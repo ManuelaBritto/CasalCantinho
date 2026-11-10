@@ -7,7 +7,6 @@
 .bv-cena { position: absolute; inset: 0; overflow: hidden; display: grid; place-items: center; }
 .bv-texto { position: relative; z-index: 5; text-align: center; padding: 1rem; animation: bv-texto-entra 1s .35s ease both; }
 .bv-titulo { margin: 0; font-size: clamp(2.4rem, 1.4rem + 5vw, 4.6rem); line-height: 1.05; }
-.bv-pre { margin: 0 0 .4rem; font-size: clamp(1.1rem, .9rem + 1vw, 1.5rem); }
 @keyframes bv-texto-entra { from { opacity: 0; transform: translateY(18px) scale(.96); } }
 
 .bv-pular {
@@ -28,7 +27,7 @@
 @keyframes bv-heroi { from { opacity: 0; transform: scale(.4) rotate(-12deg); } }
 .bv-apoio { position: absolute; z-index: 3; bottom: 5vh; left: 50%; width: 96px; margin-left: -48px; animation: bv-apoio 1s 1.2s ease-out both; }
 @keyframes bv-apoio { from { transform: translateY(140%); } }
-.bv-texto { margin-top: 18vh; }
+.bv-texto { margin-top: 14vh; }
 
 /* Jeitos de se mexer */
 .bv-jeito-brilho .bv-peca, .bv-jeito-pulo .bv-peca { top: var(--y); animation: bv-surgir var(--dur) var(--atraso) ease-in-out both; }
@@ -43,26 +42,21 @@
 /* ---------------- Cores e letras de cada tema ---------------- */
 .bv-mistica { --bv-ponto: #fff6d8; background: radial-gradient(ellipse at 50% 25%, #3b2a63 0%, #1d1333 45%, #0b0616 100%); color: #efe6ff; }
 .bv-mistica .bv-titulo { font-family: "Cinzel", Georgia, serif; color: #f3dc9b; letter-spacing: .04em; text-shadow: 0 0 26px rgba(232, 196, 106, .5); }
-.bv-mistica .bv-pre { font-family: "Dancing Script", cursive; color: #c9a7ff; }
 .bv-mistica .bv-heroi svg { filter: drop-shadow(0 0 18px rgba(232, 196, 106, .55)); }
 
 .bv-punk { --bv-ponto: #5dff7a; background: radial-gradient(ellipse at 50% 30%, #3d1f63 0%, #1c0b33 55%, #0d0419 100%); color: #eefcf1; }
 .bv-punk .bv-titulo { font-family: "Bungee", Impact, sans-serif; color: #5dff7a; text-shadow: 4px 4px 0 #050806, 0 0 26px rgba(93, 255, 122, .45); }
-.bv-punk .bv-pre { font-family: "Permanent Marker", cursive; color: #b6ff3b; }
 .bv-punk .bv-ponto { border-radius: 1px; width: 5px; height: 5px; }
 
 .bv-laco { --bv-ponto: #ffffff; background: radial-gradient(ellipse at 50% 30%, #fff9fb 0%, #ffe0ec 50%, #ffc4da 100%); color: #4a2236; }
 .bv-laco .bv-titulo { font-family: "Fredoka", system-ui, sans-serif; font-weight: 700; color: #c2366f; text-shadow: 3px 3px 0 #fff; }
-.bv-laco .bv-pre { font-family: "Caveat", cursive; font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem); color: #a8406e; }
 
 .bv-onda { --bv-ponto: #ffffff; background: linear-gradient(180deg, #ffd9cf 0%, #eaf6fc 35%, #8fcbe8 75%, #1f6fb2 100%); color: #11314f; }
 .bv-onda .bv-titulo { font-family: "Righteous", system-ui, sans-serif; color: #d23b33; text-shadow: 3px 3px 0 #fff; }
-.bv-onda .bv-pre { font-family: "Pacifico", cursive; color: #1f6fb2; }
 
 .bv-aquarela { --bv-ponto: #f4c6c6; background: radial-gradient(ellipse at 30% 20%, #e3efd9 0%, #fffaf0 45%, #f7e3d3 100%); color: #4a3b2f; }
 .bv-aquarela::before { content: ""; position: absolute; inset: 0; background: var(--textura-papel); opacity: .7; }
 .bv-aquarela .bv-titulo { font-family: "Fraunces", Georgia, serif; color: #4f7a52; text-shadow: 2px 2px 0 rgba(255, 255, 255, .7); }
-.bv-aquarela .bv-pre { font-family: "Shadows Into Light", cursive; font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem); color: #8a6a4f; }
 
 .bv-mistica .bv-pular, .bv-punk .bv-pular { background: rgba(10, 4, 20, .85); color: #efe6ff; }
 

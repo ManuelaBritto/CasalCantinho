@@ -88,7 +88,7 @@ nosso-cantinho/
 | Área | O que faz |
 |---|---|
 | **Entrada** | Perfis Kath e Drico. Sessão mantida ao atualizar; botão **Sair** em todo o app. |
-| **Boas-vindas** | Uma cena por tema: "Bem-vinda, Kath!" com laço e flores caindo, "Bem-vindo, Drico!" com guitarra e estrelas neon, "Bem-vinda, Lavi!" com lua e cristais brilhando, "Bem-vindo, Rick!" com prancha e conchas subindo, "Bem-vinda, Marih!" com casinha e flores levadas pelo vento. Dura ~4 s, tem botão **Pular animação** (ou Esc) e vira cena estática com movimento reduzido. Depois entra com o tema do perfil. |
+| **Boas-vindas** | Só a saudação ("Bem-vinda, Kath!", "Bem-vindo, Drico!"…) numa cena do tema: laço e flores caindo para a Kath, guitarra e estrelas neon para o Drico, lua e cristais para a Lavi, prancha e conchas para o Rick, casinha e flores ao vento para a Marih. Dura ~4 s, tem botão **Pular animação** (ou Esc) e vira cena estática com movimento reduzido. Depois entra com o tema do perfil. |
 | **Temas** | Um por pessoa: **Laço de Rosa** (Kath), **Estrela Punk** (Drico), **Lua Mística** (Lavi), **Onda Coral** (Rick) e **Aquarela** (Marih). Cada casal só vê e escolhe os dois temas das pessoas dele. Troca imediata pelo topo ou por **Aparência**; muda cores, fontes, fundos, ilustrações, molduras, galeria e a sala de cinema. Salvo por perfil. |
 | **Início** | Frase do tema, foto do casal (ou ilustração), aviso de cartinha nova, **"Estamos juntos?"**, contador de anos/meses/dias com data editável, atalhos, memórias recentes e cartinha em destaque. |
 | **Estamos juntos?** | Um botão liga um cronômetro compartilhado: os dois perfis veem o mesmo tempo correndo (também no topo de todas as páginas). Ao encerrar, dá para anotar "como foi" e corrigir o horário de término. Guarda o total juntos, número de encontros, o maior encontro e o histórico (com exclusão). Embaixo aparece uma **curiosidade** comparando o tempo com recordes e fatos (ex.: "Nossa! Vocês ficaram 30 minutos juntos — praticamente o mesmo tempo que o recorde de alguém que ficou embaixo d’água sem respirar"), com a fonte. Os fatos foram pesquisados na web e ficam em `js/curiosidades.js` (fácil de atualizar). |
@@ -224,14 +224,14 @@ O `.gitignore` já impede o envio do `.env`. Confira com `git status` antes do p
 
 Com isso, quando um manda **cartinha, elogio ou "Lembre de mim"**, o celular do outro recebe uma notificação, mesmo com o site fechado. Se a pessoa estiver com o site aberto na tela, aparece só o aviso dentro do site.
 
-**1. Banco (uma vez).** No Supabase → *SQL Editor*, rode `supabase/notificacoes.sql`.
+**1. Banco (uma vez).** No Supabase → *SQL Editor*, rode `supabase/notificacoes.sql` **depois** dos outros arquivos. Ele já funciona com vários casais e com quem está em dois cantinhos (a Lavi recebe os avisos de cada cantinho no mesmo celular). Pode rodar de novo sem problema.
 
 **2. Chaves (uma vez).** No seu computador, dentro da pasta do projeto:
 ```bash
 npm install
 npm run chaves
 ```
-Aparecem 3 linhas (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`). Cole no `.env` e também na Vercel (*Settings → Environment Variables*, marcando Production e Preview). Depois faça **Redeploy**. A chave privada é secreta: só no `.env` e na Vercel, nunca no GitHub.
+Aparecem 3 linhas (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`). Para já sair com o endereço do site novo: `npm run chaves -- https://seu-site.vercel.app`. Cole no `.env` e também na Vercel (*Settings → Environment Variables*, marcando Production e Preview). Depois faça **Redeploy**. A chave privada é secreta: só no `.env` e na Vercel, nunca no GitHub.
 
 **3. Em cada celular.**
 - **iPhone (iOS 16.4 ou mais novo):** Safari → *Compartilhar* → *Adicionar à Tela de Início*. Abra o **Cantinho** pelo ícone, entre na conta e vá em **Aparência → Ativar notificações**. A Apple só libera notificações para sites instalados assim. O app instalado guarda o login separado do Safari, então é preciso entrar de novo nele.

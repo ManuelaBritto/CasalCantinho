@@ -9,13 +9,13 @@ const SAIDA = 650;
 
 const aleatorio = (min, max) => Math.round((min + Math.random() * (max - min)) * 100) / 100;
 
-// Cada tema: adesivo principal, adesivos que caem/brilham, frase de abertura e o jeito de se mexer
+// Cada tema: adesivo principal, adesivos que caem/brilham e o jeito de se mexer
 const CENAS = {
-  mistica: { heroi: 'lua-mistica', apoio: 'gato-preto', chuva: ['constelacao', 'cristal', 'olho-astral', 'carta-cigana'], pre: 'as estrelas te esperavam', jeito: 'brilho' },
-  punk: { heroi: 'guitarra-estrela', apoio: 'pinguim-punk', chuva: ['estrela-verde', 'respingo', 'vinil-verde', 'coracao-xadrez'], pre: 'o show vai começar', jeito: 'pulo' },
-  laco: { heroi: 'laco-rosa', apoio: 'pinguinzinha', chuva: ['margarida', 'tulipa', 'cerejeira', 'estrelinha'], pre: 'seu jardim está florindo', jeito: 'queda' },
-  onda: { heroi: 'prancha', apoio: 'concha', chuva: ['onda', 'estrela-mar', 'caracol', 'concha'], pre: 'a maré está boa hoje', jeito: 'mare' },
-  aquarela: { heroi: 'casinha', apoio: 'gatinho', chuva: ['nuvem-gordinha', 'flores-campo', 'cravo', 'violao'], pre: 'o vento trouxe você', jeito: 'vento' },
+  mistica: { heroi: 'lua-mistica', apoio: 'gato-preto', chuva: ['constelacao', 'cristal', 'olho-astral', 'carta-cigana'], jeito: 'brilho' },
+  punk: { heroi: 'guitarra-estrela', apoio: 'pinguim-punk', chuva: ['estrela-verde', 'respingo', 'vinil-verde', 'coracao-xadrez'], jeito: 'pulo' },
+  laco: { heroi: 'laco-rosa', apoio: 'pinguinzinha', chuva: ['margarida', 'tulipa', 'cerejeira', 'estrelinha'], jeito: 'queda' },
+  onda: { heroi: 'prancha', apoio: 'concha', chuva: ['onda', 'estrela-mar', 'caracol', 'concha'], jeito: 'mare' },
+  aquarela: { heroi: 'casinha', apoio: 'gatinho', chuva: ['nuvem-gordinha', 'flores-campo', 'cravo', 'violao'], jeito: 'vento' },
 };
 
 function cena(tema, perfil) {
@@ -31,7 +31,6 @@ function cena(tema, perfil) {
       <div class="bv-heroi" aria-hidden="true">${adesivo(c.heroi)}</div>
       <div class="bv-apoio" aria-hidden="true">${adesivo(c.apoio)}</div>
       <div class="bv-texto">
-        <p class="bv-pre">${c.pre}</p>
         <h2 class="bv-titulo">${perfil.saudacao}</h2>
       </div>
     </div>`;
