@@ -2,7 +2,7 @@
 // Também recebe os bilhetes rápidos (Enviar elogio e Lembre de mim), ver ../bilhetes.js.
 import { listar, salvar, remover } from '../store/index.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeite, ADESIVOS, PACOTES } from '../ui/ilustracoes.js';
+import { adesivo, enfeite, ADESIVOS, PACOTES, pacotesEmOrdem } from '../ui/ilustracoes.js';
 import { esc, toast, abrirModal, confirmar, formatarData, hojeISO, seloExemplo, marcarErro, limparErros } from '../ui/dom.js';
 import { PERFIS } from '../auth.js';
 import { temaAtual, temasDisponiveis } from '../tema.js';
@@ -317,7 +317,7 @@ export async function renderizar(el, ctx) {
     let alterado = false;
 
     const corPersonalizada = !CORES_PAPEL.includes(base.estilo.cor);
-    const pacotesOrdenados = [temaAtual(), ...temasDisponiveis().filter((p) => p !== temaAtual())].filter((p) => PACOTES[p]);
+    const pacotesOrdenados = pacotesEmOrdem(temaAtual(), temasDisponiveis());
 
     el.innerHTML = `
       <div class="cabecalho-secao">

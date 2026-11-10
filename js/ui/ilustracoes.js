@@ -76,8 +76,20 @@ export const ADESIVOS = {
   ...ADESIVOS_TEMAS,
 };
 
-// Pacotes de adesivos para escolher (um por tema; o cantinho mostra só os do casal)
-export const PACOTES = PACOTES_TEMAS;
+// Pacotes de adesivos: os 5 temas + os enfeites dos temas antigos. Todo mundo pode usar todos.
+const idsDoPacote = (pacote) => Object.keys(ADESIVOS).filter((id) => ADESIVOS[id].pacote === pacote);
+export const PACOTES = {
+  ...PACOTES_TEMAS,
+  gotico: { nome: 'Gótico', itens: idsDoPacote('drico') },
+  girassol: { nome: 'Girassol', itens: idsDoPacote('kath') },
+  classicos: { nome: 'Clássicos', itens: idsDoPacote('neutro') },
+};
+
+/** Ordem dos pacotes no seletor: tema atual, o do par, os outros temas e os antigos. */
+export function pacotesEmOrdem(atual, doCasal = []) {
+  const ordem = [atual, ...doCasal, ...Object.keys(PACOTES)];
+  return [...new Set(ordem)].filter((p) => PACOTES[p]);
+}
 
 export function adesivo(id) {
   const a = ADESIVOS[id];

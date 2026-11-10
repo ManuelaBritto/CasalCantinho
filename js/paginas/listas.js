@@ -1,7 +1,7 @@
 // Listas do casal: listas com categorias, itens, conclusão e progresso.
 import { listar, salvar, remover } from '../store/index.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeite, ADESIVOS, PACOTES } from '../ui/ilustracoes.js';
+import { adesivo, enfeite, ADESIVOS, PACOTES, pacotesEmOrdem } from '../ui/ilustracoes.js';
 import { PERFIS } from '../auth.js';
 import { temaAtual, temasDisponiveis } from '../tema.js';
 import { esc, toast, abrirModal, confirmar, gerarId, seloExemplo, lerFormulario, marcarErro, limparErros, normalizarTexto } from '../ui/dom.js';
@@ -201,9 +201,15 @@ export async function renderizar(el, ctx) {
             <legend>Adesivo</legend>
             <div class="enfeites">
               <label class="enfeite-opcao" title="Sem adesivo"><input type="radio" name="adesivo" value="" ${!estiloAtual.adesivo ? 'checked' : ''}><span class="sem-adesivo">${icone('fechar')}<span class="sr-only">Sem adesivo</span></span></label>
-              ${[temaAtual(), ...temasDisponiveis().filter((x) => x !== temaAtual())].filter((pk) => PACOTES[pk]).flatMap((pk) => PACOTES[pk].itens).map((id) => `
-                <label class="enfeite-opcao" title="${ADESIVOS[id].nome}"><input type="radio" name="adesivo" value="${id}" ${estiloAtual.adesivo === id ? 'checked' : ''}><span>${adesivo(id)}<span class="sr-only">${ADESIVOS[id].nome}</span></span></label>`).join('')}
             </div>
+            ${pacotesEmOrdem(temaAtual(), temasDisponiveis()).map((pk) => `
+              <fieldset class="pacote-enfeites">
+                <legend>${PACOTES[pk].nome}</legend>
+                <div class="enfeites">
+                  ${PACOTES[pk].itens.map((id) => `
+                    <label class="enfeite-opcao" title="${ADESIVOS[id].nome}"><input type="radio" name="adesivo" value="${id}" ${estiloAtual.adesivo === id ? 'checked' : ''}><span>${adesivo(id)}<span class="sr-only">${ADESIVOS[id].nome}</span></span></label>`).join('')}
+                </div>
+              </fieldset>`).join('')}
           </fieldset>
         </form>`,
       rodape: `<button type="button" class="botao-fantasma" data-fechar>Cancelar</button>
