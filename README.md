@@ -91,7 +91,6 @@ nosso-cantinho/
 | **Boas-vindas** | Kath: "Bem-vinda, Kath!" com girassóis crescendo, pétalas e raposa. Drico: "Bem-vindo, Drico!" com lua, castelo e morcegos voando. Dura ~4 s, tem botão **Pular animação** (ou Esc) e vira cena estática com movimento reduzido. Depois entra com o tema do perfil. |
 | **Temas** | Neutro, Drico e Kath. Troca imediata pelo topo ou por **Aparência**; muda cores, fontes, fundos, ilustrações, molduras, galeria e a sala de cinema. Salvo por perfil. |
 | **Início** | Frase do tema, foto do casal (ou ilustração), aviso de cartinha nova, **"Estamos juntos?"**, contador de anos/meses/dias com data editável, atalhos, memórias recentes e cartinha em destaque. |
-| **Animação de início** | Na **primeira vez que a Kath entra em cada aparelho**, a tela escurece, aparece "Feito pelo seu amorzinho, Drico!" com fogos de artifício e confetes (desenhados em `<canvas>`, sem bibliotecas) e termina numa tela de girassóis com "O nosso cantinho está pronto, amor!". A marca de "já viu" fica no navegador, então cada celular ou computador novo mostra a animação uma vez. O botão **Animação de início** no login mostra de novo quando quiserem. |
 | **Estamos juntos?** | Um botão liga um cronômetro compartilhado: os dois perfis veem o mesmo tempo correndo (também no topo de todas as páginas). Ao encerrar, dá para anotar "como foi" e corrigir o horário de término. Guarda o total juntos, número de encontros, o maior encontro e o histórico (com exclusão). Embaixo aparece uma **curiosidade** comparando o tempo com recordes e fatos (ex.: "Nossa! Vocês ficaram 30 minutos juntos — praticamente o mesmo tempo que o recorde de alguém que ficou embaixo d’água sem respirar"), com a fonte. Os fatos foram pesquisados na web e ficam em `js/curiosidades.js` (fácil de atualizar). |
 | **Cartinhas** | **Enviar para o outro perfil** ou guardar como rascunho. Abas Recebidas / Enviadas / Rascunhos; cartinha nova chega num envelope fechado com selo de cera que se abre ao clicar, contador de novas no menu, "lida em…" para quem enviou e botão **Responder**. Rascunhos não aparecem para o outro perfil. Editor com título, como chamar (opcional), data e mensagem; papel (6), cor do papel, cor da tinta, fonte (6), alinhamento, moldura (4) e até 6 enfeites dos três temas. Prévia ao vivo e em tamanho grande. Coleção com abrir, editar e excluir (com confirmação). |
 | **Elogio e Lembre de mim** | Dois bilhetes rápidos no topo de Cartinhas. **Enviar elogio**: uma ou duas frases (até 180 caracteres), com sugestões e 4 cores de bilhete. **Lembre de mim**: escolher um de 12 emojis e uma de 18 frases prontas ("Ei, esqueceu de mim?", "Estou com saudades, amor!"…; "Ei, sumida/sumido!" ajusta para quem recebe). Chegam em **Recebidas** como bilhete dobrado, quem enviou vê se já foi visto, e dá para responder com outro elogio ou lembrete. Se a outra pessoa estiver com o site aberto, recebe um aviso na hora (cartinhas normais também); se não, vê o contador e o aviso no Início quando entrar. Ficam salvos na mesma tabela das cartinhas (sem SQL novo). As frases ficam em `js/bilhetes.js`. |
@@ -151,6 +150,30 @@ Enquanto o Supabase **não** estiver configurado:
 Como funciona a segurança: a função `meu_casal()` descobre o casal do usuário logado; todas as políticas comparam `casal_id = meu_casal()`, então o banco só devolve dados do próprio casal, mesmo que alguém altere o JavaScript. Usuários não conseguem criar perfis nem trocar de casal; só alteram `perfis.tema_preferido` e `casais.ajustes`. Fotos ficam em `memorias/<id-do-casal>/…` e são exibidas por URLs assinadas temporárias.
 
 ---
+
+## 5.1 Vários casais (ex.: Lavi e Marih)
+
+O mesmo site atende vários casais, cada um no próprio cantinho: um casal **nunca** vê os dados, nomes, fotos, chat ou notificações do outro (as regras de segurança do Supabase usam o casal de quem está logado).
+
+1. No **SQL Editor**, rode `supabase/varios-casais.sql` (uma vez; pode rodar de novo sem problema). Ele:
+   - libera perfis com qualquer nome (antes só existiam `kath` e `drico`) e acrescenta **apelido** (nome mostrado), **tratamento** (`ela`, `ele` ou `neutro`, usado em "Bem-vinda/Bem-vindo", "Ei, sumida!/sumido!") e **tema_padrao**;
+   - completa os dados da Kath e do Drico, sem mexer em nada que já existe;
+   - cria o **casal 2**: login `lavi` / senha `lavi1234` e login `marih` / senha `marih1234`.
+2. Pronto: no site, cada pessoa entra com o nome de usuário e a senha. **Troque as senhas** depois (Authentication → Users).
+
+Para mudar o tratamento ou o nome mostrado de alguém:
+```sql
+update public.perfis set tratamento = 'ele', apelido = 'Marih' where nome = 'marih';
+```
+Para criar outro casal, copie o bloco "Casal 2" de `varios-casais.sql` trocando os nomes, e-mails e senhas.
+
+### Uma pessoa em mais de um casal (ex.: Lavi com a Marih e com o Ric)
+
+Rode também `supabase/pessoa-em-varios-casais.sql` (depois do `varios-casais.sql`). Ele:
+- deixa uma conta participar de vários casais: as regras do banco passam a ser "os casais de que a pessoa participa". A Marih continua sem ver nada do Ric, e o Ric nada da Marih;
+- cria o **casal 3**: a Lavi (mesma conta) e o Ric, login `ric` / senha `ric1234`.
+
+No site, quem participa de mais de um casal escolhe **"Em qual cantinho?"** ao entrar. A escolha fica guardada no aparelho, e **Trocar de cantinho** (no menu) pergunta de novo. O celular dessa pessoa recebe as notificações dos dois cantinhos, e tocar numa delas abre o cantinho de onde ela veio.
 
 ## 6. Configurar a API do TMDB (pesquisa de filmes)
 

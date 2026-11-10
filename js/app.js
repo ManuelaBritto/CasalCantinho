@@ -3,12 +3,13 @@ import { injetarSpriteIcones, icone } from './ui/icones.js';
 import { ICONE_TEMA } from './ui/ilustracoes.js';
 import { esc, toast, abrirModal } from './ui/dom.js';
 import { TEMAS, aplicarTema, aplicarPreferencias, lerPreferencias, temaDeEntrada, temaSalvo, temaAtual, aoMudarTema } from './tema.js';
-import { iniciarAuth, modoAuth, clienteSupabase, sair, salvarTemaRemoto, aoSairDaSessao, PERFIS } from './auth.js';
+import { iniciarAuth, modoAuth, clienteSupabase, sair, salvarTemaRemoto, aoSairDaSessao, PERFIS, participacoesDaConta, trocarCantinho, pedirCantinho } from './auth.js';
 import { mostrarLogin } from './login.js';
 import { mostrarBoasVindas } from './boas-vindas.js';
 import { definirStore, storeAtual, listar, obterAjustes, salvarAjustes } from './store/index.js';
 import { lerJuntos, normalizarJuntos, tempoAtualMs, relogio } from './juntos.js';
 import { iniciarSala, encerrarSala } from './sala-cinema.js';
+import { vigiarVersao } from './versao.js';
 import { criarStoreLocal } from './store/local.js';
 import { registrarServiceWorker, sincronizarNotificacoes, esquecerPerfilNotificacoes, estadoNotificacoes } from './notificacoes.js';
 import { carregarRecompensas, verificarConquistas, aplicarEstilosNome, gravarTempoCinema, esperarGravacao, limparCacheRecompensas } from './recompensas.js';
@@ -37,8 +38,15 @@ const midiaCelular = window.matchMedia('(max-width: 920px)');
 // ------------------------------------------------------------------
 async function iniciar() {
   injetarSpriteIcones();
+  vigiarVersao();
   registrarServiceWorker();
   aplicarPreferencias(lerPreferencias(null));
+  // Notificação de outro cantinho (?cantinho=…): abre direto nele
+  const pedido = new URLSearchParams(location.search).get('cantinho');
+  if (pedido) {
+    if (/^[0-9a-f-]{36}$/i.test(pedido)) pedirCantinho(pedido);
+    history.replaceState(null, '', location.pathname + location.hash);
+  }
   const auth = await iniciarAuth();
   document.getElementById('carregando').hidden = true;
   if (auth.perfil) {
@@ -195,23 +203,8 @@ export async function comemorarNovidades() {
   }
 }
 
-/**
- * Na primeira vez que a Kath entra em cada aparelho, mostra a animação de início (feita pelo Drico).
- * A marca de "já viu" fica neste navegador, então um celular ou computador novo mostra de novo.
- */
-const CHAVE_INTRO = 'nc:intro-kath-vista';
+/** Animação de boas-vindas ao entrar. */
 async function escolherAnimacao(perfil) {
-  if (perfil.id === 'kath') {
-    let jaViu = true;
-    try { jaViu = localStorage.getItem(CHAVE_INTRO) === '1'; } catch { jaViu = true; }
-    if (!jaViu) {
-      const { mostrarIntro } = await import('./intro.js');
-      try { sessionStorage.setItem('nc:boas-vindas-vista', '1'); } catch { /* ignora */ }
-      try { localStorage.setItem(CHAVE_INTRO, '1'); } catch { /* ignora */ }
-      await mostrarIntro();
-      return;
-    }
-  }
   await mostrarBoasVindas(perfil);
 }
 
@@ -295,6 +288,7 @@ function montarEstrutura(perfil) {
       </nav>
       <div class="menu-rodape">
         ${local ? `<p class="aviso-local">${icone('info')} Dados salvos só neste navegador.</p>` : ''}
+        ${participacoesDaConta().length > 1 ? `<button type="button" class="botao-sec pequeno botao-trocar-cantinho" data-trocar-cantinho title="Você está no cantinho com ${esc(Object.values(PERFIS).find((p) => p.id !== perfil.id)?.nome || '')}">${icone('coracao')} Trocar de cantinho</button>` : ''}
         <button type="button" class="botao-sec pequeno" data-sair>${icone('sair')} Sair da conta</button>
       </div>
     </aside>
@@ -359,6 +353,7 @@ function montarEstrutura(perfil) {
   ajustarInert();
 
   shell.querySelectorAll('[data-sair]').forEach((b) => b.addEventListener('click', encerrarSessao));
+  shell.querySelector('[data-trocar-cantinho]')?.addEventListener('click', () => trocarCantinho(perfil));
 }
 
 async function encerrarSessao() {

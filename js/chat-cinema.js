@@ -24,6 +24,8 @@ const relogioVideo = (s) => {
 
 // Ordem de chegada: o histórico segue a hora do SERVIDOR (criadoEm), não o relógio de cada aparelho
 const ordemServidor = (m) => String(m.criadoEm || m.em || '');
+// Horário mostrado: o do servidor; antes de salvar, a hora em que chegou neste aparelho
+const quando = (m) => m.criadoEm || m.chegouEm || m.em;
 
 const hora = (iso) => new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
@@ -81,18 +83,18 @@ export function montarChat({ painel, flutuante, formRapido, perfil, sala, contex
 
   function htmlMensagem(m, anterior) {
     const minha = m.de === eu;
-    const novoDia = !anterior || new Date(anterior.em).toDateString() !== new Date(m.em).toDateString();
-    const agrupada = !novoDia && anterior && anterior.de === m.de && Math.abs(new Date(m.em) - new Date(anterior.em)) < 120000;
+    const novoDia = !anterior || new Date(quando(anterior)).toDateString() !== new Date(quando(m)).toDateString();
+    const agrupada = !novoDia && anterior && anterior.de === m.de && Math.abs(new Date(quando(m)) - new Date(quando(anterior))) < 120000;
     const idYt = extrairId(m.texto.match(/\S*(?:youtu\.be|youtube\.com)\S*/i)?.[0] || '');
     return `
-      ${novoDia ? `<li class="chat-dia" role="presentation"><span>${esc(rotuloDia(m.em))}</span></li>` : ''}
+      ${novoDia ? `<li class="chat-dia" role="presentation"><span>${esc(rotuloDia(quando(m)))}</span></li>` : ''}
       <li class="msg ${minha ? 'minha' : 'dele'} ${agrupada ? 'agrupada' : ''} ${m.falhou ? 'falhou' : ''} ${m.convite ? 'convite' : ''}" data-msg="${esc(m.idLocal || m.id)}">
-        <span class="sr-only">${esc(nome(m.de))} às ${esc(hora(m.em))}:</span>
+        <span class="sr-only">${esc(nome(m.de))} às ${esc(hora(quando(m)))}:</span>
         <div class="msg-balao">${m.convite ? `<span class="msg-convite">${icone('megafone')} Convite para assistir</span>` : ''}<p>${htmlTexto(m.texto)}</p>
           ${idYt ? `<button type="button" class="botao-sec pequeno" data-assistir-link="${esc(idYt)}">${icone('play')} Colocar na tela</button>` : ''}
         </div>
         <p class="msg-meta" aria-hidden="${agrupada ? 'true' : 'false'}">
-          ${agrupada ? '' : `<span>${minha ? 'Você' : esc(nome(m.de))} · ${esc(hora(m.em))}</span>`}
+          ${agrupada ? '' : `<span>${minha ? 'Você' : esc(nome(m.de))} · ${esc(hora(quando(m)))}</span>`}
           ${m.youtubeId && Number.isFinite(Number(m.posicao)) ? `<button type="button" class="msg-tempo" data-pular="${Number(m.posicao)}" data-yt="${esc(m.youtubeId)}" title="Ir para este ponto${m.titulo ? ` de ${esc(m.titulo)}` : ''}">${icone('play')} aos ${relogioVideo(m.posicao)}</button>` : ''}
           ${m.falhou ? '<span class="msg-erro">não salva</span>' : ''}
         </p>
@@ -152,7 +154,7 @@ export function montarChat({ painel, flutuante, formRapido, perfil, sala, contex
     }
     try {
       const salvo = await salvar('mensagens', m);
-      Object.assign(m, { id: salvo.id });
+      Object.assign(m, { id: salvo.id, criadoEm: salvo.criadoEm || m.criadoEm });
     } catch {
       if (historicoSalvo) {
         m.falhou = true;
@@ -201,7 +203,7 @@ export function montarChat({ painel, flutuante, formRapido, perfil, sala, contex
     if (msg.tipo === 'chat' && msg.texto) {
       clearTimeout(timerDigitando);
       digitando.textContent = '';
-      receber({ idLocal: msg.idLocal, de: msg.de, texto: String(msg.texto).slice(0, MAX_MENSAGEM), em: msg.em ? new Date(msg.em).toISOString() : new Date().toISOString(), youtubeId: msg.youtubeId || null, titulo: msg.titulo || '', posicao: msg.posicao, convite: Boolean(msg.convite) });
+      receber({ idLocal: msg.idLocal, de: msg.de, texto: String(msg.texto).slice(0, MAX_MENSAGEM), em: msg.em ? new Date(msg.em).toISOString() : new Date().toISOString(), chegouEm: new Date().toISOString(), youtubeId: msg.youtubeId || null, titulo: msg.titulo || '', posicao: msg.posicao, convite: Boolean(msg.convite) });
     } else if (msg.tipo === 'digitando') {
       digitando.textContent = `${nome(msg.de)} está digitando…`;
       clearTimeout(timerDigitando);
@@ -210,12 +212,14 @@ export function montarChat({ painel, flutuante, formRapido, perfil, sala, contex
   }) : () => {};
 
   // ---------------- Histórico ----------------
+  let historicoCarregado = false;
   desenhar();
   listar('mensagens', { limite: HISTORICO })
     .then((salvas) => {
       const conhecidas = new Set(mensagens.map((m) => m.idLocal).filter(Boolean));
       const antigas = salvas.filter((m) => !conhecidas.has(m.idLocal)).sort((a, b) => ordemServidor(a).localeCompare(ordemServidor(b)));
       mensagens = [...antigas, ...mensagens];
+      historicoCarregado = true;
       if (painel.isConnected) desenhar();
     })
     .catch(() => {
@@ -224,9 +228,42 @@ export function montarChat({ painel, flutuante, formRapido, perfil, sala, contex
       aviso.textContent = 'O histórico do chat ainda não está sendo salvo: rode o arquivo supabase/chat-cinema.sql no Supabase. As mensagens continuam chegando na hora.';
     });
 
+  // ---------------- O que chegou com a conexão caída ----------------
+  // Toda mensagem também fica salva no banco. Quando a conexão volta, quando a tela volta
+  // a ficar visível e a cada 20 s, o chat confere se alguma não chegou pelo tempo real.
+  let buscando = false;
+  async function buscarNovas() {
+    if (!historicoCarregado || !historicoSalvo || buscando || !painel.isConnected || document.visibilityState !== 'visible') return;
+    buscando = true;
+    try {
+      const recentes = await listar('mensagens', { limite: 40 });
+      const ids = new Set(mensagens.map((m) => m.id).filter(Boolean));
+      const locais = new Set(mensagens.map((m) => m.idLocal).filter(Boolean));
+      recentes
+        .filter((m) => !ids.has(m.id) && !(m.idLocal && locais.has(m.idLocal)))
+        .sort((a, b) => ordemServidor(a).localeCompare(ordemServidor(b)))
+        .forEach((m) => receber(m));
+    } catch { /* sem internet: tenta na próxima */ } finally { buscando = false; }
+  }
+  let ultimaConexao = null;
+  const pararStatusSala = sala?.aoMudar ? sala.aoMudar((s) => {
+    if (s.status !== 'ok') return;
+    if (ultimaConexao !== null && s.conexao !== ultimaConexao) buscarNovas(); // reconectou
+    ultimaConexao = s.conexao;
+  }) : () => {};
+  const aoVoltarATela = () => { if (document.visibilityState === 'visible') buscarNovas(); };
+  document.addEventListener('visibilitychange', aoVoltarATela);
+  const conferencia = setInterval(buscarNovas, 20000);
+
   return {
     enviar,
     focar: () => { painel.scrollIntoView({ behavior: 'smooth', block: 'center' }); form.elements.texto.focus({ preventScroll: true }); },
-    limpar: () => { pararOuvir(); clearTimeout(timerDigitando); },
+    limpar: () => {
+      pararOuvir();
+      clearTimeout(timerDigitando);
+      pararStatusSala();
+      clearInterval(conferencia);
+      document.removeEventListener('visibilitychange', aoVoltarATela);
+    },
   };
 }

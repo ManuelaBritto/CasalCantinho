@@ -8,6 +8,7 @@ export const config = Object.freeze({
   loginDominio: String(bruto.loginDominio || 'nossocantinho.app').trim().replace(/^@/, ''),
   tmdbProxyUrl: String(bruto.tmdbProxyUrl || 'api/tmdb/search'),
   tmdbImagens: 'https://image.tmdb.org/t/p/',
+  versao: String(bruto.versao || ''),
   notificacoes: bruto.notificacoes === true,
   vapidPublicKey: String(bruto.vapidPublicKey || '').trim(),
   notificacoesErro: String(bruto.notificacoesErro || ''),

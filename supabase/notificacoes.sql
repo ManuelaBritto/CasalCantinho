@@ -12,7 +12,7 @@ create table if not exists public.push_inscricoes (
   id          uuid primary key default gen_random_uuid(),
   casal_id    uuid not null default public.meu_casal() references public.casais (id) on delete cascade,
   user_id     uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  perfil      text not null check (perfil in ('kath', 'drico')),
+  perfil      text not null constraint push_inscricoes_perfil_check check (perfil ~ '^[a-z0-9._-]{2,30}$'),
   endpoint    text not null unique check (endpoint like 'https://%'),
   p256dh      text not null,
   auth        text not null,

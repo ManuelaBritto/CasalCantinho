@@ -53,9 +53,11 @@ export function toast(mensagem, tipo = 'info', { acao, duracao = 4200 } = {}) {
   fecharBtn.addEventListener('click', () => fechar());
   el.append(fecharBtn);
   area.append(el);
-  let timer = setTimeout(fechar, acao ? duracao + 3000 : duracao);
+  // duracao: Infinity → fica até a pessoa fechar ou usar o botão
+  const fixo = !Number.isFinite(duracao);
+  let timer = fixo ? null : setTimeout(fechar, acao ? duracao + 3000 : duracao);
   el.addEventListener('mouseenter', () => clearTimeout(timer));
-  el.addEventListener('mouseleave', () => { timer = setTimeout(fechar, 2000); });
+  el.addEventListener('mouseleave', () => { if (!fixo) timer = setTimeout(fechar, 2000); });
   function fechar() {
     clearTimeout(timer);
     el.classList.add('saindo');
@@ -153,7 +155,7 @@ export function marcarErro(campo, mensagem) {
 
 export function limparErros(form) {
   form.querySelectorAll('[aria-invalid]').forEach((c) => c.removeAttribute('aria-invalid'));
-  form.querySelectorAll('.erro-campo').forEach((m) => m.remove());
+  form.querySelectorAll('.erro-campo:not(.erro-login)').forEach((m) => m.remove()); // a mensagem do login é fixa na tela
 }
 
 export function normalizarTexto(s) {

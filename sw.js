@@ -28,7 +28,7 @@ self.addEventListener('notificationclick', (evento) => {
     const aberta = janelas.find((j) => new URL(j.url).origin === self.location.origin);
     if (aberta) {
       // Site já aberto: só troca a página (sem recarregar)
-      aberta.postMessage({ tipo: 'nc:abrir', hash: destino.hash || '#/inicio' });
+      aberta.postMessage({ tipo: 'nc:abrir', hash: destino.hash || '#/inicio', cantinho: destino.searchParams.get('cantinho') || '' });
       try { await aberta.focus(); } catch { /* alguns sistemas não deixam focar */ }
       return;
     }

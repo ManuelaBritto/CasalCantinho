@@ -46,7 +46,7 @@ export function mostrarLogin({ erroInicial = '' } = {}) {
         <form class="formulario" id="form-login" novalidate>
           <div class="campo">
             <label for="login-nome">Nome</label>
-            <input id="login-nome" name="nome" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Kath ou Drico" required>
+            <input id="login-nome" name="nome" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Seu nome de usuário" required>
           </div>
           <div class="campo">
             <label for="login-senha">Senha</label>
@@ -57,15 +57,9 @@ export function mostrarLogin({ erroInicial = '' } = {}) {
 
         </form>`}
 
-      <button type="button" class="botao-fantasma login-intro" data-ver-intro>${icone('sparkle')} Animação de início</button>
     </div>`;
 
   tela.hidden = false;
-
-  tela.querySelector('[data-ver-intro]').addEventListener('click', async () => {
-    const { mostrarIntro } = await import('./intro.js');
-    await mostrarIntro({ textoBotao: 'Voltar' });
-  });
 
   return new Promise((resolver) => {
     if (demo) {

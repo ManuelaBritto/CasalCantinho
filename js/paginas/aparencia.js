@@ -53,7 +53,7 @@ export async function renderizar(el, ctx) {
       <fieldset>
         <legend>Ao entrar na conta, usar</legend>
         <div class="opcoes">
-          ${opcao('aoEntrar', 'perfil', `O tema do perfil (${perfil.temaPadrao === 'kath' ? 'Kath' : 'Drico'})`, prefs.aoEntrar)}
+          ${opcao('aoEntrar', 'perfil', `O tema do perfil (${TEMAS[perfil.temaPadrao]?.nome || 'Neutro'})`, prefs.aoEntrar)}
           ${opcao('aoEntrar', 'ultimo', 'O último tema que escolhi', prefs.aoEntrar)}
         </div>
       </fieldset>

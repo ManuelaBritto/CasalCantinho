@@ -4,7 +4,7 @@
 import { salvar } from './store/index.js';
 import { salaAtual } from './sala-cinema.js';
 import { notificarOutro } from './notificacoes.js';
-import { PERFIS } from './auth.js';
+import { PERFIS, flexao } from './auth.js';
 import { icone } from './ui/icones.js';
 import { esc, toast, abrirModal, marcarErro, limparErros } from './ui/dom.js';
 
@@ -32,7 +32,7 @@ export function frasesLembrete(paraId) {
     'Já pensou em mim hoje?',
     'Volta logo, tá?',
     'Só queria ouvir sua voz.',
-    paraId === 'kath' ? 'Ei, sumida!' : 'Ei, sumido!',
+    flexao(paraId, { ela: 'Ei, sumida!', ele: 'Ei, sumido!', neutro: 'Ei, cadê você?' }),
     'Um beijo pra você não esquecer de mim.',
     'Contando os minutos pra te ver.',
     'Você tá fazendo falta aqui.',
@@ -47,7 +47,7 @@ function sugestoesElogio(paraId) {
   return [
     'Seu sorriso deixa meu dia mais bonito.',
     'Você é a pessoa mais linda que eu conheço.',
-    paraId === 'kath' ? 'Você fica ainda mais linda quando ri.' : 'Você fica ainda mais lindo quando ri.',
+    flexao(paraId, { ela: 'Você fica ainda mais linda quando ri.', ele: 'Você fica ainda mais lindo quando ri.', neutro: 'Seu riso é a coisa mais bonita que existe.' }),
     'Tenho muito orgulho de você.',
     'Você me faz querer ser melhor todo dia.',
     'Seu abraço é o meu lugar favorito.',
@@ -119,7 +119,7 @@ function explicarEntrega(r, paraId) {
   if (!r || r.enviadas > 0 || motivosAvisados.has(r.motivo)) return;
   const quem = nomeDe(paraId);
   let texto = '';
-  if (r.motivo === 'sem-aparelho') texto = `${quem} ainda não ativou as notificações em nenhum aparelho (Aparência → Ativar notificações, no celular de ${quem}). Ela vai ver quando abrir o site.`.replace('Ela vai', paraId === 'drico' ? 'Ele vai' : 'Ela vai');
+  if (r.motivo === 'sem-aparelho') texto = `${quem} ainda não ativou as notificações em nenhum aparelho (Aparência → Ativar notificações, no celular de ${quem}). ${flexao(paraId, { ela: 'Ela vai', ele: 'Ele vai', neutro: `${quem} vai` })} ver quando abrir o site.`;
   else if (r.motivo === 'erro') texto = `A notificação para ${quem} não foi enviada: ${r.erro || 'erro no servidor'}`;
   if (!texto) return;
   motivosAvisados.add(r.motivo);

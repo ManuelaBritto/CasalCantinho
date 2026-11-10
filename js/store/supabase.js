@@ -1,7 +1,7 @@
 // Armazenamento no SUPABASE — usado quando SUPABASE_URL e SUPABASE_ANON_KEY estão configurados.
 // Mesma interface do store local, então as páginas não precisam saber qual está ativo.
-// O isolamento entre casais é garantido pelas políticas RLS em supabase/schema.sql
-// (o front-end não filtra por casal: quem filtra é o banco).
+// O isolamento entre casais é garantido pelas políticas RLS do banco. Como uma pessoa
+// pode participar de mais de um casal, o site ainda filtra e grava pelo casal ATIVO.
 import { gerarId } from '../ui/dom.js';
 import { reduzirImagem } from './imagens.js';
 
@@ -45,6 +45,7 @@ export function criarStoreSupabase(cliente, perfil) {
       conferir(colecao);
       let consulta = cliente.from(colecao)
         .select('id, dados, criado_em, atualizado_em')
+        .eq('casal_id', perfil.casalId)
         .order('criado_em', { ascending: false });
       if (limite) consulta = consulta.limit(limite);
       const { data, error } = await consulta;
@@ -63,7 +64,7 @@ export function criarStoreSupabase(cliente, perfil) {
       const dados = paraDados(doc);
       const consulta = doc.id
         ? cliente.from(colecao).update({ dados, atualizado_em: new Date().toISOString() }).eq('id', doc.id)
-        : cliente.from(colecao).insert({ dados });
+        : cliente.from(colecao).insert({ dados, casal_id: perfil.casalId });
       const { data, error } = await consulta.select('id, dados, criado_em, atualizado_em').single();
       if (error) throw falha(error, 'salvar');
       const salvo = paraDoc(data);
@@ -81,7 +82,7 @@ export function criarStoreSupabase(cliente, perfil) {
     },
 
     async obterAjustes() {
-      const { data, error } = await cliente.from('casais').select('ajustes').maybeSingle();
+      const { data, error } = await cliente.from('casais').select('ajustes').eq('id', perfil.casalId).maybeSingle();
       if (error) throw falha(error, 'carregar os ajustes');
       const ajustes = { ...(data?.ajustes || {}) };
       if (ajustes.fotoCasalPath) ajustes.fotoCasal = (await assinar([ajustes.fotoCasalPath]))[ajustes.fotoCasalPath] || null;

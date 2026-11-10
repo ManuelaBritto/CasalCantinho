@@ -9,7 +9,13 @@ import { esc, toast, abrirModal, formatarData } from './ui/dom.js';
 
 const L = 1080;
 const A = 1350;
-const NOMES = `${PERFIS.kath?.nome || 'Kath'} & ${PERFIS.drico?.nome || 'Drico'}`;
+// As duas pessoas do casal, sempre na mesma ordem nos dois aparelhos ("Kath & Drico", "Lavi & Marih")
+const ORDEM_TRATAMENTO = { ela: 0, neutro: 1, ele: 2 };
+const casal = () => {
+  const lista = Object.values(PERFIS).sort((a, b) => (ORDEM_TRATAMENTO[a.tratamento] ?? 1) - (ORDEM_TRATAMENTO[b.tratamento] ?? 1) || a.id.localeCompare(b.id));
+  return [lista[0]?.nome || 'Você', lista[1]?.nome || 'Amor'];
+};
+const nomesCasal = () => casal().join(' & ');
 
 // ---------------- Dados ----------------
 async function coletarDados() {
@@ -169,7 +175,7 @@ function polaroid(ctx, d, r, img) {
   ctx.shadowColor = 'transparent';
   if (img) imagemCobrindo(ctx, img, -330, -420, 660, 660); else cenaCinema(ctx, -330, -420, 660, 660);
   texto(ctx, 'Nossa primeira hora de cinema', 0, 330, { fonte: '700 64px Caveat', cor: '#3b2a2f', largura: 680 });
-  texto(ctx, `${NOMES} · ${dataCurta(d.prog.datas[r.id])}`, 0, 400, { fonte: '500 46px Caveat', cor: '#7a5560', largura: 680 });
+  texto(ctx, `${nomesCasal()} · ${dataCurta(d.prog.datas[r.id])}`, 0, 400, { fonte: '500 46px Caveat', cor: '#7a5560', largura: 680 });
   // fita adesiva
   ctx.fillStyle = 'rgba(242, 226, 228, .85)';
   ctx.rotate(0.1);
@@ -196,9 +202,9 @@ function cartaz(ctx, d) {
   ctx.strokeRect(40, 40, L - 80, A - 80);
 
   texto(ctx, 'NOSSO CANTINHO APRESENTA', L / 2, 150, { fonte: '700 28px "DM Sans"', cor: '#e0b98a', espacamento: 8 });
-  texto(ctx, (PERFIS.kath?.nome || 'Kath').toUpperCase(), L / 2, 360, { fonte: '700 170px Fraunces', cor: '#f8e7c9' });
+  texto(ctx, casal()[0].toUpperCase(), L / 2, 360, { fonte: '700 170px Fraunces', cor: '#f8e7c9' });
   texto(ctx, '&', L / 2, 470, { fonte: 'italic 500 90px Lora', cor: '#e0a85b' });
-  texto(ctx, (PERFIS.drico?.nome || 'Drico').toUpperCase(), L / 2, 640, { fonte: '700 170px Fraunces', cor: '#f8e7c9' });
+  texto(ctx, casal()[1].toUpperCase(), L / 2, 640, { fonte: '700 170px Fraunces', cor: '#f8e7c9' });
   for (let i = -2; i <= 2; i++) { estrela(ctx, L / 2 + i * 70, 720, 18, 8); ctx.fillStyle = '#e0a85b'; ctx.fill(); }
   texto(ctx, `em ${formatarTempoCinema(d.prog.totalMs)} de cinema juntinhos`, L / 2, 810, { fonte: 'italic 500 50px Lora', cor: '#f3d9c0' });
 
@@ -258,9 +264,9 @@ function cabine(ctx, d, r, img) {
   if (img) imagemCobrindo(ctx, img, q.x, q.y, q.w, q.h);
   else {
     coracao(ctx, q.x + q.w / 2, q.y + 110, 110, '#ff8fab');
-    texto(ctx, NOMES, q.x + q.w / 2, q.y + 215, { fonte: '700 40px Caveat', cor: '#f6dcc6' });
+    texto(ctx, nomesCasal(), q.x + q.w / 2, q.y + 215, { fonte: '700 40px Caveat', cor: '#f6dcc6' });
   }
-  texto(ctx, `${NOMES.toUpperCase()} · ${dataCurta(d.prog.datas[r.id]).toUpperCase()}`, L / 2, 1250 + 20, { fonte: '700 22px "Courier Prime"', cor: '#5a4048', largura: fw - 40 });
+  texto(ctx, `${nomesCasal().toUpperCase()} · ${dataCurta(d.prog.datas[r.id]).toUpperCase()}`, L / 2, 1250 + 20, { fonte: '700 22px "Courier Prime"', cor: '#5a4048', largura: fw - 40 });
   ctx.restore();
 }
 
@@ -296,9 +302,9 @@ function estrelaCalcada(ctx, d, r) {
   ctx.stroke();
   ctx.restore();
 
-  texto(ctx, (PERFIS.kath?.nome || 'Kath').toUpperCase(), L / 2, 520, { fonte: '700 92px Fraunces', cor: '#ffe8a8', largura: 380 });
+  texto(ctx, casal()[0].toUpperCase(), L / 2, 520, { fonte: '700 92px Fraunces', cor: '#ffe8a8', largura: 380 });
   texto(ctx, '&', L / 2, 590, { fonte: 'italic 500 56px Lora', cor: '#ffe8a8' });
-  texto(ctx, (PERFIS.drico?.nome || 'Drico').toUpperCase(), L / 2, 690, { fonte: '700 92px Fraunces', cor: '#ffe8a8', largura: 380 });
+  texto(ctx, casal()[1].toUpperCase(), L / 2, 690, { fonte: '700 92px Fraunces', cor: '#ffe8a8', largura: 380 });
   ctx.fillStyle = '#e9b44c';
   ctx.beginPath();
   ctx.arc(L / 2, 790, 46, 0, Math.PI * 2);
@@ -357,7 +363,7 @@ export function abrirFotoRecordacao(r) {
       if (!el.isConnected) return;
       blob = b;
       url = URL.createObjectURL(b);
-      el.querySelector('[data-previa]').innerHTML = `<img src="${url}" alt="${esc(r.nome)}: foto de recordação do cinema de ${esc(NOMES)}">`;
+      el.querySelector('[data-previa]').innerHTML = `<img src="${url}" alt="${esc(r.nome)}: foto de recordação do cinema de ${esc(nomesCasal())}">`;
       baixar.href = url;
       baixar.removeAttribute('aria-disabled');
       const arquivo = new File([b], nomeArquivo, { type: 'image/png' });

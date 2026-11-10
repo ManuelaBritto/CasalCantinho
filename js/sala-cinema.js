@@ -19,6 +19,7 @@ function criarBase(perfil) {
     erro: '',
     presentes: new Set(), // perfis (kath/drico) com a sala aberta, além de mim
     vendo: new Set(),     // dos presentes, quem está com o site visível na tela agora
+    conexao: 1,           // aumenta a cada reconexão (o chat usa para buscar o que perdeu)
     perfil,
     enviar() {},
     ouvir(fn) { ouvintes.add(fn); return () => ouvintes.delete(fn); },
@@ -34,38 +35,91 @@ function salaSupabase(perfil, cliente) {
   const s = criarBase(perfil);
   s.tipo = 'supabase';
   s.status = 'conectando';
+  s.conexao = 0; // quantas vezes entrou na sala (mais de 1 = reconectou depois de cair)
   const topico = `cinema:${perfil.casalId}`;
   let canal = null;
+  let fechada = false;
+  let tentativa = 0;
+  let timerReconectar = null;
+  let geracao = 0;
 
-  (async () => {
-    try { await cliente.realtime.setAuth(); } catch { /* versões antigas: usa a sessão automaticamente */ }
-    canal = cliente.channel(topico, {
+  // A conexão em tempo real cai quando o celular bloqueia a tela, a aba fica em segundo plano
+  // ou a internet oscila. Antes ela não voltava sozinha (só atualizando a página).
+  async function conectar() {
+    clearTimeout(timerReconectar);
+    timerReconectar = null;
+    if (fechada) return;
+    const minha = ++geracao;
+    if (canal) {
+      const velho = canal;
+      canal = null;
+      try { await cliente.removeChannel(velho); } catch { /* já estava fechado */ }
+    }
+    if (minha !== geracao || fechada) return;
+    if (s.status !== 'conectando') { s.status = 'conectando'; s._mudou(); }
+    try {
+      // getSession renova o login se ele venceu enquanto o aparelho dormia
+      const { data } = await cliente.auth.getSession();
+      await cliente.realtime.setAuth(data?.session?.access_token);
+    } catch { /* versões antigas: usa a sessão automaticamente */ }
+    if (minha !== geracao || fechada) return;
+
+    const c = cliente.channel(topico, {
       config: { private: true, broadcast: { self: false }, presence: { key: perfil.id } },
     });
-    canal.on('broadcast', { event: 'cinema' }, ({ payload }) => {
+    canal = c;
+    c.on('broadcast', { event: 'cinema' }, ({ payload }) => {
       if (payload && payload.de !== perfil.id) s._emitir(payload);
     });
-    canal.on('presence', { event: 'sync' }, () => {
-      const estado = canal.presenceState();
+    c.on('presence', { event: 'sync' }, () => {
+      if (c !== canal) return;
+      const estado = c.presenceState();
       s.presentes = new Set(Object.keys(estado).filter((k) => k !== perfil.id));
       s.vendo = new Set([...s.presentes].filter((k) => (estado[k] || []).some((m) => m.visivel !== false)));
       s._mudou();
     });
-    canal.subscribe(async (status, err) => {
+    c.subscribe(async (status, err) => {
+      if (c !== canal) return; // canal antigo, já trocado
       if (status === 'SUBSCRIBED') {
+        tentativa = 0;
         s.status = 'ok';
         s.erro = '';
-        try { await canal.track({ perfil: perfil.id, desde: Date.now(), visivel: estouVendo() }); } catch { /* presença é opcional */ }
+        s.conexao += 1;
+        try { await c.track({ perfil: perfil.id, desde: Date.now(), visivel: estouVendo() }); } catch { /* presença é opcional */ }
       } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
         s.status = 'erro';
-        s.erro = 'Não foi possível abrir a sala compartilhada. Confira se o arquivo supabase/cinema-juntos.sql foi executado.';
+        s.erro = s.conexao === 0 && tentativa >= 2
+          ? 'Não foi possível abrir a sala compartilhada. Confira se o arquivo supabase/cinema-juntos.sql foi executado.'
+          : 'A conexão caiu. Reconectando…';
         console.warn('[Cinema] canal:', status, err?.message || '');
+        agendar();
       } else if (status === 'CLOSED') {
-        if (s.status !== 'erro') s.status = 'indisponivel';
+        if (!fechada) { s.status = 'conectando'; agendar(); }
       }
       s._mudou();
     });
-  })();
+  }
+
+  function agendar(agora = false) {
+    if (fechada || timerReconectar) return;
+    const espera = agora ? 0 : Math.min(30000, 1000 * 2 ** Math.min(tentativa, 5)); // 1, 2, 4… até 30 s
+    tentativa += 1;
+    timerReconectar = setTimeout(() => { timerReconectar = null; conectar(); }, espera);
+  }
+
+  /** Confere se a conexão continua de pé; se não, reconecta na hora. */
+  function conferir() {
+    if (fechada) return;
+    let caiu = s.status !== 'ok';
+    try { if (cliente.realtime.isConnected && !cliente.realtime.isConnected()) caiu = true; } catch { /* ignora */ }
+    if (canal?.state && !['joined', 'joining'].includes(canal.state)) caiu = true;
+    if (!caiu) return;
+    clearTimeout(timerReconectar);
+    timerReconectar = null;
+    agendar(true);
+  }
+
+  conectar();
 
   s.enviar = (tipo, dados = {}) => {
     if (!canal || s.status !== 'ok') return false;
@@ -73,11 +127,21 @@ function salaSupabase(perfil, cliente) {
     return true;
   };
   const aoMudarVisibilidade = () => {
-    if (canal && s.status === 'ok') canal.track({ perfil: perfil.id, desde: Date.now(), visivel: estouVendo() }).catch(() => {});
+    if (!estouVendo()) { if (canal && s.status === 'ok') canal.track({ perfil: perfil.id, desde: Date.now(), visivel: false }).catch(() => {}); return; }
+    conferir(); // voltou para a tela: a conexão pode ter caído enquanto estava em segundo plano
+    if (canal && s.status === 'ok') canal.track({ perfil: perfil.id, desde: Date.now(), visivel: true }).catch(() => {});
   };
+  const aoVoltarInternet = () => conferir();
   document.addEventListener('visibilitychange', aoMudarVisibilidade);
+  window.addEventListener('online', aoVoltarInternet);
+  const vigia = setInterval(() => { if (estouVendo()) conferir(); }, 15000);
+  s.reconectar = () => conferir();
   s.fechar = () => {
+    fechada = true;
+    clearTimeout(timerReconectar);
+    clearInterval(vigia);
     document.removeEventListener('visibilitychange', aoMudarVisibilidade);
+    window.removeEventListener('online', aoVoltarInternet);
     if (canal) cliente.removeChannel(canal);
     canal = null;
   };

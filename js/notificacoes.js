@@ -12,7 +12,7 @@
 // No iPhone/iPad, a Apple só libera notificações para sites adicionados à Tela de Início
 // (Safari > Compartilhar > Adicionar à Tela de Início) e abertos pelo ícone.
 import { config } from './config.js';
-import { modoAuth, clienteSupabase, PERFIS } from './auth.js';
+import { modoAuth, clienteSupabase, PERFIS, participacoesDaConta, pedirCantinho } from './auth.js';
 import { salaAtual } from './sala-cinema.js';
 
 let registro = null;
@@ -45,7 +45,17 @@ export async function registrarServiceWorker() {
     registro = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
     // Ao tocar numa notificação com o site aberto, o service worker pede para trocar de página
     navigator.serviceWorker.addEventListener('message', (e) => {
-      if (e.data?.tipo === 'nc:abrir' && typeof e.data.hash === 'string' && e.data.hash.startsWith('#/')) location.hash = e.data.hash;
+      if (e.data?.tipo !== 'nc:abrir' || typeof e.data.hash !== 'string' || !e.data.hash.startsWith('#/')) return;
+      // Notificação de OUTRO cantinho da pessoa (ex.: a Lavi está com a Marih e chegou algo do Ric)
+      const cantinho = e.data.cantinho;
+      if (cantinho && perfilAtivo?.casalId && cantinho !== perfilAtivo.casalId && participacoesDaConta().some((p) => p.casalId === cantinho)) {
+        pedirCantinho(cantinho);
+        try { sessionStorage.removeItem('nc:boas-vindas-vista'); } catch { /* ignora */ }
+        location.hash = e.data.hash;
+        location.reload();
+        return;
+      }
+      location.hash = e.data.hash;
     });
   } catch (e) {
     console.warn('[notificações] service worker não registrado:', e?.message || e);
@@ -89,15 +99,18 @@ export async function estadoNotificacoes() {
 async function salvarInscricao(inscricao, perfil) {
   const cliente = clienteSupabase();
   const j = inscricao.toJSON();
-  // Remove o registro antigo deste aparelho (ex.: era da outra conta) e grava de novo
+  // Remove o registro antigo deste aparelho (ex.: era da outra conta) e grava de novo,
+  // uma linha por cantinho da pessoa (assim a Lavi recebe da Marih e do Ric no mesmo celular)
   await cliente.from('push_inscricoes').delete().eq('endpoint', j.endpoint);
-  const { error } = await cliente.from('push_inscricoes').insert({
-    perfil: perfil.id,
+  const cantinhos = participacoesDaConta().length ? participacoesDaConta() : [{ casalId: perfil.casalId, perfilId: perfil.id }];
+  const { error } = await cliente.from('push_inscricoes').insert(cantinhos.map((c) => ({
+    casal_id: c.casalId,
+    perfil: c.perfilId,
     endpoint: j.endpoint,
     p256dh: j.keys.p256dh,
     auth: j.keys.auth,
     aparelho: nomeAparelho(),
-  });
+  })));
   if (error) {
     if (/push_inscricoes/.test(error.message || '') || error.code === '42P01' || error.code === 'PGRST205') {
       throw new Error('Falta rodar o arquivo supabase/notificacoes.sql no Supabase.');
@@ -155,8 +168,10 @@ export async function sincronizarNotificacoes(perfil) {
     const reg = registro || await navigator.serviceWorker.getRegistration('/');
     const inscricao = await reg?.pushManager.getSubscription();
     if (!inscricao) return;
-    const { data } = await clienteSupabase().from('push_inscricoes').select('perfil').eq('endpoint', inscricao.endpoint).maybeSingle();
-    if (data?.perfil !== perfil.id) await salvarInscricao(inscricao, perfil);
+    const { data } = await clienteSupabase().from('push_inscricoes').select('perfil, casal_id').eq('endpoint', inscricao.endpoint);
+    const salvas = new Set((data || []).map((d) => `${d.casal_id}:${d.perfil}`));
+    const esperadas = participacoesDaConta().map((c) => `${c.casalId}:${c.perfilId}`);
+    if (salvas.size !== esperadas.length || esperadas.some((k) => !salvas.has(k))) await salvarInscricao(inscricao, perfil);
   } catch (e) {
     console.warn('[notificações] sincronização:', e?.message || e);
   }
@@ -172,7 +187,7 @@ async function chamarServidor(dados) {
   const r = await fetch('/api/notificar', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify(dados),
+    body: JSON.stringify({ ...dados, casal: perfilAtivo?.casalId }),
   });
   const corpo = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(corpo.erro || 'Não foi possível enviar a notificação.');

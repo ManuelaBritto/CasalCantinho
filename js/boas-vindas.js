@@ -1,4 +1,4 @@
-// Animação de boas-vindas personalizada (Kath: girassóis · Drico: morcegos).
+// Animação de boas-vindas ao entrar, conforme o tema da pessoa (girassóis ou morcegos).
 // Curta, pode ser pulada (botão ou Esc) e respeita "movimento reduzido".
 import { adesivo } from './ui/ilustracoes.js';
 import { movimentoReduzido } from './tema.js';
@@ -70,7 +70,7 @@ export function mostrarBoasVindas(perfil) {
   camada.setAttribute('role', 'dialog');
   camada.setAttribute('aria-label', perfil.saudacao);
   camada.innerHTML = `
-    ${perfil.id === 'kath' ? cenaKath(perfil) : cenaDrico(perfil)}
+    ${perfil.temaPadrao === 'drico' ? cenaDrico(perfil) : cenaKath(perfil)}
     <button type="button" class="bv-pular">Pular animação</button>`;
   camada.hidden = false;
   try { sessionStorage.setItem('nc:boas-vindas-vista', '1'); } catch { /* ignora */ }

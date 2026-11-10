@@ -33,7 +33,10 @@ create table if not exists public.casais (
 create table if not exists public.perfis (
   user_id         uuid primary key references auth.users (id) on delete cascade,
   casal_id        uuid not null references public.casais (id) on delete cascade,
-  nome            text not null check (nome in ('kath', 'drico')),
+  nome            text not null constraint perfis_nome_check check (nome ~ '^[a-z0-9._-]{2,30}$'), -- login (kath, drico, lavi…)
+  apelido         text,                                   -- nome mostrado no site
+  tratamento      text not null default 'neutro' constraint perfis_tratamento_check check (tratamento in ('ela', 'ele', 'neutro')),
+  tema_padrao     text constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('neutro', 'drico', 'kath')),
   tema_preferido  text check (tema_preferido in ('neutro', 'drico', 'kath')),
   criado_em       timestamptz not null default now(),
   unique (casal_id, nome)
@@ -153,7 +156,7 @@ create table if not exists public.push_inscricoes (
   id          uuid primary key default gen_random_uuid(),
   casal_id    uuid not null default public.meu_casal() references public.casais (id) on delete cascade,
   user_id     uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  perfil      text not null check (perfil in ('kath', 'drico')),
+  perfil      text not null constraint push_inscricoes_perfil_check check (perfil ~ '^[a-z0-9._-]{2,30}$'),
   endpoint    text not null unique check (endpoint like 'https://%'),
   p256dh      text not null,
   auth        text not null,
@@ -285,8 +288,8 @@ begin
     insert into public.casais default values returning id into id_casal;
   end if;
 
-  insert into public.perfis (user_id, casal_id, nome)
-  values (id_kath, id_casal, 'kath'), (id_drico, id_casal, 'drico')
+  insert into public.perfis (user_id, casal_id, nome, apelido, tratamento, tema_padrao)
+  values (id_kath, id_casal, 'kath', 'Kath', 'ela', 'kath'), (id_drico, id_casal, 'drico', 'Drico', 'ele', 'drico')
   on conflict (user_id) do nothing;
 
   raise notice 'Pronto! Kath e Drico vinculados ao casal %', id_casal;
@@ -298,3 +301,5 @@ select p.nome, u.email, p.casal_id
 from public.perfis p
 join auth.users u on u.id = p.user_id
 order by p.nome;
+
+-- Outros casais (ex.: Lavi e Marih): rode também supabase/varios-casais.sql

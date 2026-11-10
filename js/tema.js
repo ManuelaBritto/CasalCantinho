@@ -1,12 +1,12 @@
 // Temas e preferências visuais.
-// A preferência é guardada por perfil (Kath / Drico) neste navegador e,
+// A preferência é guardada por perfil neste navegador e,
 // quando o Supabase está ativo, também na tabela `perfis` (coluna tema_preferido).
 import { renderizarDecoracao } from './ui/ilustracoes.js';
 
 export const TEMAS = {
   neutro: { nome: 'Neutro', descricao: 'Linho, rosa antigo e creme. Leve e aconchegante.', corMeta: '#f7f2ee' },
-  drico: { nome: 'Drico', descricao: 'Preto, vinho e roxo profundo. Romance gótico — sem sustos.', corMeta: '#140b13' },
-  kath: { nome: 'Kath', descricao: 'Amarelo girassol, laranja e creme. Vintage e acolhedor.', corMeta: '#fbf2df' },
+  drico: { nome: 'Gótico', descricao: 'Preto, vinho e roxo profundo. Romance gótico — sem sustos.', corMeta: '#140b13' },
+  kath: { nome: 'Girassol', descricao: 'Amarelo girassol, laranja e creme. Vintage e acolhedor.', corMeta: '#fbf2df' },
 };
 
 const chaveTema = (perfil) => `nc:tema:${perfil || 'visitante'}`;

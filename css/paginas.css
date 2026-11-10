@@ -785,3 +785,23 @@ html[data-movimento="reduzir"] .creditos.saindo { animation: none; opacity: 0; }
 /* Cinemateca: busca enquanto digita */
 .busca-filme .dica { margin: .4rem 0 0; }
 .busca-carregando { justify-content: flex-start; padding: .2rem 0 .7rem; }
+
+/* Escolher cantinho (conta em mais de um casal) */
+.escolher-cantinho .login-logo { width: 96px; height: 96px; justify-self: center; }
+.cantinhos { display: grid; gap: .75rem; text-align: left; }
+.cantinho-opcao {
+  display: flex; align-items: center; gap: .9rem; width: 100%; padding: .9rem 1rem; text-align: left;
+  border-radius: 18px; border: 2px solid var(--cor-borda); background: var(--cor-superficie);
+  color: var(--cor-texto); font: inherit; cursor: pointer;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.cantinho-opcao:hover, .cantinho-opcao:focus-visible { transform: translateY(-2px); border-color: var(--cor-primaria); box-shadow: 0 8px 20px rgba(0, 0, 0, .1); }
+.cantinho-opcao:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+.cantinho-enfeite { flex: none; width: 46px; height: 46px; }
+.cantinho-enfeite svg { width: 100%; height: 100%; }
+.cantinho-texto { flex: 1; display: grid; gap: .15rem; }
+.cantinho-texto strong { font-size: 1.05rem; }
+.cantinho-texto small { color: var(--cor-texto-suave); }
+.cantinho-opcao > .icone { flex: none; color: var(--cor-primaria); }
+.botao-trocar-cantinho { width: 100%; justify-content: center; }
+html[data-movimento="reduzir"] .cantinho-opcao { transition: none; }

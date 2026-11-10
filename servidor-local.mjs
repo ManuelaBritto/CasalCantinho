@@ -40,6 +40,8 @@ function carregarEnv(caminho) {
 carregarEnv(join(RAIZ, '.env'));
 
 const PORTA = Number(process.env.PORT) || 5173;
+// Cada vez que o servidor local reinicia conta como uma versão nova
+if (!process.env.VERSAO_SITE) process.env.VERSAO_SITE = `local-${Date.now()}`;
 const TMDB_ATIVO = tmdbAtivo();
 const SUPABASE_ATIVO = Boolean((process.env.SUPABASE_URL || '').trim() && (process.env.SUPABASE_ANON_KEY || '').trim());
 
