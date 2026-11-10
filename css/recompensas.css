@@ -7,7 +7,7 @@
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .5));
 }
-html[data-tema="drico"] .nome-cromado {
+html[data-tom="escuro"] .nome-cromado {
   background-image: linear-gradient(180deg, #ffffff 0%, #d4d4dc 30%, #8a8a95 52%, #f3f3f6 64%, #a3a3ad 100%);
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .6));
 }
@@ -16,7 +16,7 @@ html[data-tema="drico"] .nome-cromado {
   text-shadow: 0 0 2px #fff, 0 0 6px #ff4fb2, 0 0 14px #ff4fb2;
   animation: neon-piscar 4s infinite;
 }
-html[data-tema="drico"] .nome-neon { color: #ffe3f3; text-shadow: 0 0 4px #ff4fb2, 0 0 10px #ff4fb2, 0 0 22px #ff2f9e; }
+html[data-tom="escuro"] .nome-neon { color: #ffe3f3; text-shadow: 0 0 4px #ff4fb2, 0 0 10px #ff4fb2, 0 0 22px #ff2f9e; }
 @keyframes neon-piscar { 0%, 91%, 95%, 100% { opacity: 1; } 93% { opacity: .55; } }
 .nome-letreiro {
   display: inline-block; padding: .02em .4em; border-radius: .35em;

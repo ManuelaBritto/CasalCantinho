@@ -3,7 +3,7 @@ import { adesivo } from './ui/ilustracoes.js';
 import { icone } from './ui/icones.js';
 import { esc } from './ui/dom.js';
 
-const ENFEITES = ['coracao', 'girassol', 'lua', 'flor', 'brilho', 'laco'];
+const ENFEITES = ['laco-rosa', 'lua-mistica', 'onda', 'gatinho', 'estrela-verde', 'coracao'];
 const com = (p) => (p?.tratamento === 'ela' ? 'com a' : p?.tratamento === 'ele' ? 'com o' : 'com');
 
 /** Mostra as opções e resolve com o id do casal escolhido. */

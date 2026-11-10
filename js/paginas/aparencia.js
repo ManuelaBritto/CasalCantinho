@@ -2,15 +2,17 @@
 import { icone } from '../ui/icones.js';
 import { adesivo } from '../ui/ilustracoes.js';
 import { esc, toast, confirmar } from '../ui/dom.js';
-import { TEMAS, temaAtual, aplicarTema, lerPreferencias, salvarPreferencias } from '../tema.js';
+import { TEMAS, temaAtual, temasDisponiveis, aplicarTema, lerPreferencias, salvarPreferencias } from '../tema.js';
 import { salvarTemaRemoto } from '../auth.js';
 import { storeAtual } from '../store/index.js';
 import { montarPainelNotificacoes } from '../painel-notificacoes.js';
 
 const PREVIA = {
-  neutro: ['coracao', 'flor', 'brilho'],
-  drico: ['morcego', 'lua', 'rosa'],
-  kath: ['girassol', 'raposa', 'folhagem'],
+  mistica: ['lua-mistica', 'gato-preto', 'carta-cigana'],
+  punk: ['estrela-verde', 'guitarra-estrela', 'pinguim-punk'],
+  laco: ['laco-rosa', 'pinguinzinha', 'tulipa'],
+  onda: ['onda', 'concha', 'prancha'],
+  aquarela: ['gatinho', 'casinha', 'flores-campo'],
 };
 
 export async function renderizar(el, ctx) {
@@ -33,7 +35,7 @@ export async function renderizar(el, ctx) {
       <h2 id="titulo-temas">Tema</h2>
       <fieldset class="temas-grade">
         <legend class="sr-only">Escolha um tema</legend>
-        ${Object.entries(TEMAS).map(([id, t]) => `
+        ${temasDisponiveis().map((id) => [id, TEMAS[id]]).map(([id, t]) => `
           <label class="tema-cartao tema-previa-${id}">
             <input type="radio" name="tema-aparencia" value="${id}" ${temaAtual() === id ? 'checked' : ''}>
             <span class="tema-cartao-corpo">
@@ -53,7 +55,7 @@ export async function renderizar(el, ctx) {
       <fieldset>
         <legend>Ao entrar na conta, usar</legend>
         <div class="opcoes">
-          ${opcao('aoEntrar', 'perfil', `O tema do perfil (${TEMAS[perfil.temaPadrao]?.nome || 'Neutro'})`, prefs.aoEntrar)}
+          ${opcao('aoEntrar', 'perfil', `O tema do perfil (${TEMAS[perfil.temaPadrao]?.nome || ''})`, prefs.aoEntrar)}
           ${opcao('aoEntrar', 'ultimo', 'O último tema que escolhi', prefs.aoEntrar)}
         </div>
       </fieldset>

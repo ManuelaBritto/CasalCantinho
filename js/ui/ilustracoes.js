@@ -1,5 +1,7 @@
-// Ilustrações desenhadas em SVG para os três temas.
-// Todas são originais e decorativas (aria-hidden quando usadas como enfeite).
+// Ilustrações desenhadas em SVG. Todas são originais e decorativas (aria-hidden como enfeite).
+// Os desenhos dos cinco temas atuais ficam em adesivos-temas.js. Os desenhos dos temas
+// antigos continuam aqui só para as cartinhas e listas que já os usam.
+import { ADESIVOS_TEMAS, PACOTES_TEMAS } from './adesivos-temas.js';
 
 const svg = (conteudo, vb = '0 0 64 64') =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" aria-hidden="true" focusable="false">${conteudo}</svg>`;
@@ -69,13 +71,13 @@ export const ADESIVOS = {
   carimbo: { nome: 'Carimbo', pacote: 'kath', svg: () => svg('<g fill="none" stroke="#b8560f" stroke-width="2" opacity=".9"><circle cx="32" cy="32" r="26"/><circle cx="32" cy="32" r="20" stroke-dasharray="3 3"/></g><text x="32" y="30" text-anchor="middle" font-family="Courier Prime, monospace" font-size="9" font-weight="700" fill="#b8560f">COM</text><text x="32" y="41" text-anchor="middle" font-family="Courier Prime, monospace" font-size="9" font-weight="700" fill="#b8560f">AMOR</text>') },
   selo: { nome: 'Selo postal', pacote: 'kath', svg: seloPostal },
   polaroid: { nome: 'Polaroid', pacote: 'kath', svg: () => svg('<g transform="rotate(-6 32 32)"><rect x="12" y="8" width="40" height="48" rx="2" fill="#fffdf6" stroke="#e4cda3" stroke-width="1.5"/><rect x="16" y="12" width="32" height="30" fill="#f4c96b"/><circle cx="38" cy="21" r="5" fill="#fff3c4"/><path d="M16 42l10-12 8 8 5-5 9 9z" fill="#7d8f3a"/></g>') },
+
+  // Temas atuais
+  ...ADESIVOS_TEMAS,
 };
 
-export const PACOTES = {
-  neutro: { nome: 'Fofura (Neutro)', itens: ['coracao', 'flor', 'brilho', 'laco', 'nuvem'] },
-  drico: { nome: 'Gótico romântico (Drico)', itens: ['morcego', 'rosa', 'lua', 'teia', 'aranha', 'vela', 'castelo', 'vampiro'] },
-  kath: { nome: 'Vintage girassol (Kath)', itens: ['girassol', 'raposa', 'folhagem', 'carimbo', 'selo', 'polaroid'] },
-};
+// Pacotes de adesivos para escolher (um por tema; o cantinho mostra só os do casal)
+export const PACOTES = PACOTES_TEMAS;
 
 export function adesivo(id) {
   const a = ADESIVOS[id];
@@ -84,38 +86,68 @@ export function adesivo(id) {
 
 // Ícones dos temas (seletor)
 export const ICONE_TEMA = {
-  neutro: () => adesivo('coracao'),
-  drico: () => adesivo('morcego'),
-  kath: () => adesivo('girassol'),
+  mistica: () => adesivo('lua-mistica'),
+  punk: () => adesivo('estrela-verde'),
+  laco: () => adesivo('laco-rosa'),
+  onda: () => adesivo('onda'),
+  aquarela: () => adesivo('gatinho'),
 };
+
+/** Enfeites de cada página, por tema (o CSS mostra só o do tema ativo). */
+export const ENFEITES = {
+  cartinhas: { mistica: 'carta-cigana', punk: 'coracao-xadrez', laco: 'laco-rosa', onda: 'concha', aquarela: 'cravo' },
+  listas: { mistica: 'constelacao', punk: 'paisley', laco: 'livros', onda: 'trilha', aquarela: 'coruja' },
+  cinemateca: { mistica: 'olho-astral', punk: 'vinil-verde', laco: 'tulipa', onda: 'estrela-mar', aquarela: 'nuvem-gordinha' },
+  cinematecaVazia: { mistica: 'cristal', punk: 'caixa-som', laco: 'margarida', onda: 'por-do-sol', aquarela: 'casinha' },
+  memorias: { mistica: 'lua-mistica', punk: 'estrela-verde', laco: 'cerejeira', onda: 'onda', aquarela: 'flores-campo' },
+  cinema: { mistica: 'gato-preto', punk: 'guitarra-estrela', laco: 'pinguinzinha', onda: 'prancha', aquarela: 'vinil' },
+  diversao: { mistica: 'mapa-astral', punk: 'respingo', laco: 'estrelinha', onda: 'bola', aquarela: 'violao' },
+  contador: { mistica: 'lua-mistica', punk: 'estrela-verde', laco: 'laco-rosa', onda: 'concha', aquarela: 'gatinho' },
+};
+export const enfeite = (nome) => enfeitePorTema(ENFEITES[nome]);
 
 // ---------- Decoração de fundo por tema ----------
 // t = largura, o = opacidade, r = rotação, d = duração da flutuação, opcional = escondido no modo "discreta"
 const DECORACOES = {
-  neutro: [
-    { id: 'coracao', x: '4%', y: '14%', t: 46, o: .35, r: -12 },
-    { id: 'flor', x: '92%', y: '9%', t: 54, o: .4, r: 10 },
-    { id: 'brilho', x: '86%', y: '46%', t: 34, o: .45, r: 0, opcional: true },
-    { id: 'nuvem', x: '7%', y: '72%', t: 70, o: .35, r: 0, opcional: true },
-    { id: 'laco', x: '94%', y: '82%', t: 48, o: .35, r: 14 },
-    { id: 'brilho', x: '45%', y: '93%', t: 26, o: .35, r: 10, opcional: true },
+  mistica: [
+    { id: 'lua-mistica', x: '90%', y: '5%', t: 92, o: .6, r: 0 },
+    { id: 'constelacao', x: '4%', y: '12%', t: 70, o: .45, r: -8 },
+    { id: 'carta-cigana', x: '84%', y: '44%', t: 46, o: .4, r: 12, opcional: true },
+    { id: 'cristal', x: '8%', y: '60%', t: 40, o: .4, r: -10, opcional: true },
+    { id: 'gato-preto', x: '92%', y: '82%', t: 66, o: .5, r: 0 },
+    { id: 'olho-astral', x: '45%', y: '94%', t: 40, o: .3, r: 0, opcional: true },
   ],
-  drico: [
-    { id: 'lua', x: '90%', y: '5%', t: 92, o: .55, r: 0 },
-    { id: 'teia', x: '-1%', y: '-1%', t: 130, o: .3, r: 0 },
-    { id: 'morcego', x: '78%', y: '22%', t: 46, o: .5, r: -10, opcional: true },
-    { id: 'morcego', x: '12%', y: '48%', t: 34, o: .4, r: 12, opcional: true },
-    { id: 'castelo', x: '92%', y: '80%', t: 96, o: .35, r: 0 },
-    { id: 'rosa', x: '3%', y: '84%', t: 52, o: .4, r: -14, opcional: true },
-    { id: 'aranha', x: '60%', y: '0%', t: 40, o: .35, r: 0, opcional: true },
+  punk: [
+    { id: 'estrela-verde', x: '92%', y: '6%', t: 70, o: .55, r: 14 },
+    { id: 'respingo', x: '4%', y: '10%', t: 74, o: .4, r: -12 },
+    { id: 'vinil-verde', x: '86%', y: '46%', t: 50, o: .35, r: 0, opcional: true },
+    { id: 'paisley', x: '6%', y: '64%', t: 44, o: .35, r: 18, opcional: true },
+    { id: 'pinguim-punk', x: '92%', y: '84%', t: 64, o: .5, r: 0 },
+    { id: 'estrela-verde', x: '48%', y: '94%', t: 30, o: .35, r: -10, opcional: true },
   ],
-  kath: [
-    { id: 'girassol', x: '92%', y: '6%', t: 80, o: .45, r: 12 },
-    { id: 'folhagem', x: '1%', y: '10%', t: 64, o: .35, r: -20 },
-    { id: 'girassol', x: '3%', y: '80%', t: 66, o: .4, r: -8, opcional: true },
-    { id: 'raposa', x: '93%', y: '84%', t: 56, o: .38, r: 6 },
-    { id: 'carimbo', x: '84%', y: '45%', t: 50, o: .25, r: -18, opcional: true },
-    { id: 'folhagem', x: '50%', y: '94%', t: 40, o: .3, r: 40, opcional: true },
+  laco: [
+    { id: 'laco-rosa', x: '92%', y: '6%', t: 64, o: .5, r: 12 },
+    { id: 'cerejeira', x: '4%', y: '12%', t: 54, o: .45, r: -10 },
+    { id: 'estrelinha', x: '86%', y: '46%', t: 38, o: .45, r: 0, opcional: true },
+    { id: 'tulipa', x: '6%', y: '74%', t: 52, o: .4, r: -6, opcional: true },
+    { id: 'pinguinzinha', x: '93%', y: '84%', t: 58, o: .45, r: 0 },
+    { id: 'margarida', x: '48%', y: '94%', t: 34, o: .4, r: 10, opcional: true },
+  ],
+  onda: [
+    { id: 'por-do-sol', x: '91%', y: '6%', t: 70, o: .5, r: 0 },
+    { id: 'concha', x: '4%', y: '12%', t: 48, o: .45, r: -14 },
+    { id: 'estrela-mar', x: '86%', y: '46%', t: 40, o: .4, r: 10, opcional: true },
+    { id: 'caracol', x: '6%', y: '70%', t: 44, o: .4, r: 0, opcional: true },
+    { id: 'onda', x: '92%', y: '84%', t: 66, o: .45, r: 0 },
+    { id: 'trilha', x: '48%', y: '94%', t: 40, o: .3, r: 0, opcional: true },
+  ],
+  aquarela: [
+    { id: 'nuvem-gordinha', x: '90%', y: '5%', t: 80, o: .55, r: 0 },
+    { id: 'flores-campo', x: '4%', y: '12%', t: 54, o: .45, r: -8 },
+    { id: 'coruja', x: '86%', y: '46%', t: 42, o: .4, r: 0, opcional: true },
+    { id: 'cravo', x: '6%', y: '70%', t: 46, o: .4, r: -10, opcional: true },
+    { id: 'gatinho', x: '92%', y: '84%', t: 62, o: .5, r: 0 },
+    { id: 'vinil', x: '48%', y: '94%', t: 36, o: .3, r: 0, opcional: true },
   ],
 };
 
@@ -128,38 +160,22 @@ export function renderizarDecoracao(tema) {
 }
 
 // ---------- Cena ilustrada para o espaço da foto do casal ----------
+const CENAS = {
+  mistica: { ceu: ['#2a1a4d', '#120b22'], chao: '#0b0716', itens: [['lua-mistica', 210, 18, 1.6], ['constelacao', 30, 20, 1.2], ['carta-cigana', 120, 70, 1], ['gato-preto', 196, 120, 1.4]] },
+  punk: { ceu: ['#2a1150', '#12061f'], chao: '#0a0414', itens: [['respingo', 20, 20, 1.3], ['estrela-verde', 220, 20, 1.3], ['guitarra-estrela', 120, 60, 1.7], ['pinguim-punk', 30, 120, 1.3]] },
+  laco: { ceu: ['#ffe3ee', '#fff4f8'], chao: '#f7c4d6', itens: [['laco-rosa', 128, 14, 1.2], ['cerejeira', 24, 30, 1], ['livros', 200, 110, 1.4], ['pinguinzinha', 60, 110, 1.4], ['estrelinha', 246, 24, .8]] },
+  onda: { ceu: ['#bfe3f6', '#ffe1d2'], chao: '#f4e3c1', itens: [['por-do-sol', 110, 50, 1.6], ['prancha', 228, 70, 1.6], ['concha', 30, 140, 1], ['estrela-mar', 150, 150, .9]] },
+  aquarela: { ceu: ['#cfe6f3', '#fbf6ea'], chao: '#b7d3b0', itens: [['nuvem-gordinha', 30, 14, 1.3], ['nuvem-gordinha', 200, 30, 1], ['casinha', 190, 96, 1.6], ['gatinho', 40, 128, 1.3]] },
+};
+
 export function cenaCasal(tema) {
-  if (tema === 'drico') {
-    return svg(`
-      <defs><radialGradient id="cl-ceu" cx="70%" cy="20%" r="90%"><stop offset="0" stop-color="#4a1f4f"/><stop offset="1" stop-color="#12070f"/></radialGradient></defs>
-      <rect width="320" height="220" fill="url(#cl-ceu)"/>
-      <circle cx="238" cy="62" r="34" fill="#f3e3b5"/><circle cx="252" cy="54" r="30" fill="#2f1430"/>
-      <g fill="#24101f"><path d="M40 220V120l14-26 14 26v100zM96 220v-70h10v-10h10v10h12v-10h10v10h10v70zM190 220V110l16-34 16 34v110zM250 220v-60h40v60z"/></g>
-      <g fill="#f6c66b"><rect x="50" y="140" width="8" height="12" rx="4"/><rect x="200" y="130" width="10" height="14" rx="5"/><rect x="118" y="170" width="8" height="12" rx="4"/></g>
-      <g transform="translate(110 54) scale(.55)">${ADESIVOS.morcego.svg().replace(/^<svg[^>]*>|<\/svg>$/g, '')}</g>
-      <g transform="translate(160 84) scale(.4)">${ADESIVOS.morcego.svg().replace(/^<svg[^>]*>|<\/svg>$/g, '')}</g>`, '0 0 320 220');
-  }
-  if (tema === 'kath') {
-    const g = ADESIVOS.girassol.svg().replace(/^<svg[^>]*>|<\/svg>$/g, '');
-    const r = ADESIVOS.raposa.svg().replace(/^<svg[^>]*>|<\/svg>$/g, '');
-    return svg(`
-      <defs><linearGradient id="cm-ceu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9b0"/><stop offset="1" stop-color="#f6c770"/></linearGradient></defs>
-      <rect width="320" height="220" fill="url(#cm-ceu)"/>
-      <circle cx="160" cy="150" r="70" fill="#fff3c4" opacity=".7"/>
-      <path d="M0 170q80-30 160 0t160 0v50H0z" fill="#9aa64a"/><path d="M0 190q90-20 170 4t150-6v32H0z" fill="#7d8f3a"/>
-      <g stroke="#5c6b25" stroke-width="4"><path d="M70 200v-70M250 200v-80M120 210v-50"/></g>
-      <g transform="translate(40 100) scale(.95)">${g}</g><g transform="translate(220 86) scale(1)">${g}</g><g transform="translate(98 136) scale(.7)">${g}</g>
-      <g transform="translate(140 148) scale(.8)">${r}</g>`, '0 0 320 220');
-  }
-  const c = ADESIVOS.coracao.svg().replace(/^<svg[^>]*>|<\/svg>$/g, '');
-  const f = ADESIVOS.flor.svg().replace(/^<svg[^>]*>|<\/svg>$/g, '');
+  const c = CENAS[tema] || CENAS.laco;
+  const dentro = (id) => (ADESIVOS[id]?.svg() || '').replace(/^<svg[^>]*>|<\/svg>$/g, '');
   return svg(`
-    <defs><linearGradient id="cn-ceu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe8ef"/><stop offset="1" stop-color="#fdeedd"/></linearGradient></defs>
-    <rect width="320" height="220" fill="url(#cn-ceu)"/>
-    <circle cx="70" cy="60" r="40" fill="#fff" opacity=".6"/><circle cx="260" cy="170" r="50" fill="#fff" opacity=".5"/>
-    <g transform="translate(108 52) scale(1.6)">${c}</g>
-    <g transform="translate(150 70) scale(1.2) rotate(12 32 32)">${c}</g>
-    <g transform="translate(30 140) scale(.8)">${f}</g><g transform="translate(250 30) scale(.7)">${f}</g><g transform="translate(232 128) scale(.6)">${f}</g>`, '0 0 320 220');
+    <defs><linearGradient id="cena-ceu-${tema}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.ceu[0]}"/><stop offset="1" stop-color="${c.ceu[1]}"/></linearGradient></defs>
+    <rect width="320" height="220" fill="url(#cena-ceu-${tema})"/>
+    <path d="M0 180q80-26 160-4t160-6v50H0z" fill="${c.chao}"/>
+    ${c.itens.map(([id, x, y, e]) => `<g transform="translate(${x} ${y}) scale(${e})">${dentro(id)}</g>`).join('')}`, '0 0 320 220');
 }
 
 // Pôster genérico (quando um filme não tem imagem)

@@ -2,7 +2,7 @@
 import { listar, salvar, remover } from '../store/index.js';
 import { config } from '../config.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeitePorTema, posterVazio } from '../ui/ilustracoes.js';
+import { adesivo, enfeite, posterVazio } from '../ui/ilustracoes.js';
 import { esc, toast, abrirModal, confirmar, seloExemplo, lerFormulario, marcarErro, limparErros, normalizarTexto } from '../ui/dom.js';
 
 const STATUS = {
@@ -186,7 +186,7 @@ export async function renderizar(el, ctx) {
               </li>`).join('')}
           </ul>` : `
           <div class="vazio">
-            <span class="ilustracao" aria-hidden="true">${enfeitePorTema({ neutro: 'brilho', drico: 'castelo', kath: 'polaroid' })}</span>
+            <span class="ilustracao" aria-hidden="true">${enfeite('cinematecaVazia')}</span>
             <h3>Nada em "${STATUS[aba]}"</h3>
             <p>${aba === 'quero' ? 'Pesquise um filme ou adicione manualmente.' : 'Mude o status de um filme para ele aparecer aqui.'}</p>
           </div>`}
@@ -203,7 +203,7 @@ export async function renderizar(el, ctx) {
     el.innerHTML = `
       <div class="cabecalho-secao">
         <div>
-          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeitePorTema({ neutro: 'coracao', drico: 'lua', kath: 'girassol' })}</span>Cinemateca</h1>
+          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeite('cinemateca')}</span>Cinemateca</h1>
           <p>Os filmes de vocês: o que querem ver, o que estão vendo e o que já viram.</p>
         </div>
         <button type="button" class="botao-sec" data-manual>${icone('mais')} Adicionar manualmente</button>

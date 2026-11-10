@@ -20,7 +20,7 @@ export function dadosDeExemplo() {
         de: 'kath', para: 'drico', enviadaEm: t, lidaEm: null,
         titulo: 'Exemplo: bilhete vintage', destinatario: '', data: '',
         mensagem: 'Exemplo de cartinha com papel envelhecido, carimbo e girassóis.\n\nTroque este texto pelo que quiser dizer.',
-        estilo: { papel: 'envelhecido', cor: '#f8e7c2', tinta: 'auto', fonte: 'courier', alinhamento: 'esquerda', moldura: 'vintage', adesivos: ['girassol', 'carimbo', 'raposa'] },
+        estilo: { papel: 'envelhecido', cor: '#f8e7c2', tinta: 'auto', fonte: 'courier', alinhamento: 'esquerda', moldura: 'vintage', adesivos: ['laco-rosa', 'margarida', 'pinguinzinha'] },
       },
       {
         id: 'exemplo-carta-3', exemplo: true, criadoEm: t, atualizadoEm: t,

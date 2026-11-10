@@ -17,12 +17,12 @@
 .botao { background: var(--cor-primaria); color: var(--cor-sobre-primaria); }
 .botao:hover:not(:disabled) { filter: brightness(1.08); }
 .botao-sec { background: var(--cor-superficie); color: var(--cor-primaria-texto); border-color: var(--cor-borda); }
-html[data-tema="drico"] .botao-sec { border-color: var(--cor-borda); background: var(--cor-superficie-2); }
+html[data-tom="escuro"] .botao-sec { border-color: var(--cor-borda); background: var(--cor-superficie-2); }
 .botao-sec:hover:not(:disabled) { border-color: var(--cor-primaria); background: var(--cor-superficie-2); }
 .botao-fantasma { background: transparent; color: var(--cor-texto); }
 .botao-fantasma:hover:not(:disabled) { background: var(--cor-superficie-2); }
 .botao-perigo { background: var(--cor-erro); color: #fff; }
-html[data-tema="drico"] .botao-perigo { background: #c4433a; }
+html[data-tom="escuro"] .botao-perigo { background: #c4433a; }
 .botao-perigo:hover:not(:disabled) { filter: brightness(1.08); }
 :is(.botao, .botao-sec, .botao-fantasma, .botao-perigo):disabled { opacity: .55; transform: none; }
 .botao.pequeno, .botao-sec.pequeno, .botao-fantasma.pequeno, .botao-perigo.pequeno { min-height: 36px; padding: .35rem .8rem; font-size: .85rem; }
@@ -91,7 +91,7 @@ legend { font-weight: 600; font-size: .9rem; padding: 0; margin-bottom: .45rem; 
   box-shadow: var(--sombra);
   padding: clamp(1rem, 2.4vw, 1.5rem);
 }
-html[data-tema="kath"] .cartao { border-style: solid; }
+html[data-tema="aquarela"] .cartao { border-style: solid; }
 
 .cabecalho-secao { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
 .cabecalho-secao h1, .cabecalho-secao h2 { margin: 0; }
@@ -232,4 +232,5 @@ dialog.modal[open] { animation: surgir .22s ease; display: flex; flex-direction:
 .filtros { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
 
 /* Drico: ícones escuros ganham um brilho suave para aparecer no fundo escuro */
-html[data-tema="drico"] :is(.seletor-tema span svg, .marca-icone svg, .avatar svg, .decoracao .enfeite svg) { filter: drop-shadow(0 0 4px rgba(240, 160, 188, .55)); }
+html[data-tema="mistica"] :is(.seletor-tema span svg, .marca-icone svg, .avatar svg, .decoracao .enfeite svg) { filter: drop-shadow(0 0 4px rgba(201, 167, 255, .55)); }
+html[data-tema="punk"] :is(.seletor-tema span svg, .marca-icone svg, .avatar svg, .decoracao .enfeite svg) { filter: drop-shadow(0 0 4px rgba(93, 255, 122, .5)); }

@@ -15,7 +15,7 @@ import { listar, salvar, remover, obterAjustes, salvarAjustes } from '../store/i
 import { salaAtual } from '../sala-cinema.js';
 import { PERFIS } from '../auth.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeitePorTema } from '../ui/ilustracoes.js';
+import { adesivo, enfeite } from '../ui/ilustracoes.js';
 import { esc, toast, confirmar, abrirModal, lerFormulario, marcarErro, limparErros, formatarData } from '../ui/dom.js';
 import { temaAtual, aoMudarTema } from '../tema.js';
 import { somarTempoCinema, gravarTempoCinema, lerProgresso, carregarRecompensas } from '../recompensas.js';
@@ -78,12 +78,18 @@ const ERROS_PLAYER = {
   153: 'O YouTube recusou a reprodução incorporada deste vídeo.',
 };
 
-const letreiro = (tema) => (tema === 'drico' ? 'Sessão da Meia-Noite' : tema === 'kath' ? 'Cine Girassol' : 'Sessão do Casal');
+const letreiro = () => 'Cineminha';
+const SALA_ENFEITES = {
+  mistica: ['lua-mistica', 'constelacao', 'gato-preto', 'cristal'],
+  punk: ['estrela-verde', 'estrela-verde', 'guitarra-estrela', 'caixa-som'],
+  laco: ['laco-rosa', 'laco-rosa', 'tulipa', 'pinguinzinha'],
+  onda: ['concha', 'estrela-mar', 'onda', 'prancha'],
+  aquarela: ['nuvem-gordinha', 'flores-campo', 'gatinho', 'vinil'],
+};
 
 function enfeitesSala(tema) {
-  if (tema === 'drico') return `<span class="sala-enfeite se-1">${adesivo('morcego')}</span><span class="sala-enfeite se-2">${adesivo('morcego')}</span><span class="sala-enfeite se-3">${adesivo('vela')}</span><span class="sala-enfeite se-4">${adesivo('vela')}</span>`;
-  if (tema === 'kath') return `<span class="sala-enfeite se-1">${adesivo('girassol')}</span><span class="sala-enfeite se-2">${adesivo('girassol')}</span><span class="sala-enfeite se-3">${adesivo('folhagem')}</span><span class="sala-enfeite se-4">${adesivo('raposa')}</span>`;
-  return `<span class="sala-enfeite se-1">${adesivo('coracao')}</span><span class="sala-enfeite se-2">${adesivo('brilho')}</span><span class="sala-enfeite se-3">${adesivo('laco')}</span><span class="sala-enfeite se-4">${adesivo('coracao')}</span>`;
+  const lista = SALA_ENFEITES[tema] || SALA_ENFEITES.laco;
+  return lista.map((id, n) => `<span class="sala-enfeite se-${n + 1}">${adesivo(id)}</span>`).join('');
 }
 
 function poltronas() {
@@ -795,7 +801,7 @@ export async function renderizar(el, ctx) {
     el.querySelector('#painel-videos').innerHTML = lista.length
       ? `<ul class="grade grade-videos" role="list">${lista.map(htmlVideo).join('')}</ul>`
       : `<div class="vazio">
-          <span class="ilustracao" aria-hidden="true">${enfeitePorTema({ neutro: 'coracao', drico: 'vela', kath: 'polaroid' })}</span>
+          <span class="ilustracao" aria-hidden="true">${enfeite('cinema')}</span>
           <h3>${aba === 'favoritos' ? 'Nenhum favorito ainda' : 'Nenhuma sessão ainda'}</h3>
           <p>${aba === 'favoritos' ? 'Toque na estrela de um vídeo para guardar aqui.' : 'Todo vídeo que vocês colocarem na tela aparece aqui automaticamente.'}</p>
         </div>`;

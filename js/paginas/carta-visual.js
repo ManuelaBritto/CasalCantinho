@@ -39,8 +39,11 @@ export const CORES_TINTA = { auto: 'Automática', '#3a2530': 'Grafite', '#7a1530
 export const MAX_ADESIVOS = 6;
 
 export function estiloPadrao(tema) {
-  if (tema === 'drico') return { papel: 'noite', cor: '#2a1626', tinta: 'auto', fonte: 'cormorant', alinhamento: 'centro', moldura: 'gotica', adesivos: [] };
-  if (tema === 'kath') return { papel: 'envelhecido', cor: '#f8e7c2', tinta: 'auto', fonte: 'courier', alinhamento: 'esquerda', moldura: 'vintage', adesivos: [] };
+  if (tema === 'mistica') return { papel: 'noite', cor: '#1e1b2e', tinta: 'auto', fonte: 'cormorant', alinhamento: 'centro', moldura: 'gotica', adesivos: [] };
+  if (tema === 'punk') return { papel: 'noite', cor: '#1e1b2e', tinta: 'auto', fonte: 'courier', alinhamento: 'esquerda', moldura: 'nenhuma', adesivos: [] };
+  if (tema === 'laco') return { papel: 'pautado', cor: '#fde4ec', tinta: 'auto', fonte: 'caveat', alinhamento: 'esquerda', moldura: 'delicada', adesivos: [] };
+  if (tema === 'onda') return { papel: 'liso', cor: '#fff4d6', tinta: 'auto', fonte: 'dancing', alinhamento: 'esquerda', moldura: 'nenhuma', adesivos: [] };
+  if (tema === 'aquarela') return { papel: 'envelhecido', cor: '#f8e7c2', tinta: 'auto', fonte: 'fraunces', alinhamento: 'esquerda', moldura: 'vintage', adesivos: [] };
   return { papel: 'pautado', cor: '#fff4f6', tinta: 'auto', fonte: 'caveat', alinhamento: 'esquerda', moldura: 'delicada', adesivos: [] };
 }
 
@@ -61,7 +64,7 @@ function tintaFinal(estilo) {
 
 /** Retorna o HTML de uma carta. `compacta` mostra só o começo do texto. */
 export function htmlCarta(carta, { compacta = false, idTitulo = '' } = {}) {
-  const estilo = { ...estiloPadrao('neutro'), ...(carta.estilo || {}) };
+  const estilo = { ...estiloPadrao(''), ...(carta.estilo || {}) };
   const fonte = FONTES[estilo.fonte] || FONTES.nunito;
   const alinhar = ALINHAMENTOS[estilo.alinhamento]?.css || 'left';
   const escuro = papelEscuro(estilo.cor);

@@ -2,7 +2,7 @@
 import { injetarSpriteIcones, icone } from './ui/icones.js';
 import { ICONE_TEMA } from './ui/ilustracoes.js';
 import { esc, toast, abrirModal } from './ui/dom.js';
-import { TEMAS, aplicarTema, aplicarPreferencias, lerPreferencias, temaDeEntrada, temaSalvo, temaAtual, aoMudarTema } from './tema.js';
+import { TEMAS, TEMA_ENTRADA, aplicarTema, aplicarPreferencias, lerPreferencias, temaDeEntrada, temaSalvo, temaAtual, aoMudarTema, definirTemasDisponiveis, temasDisponiveis, temasDoCasal } from './tema.js';
 import { iniciarAuth, modoAuth, clienteSupabase, sair, salvarTemaRemoto, aoSairDaSessao, PERFIS, participacoesDaConta, trocarCantinho, pedirCantinho } from './auth.js';
 import { mostrarLogin } from './login.js';
 import { mostrarBoasVindas } from './boas-vindas.js';
@@ -60,7 +60,7 @@ async function iniciar() {
 
 async function fluxoLogin(erro) {
   aplicarPreferencias(lerPreferencias(null));
-  aplicarTema('neutro', { salvar: false });
+  aplicarTema(TEMA_ENTRADA, { salvar: false, livre: true });
   const perfil = await mostrarLogin({ erroInicial: erro });
   await abrirApp(perfil, { primeiraEntrada: true, animar: true });
 }
@@ -97,6 +97,8 @@ async function abrirApp(perfil, { primeiraEntrada, animar }) {
   });
 
   aplicarPreferencias(lerPreferencias(perfil.id));
+  // Cada casal só usa os temas das duas pessoas dele
+  definirTemasDisponiveis(temasDoCasal(PERFIS, perfil));
   const tema = primeiraEntrada ? temaDeEntrada(perfil.id, perfil.temaPadrao) : (temaSalvo(perfil.id) || perfil.temaPadrao);
   aplicarTema(tema, { perfil: perfil.id });
 
@@ -268,7 +270,7 @@ function montarEstrutura(perfil) {
   const seletorTema = (nome) => `
     <fieldset class="seletor-tema">
       <legend>Tema</legend>
-      ${Object.entries(TEMAS).map(([id, t]) => `
+      ${temasDisponiveis().map((id) => [id, TEMAS[id]]).map(([id, t]) => `
         <label title="Tema ${t.nome}">
           <input type="radio" name="${nome}" value="${id}" ${temaAtual() === id ? 'checked' : ''}>
           <span>${ICONE_TEMA[id]()}<span class="nome-tema">${t.nome}</span></span>
@@ -302,7 +304,7 @@ function montarEstrutura(perfil) {
         </a>
         ${seletorTema('tema')}
         <div class="usuario">
-          <span class="avatar" aria-hidden="true">${ICONE_TEMA[perfil.temaPadrao]()}</span>
+          <span class="avatar" aria-hidden="true">${(ICONE_TEMA[perfil.temaPadrao] || ICONE_TEMA[TEMA_ENTRADA])()}</span>
           <span class="usuario-nome"><span data-nome-perfil="${perfil.id}">${esc(perfil.nome)}</span>${demo ? '<small>modo demonstração</small>' : ''}</span>
           <button type="button" class="botao-icone" data-sair aria-label="Sair da conta" title="Sair da conta">${icone('sair')}</button>
         </div>
@@ -325,8 +327,8 @@ function montarEstrutura(perfil) {
   removerOuvinteTema?.();
   removerOuvinteTema = aoMudarTema((tema) => {
     const marca = document.querySelector('.marca-icone');
-    if (marca) marca.innerHTML = ICONE_TEMA[tema]();
-    toast(`Tema ${TEMAS[tema].nome} aplicado`, 'sucesso', { duracao: 1800 });
+    if (marca && ICONE_TEMA[tema]) marca.innerHTML = ICONE_TEMA[tema]();
+    toast(`Tema ${TEMAS[tema]?.nome || ''} aplicado`, 'sucesso', { duracao: 1800 });
   });
 
   // Menu no celular

@@ -1,4 +1,4 @@
-// Animação de boas-vindas ao entrar, conforme o tema da pessoa (girassóis ou morcegos).
+// Animação de boas-vindas ao entrar, conforme o tema da pessoa.
 // Curta, pode ser pulada (botão ou Esc) e respeita "movimento reduzido".
 import { adesivo } from './ui/ilustracoes.js';
 import { movimentoReduzido } from './tema.js';
@@ -9,54 +9,29 @@ const SAIDA = 650;
 
 const aleatorio = (min, max) => Math.round((min + Math.random() * (max - min)) * 100) / 100;
 
-function cenaKath(perfil) {
-  const petalas = Array.from({ length: 16 }, () =>
-    `<span class="bv-petala" style="--x:${aleatorio(0, 100)}%;--atraso:${aleatorio(0, 1.6)}s;--dur:${aleatorio(2.8, 4.2)}s;--giro:${aleatorio(-260, 260)}deg;--desvio:${aleatorio(-60, 60)}px"></span>`).join('');
-  const flores = [
-    { x: 8, h: 34, e: .8 }, { x: 24, h: 46, e: 1 }, { x: 74, h: 50, e: 1.05 }, { x: 90, h: 36, e: .85 }, { x: 50, h: 22, e: .65 },
-  ].map((f, i) => `
-    <div class="bv-flor" style="--x:${f.x}%;--h:${f.h}vh;--e:${f.e};--i:${i}">
-      <span class="bv-haste"></span>
-      <span class="bv-cabeca">${adesivo('girassol')}</span>
-    </div>`).join('');
-  return `
-    <div class="bv-cena bv-kath">
-      <div class="bv-raios" aria-hidden="true"></div>
-      <div class="bv-petalas" aria-hidden="true">${petalas}</div>
-      <div class="bv-campo" aria-hidden="true">${flores}</div>
-      <div class="bv-raposa" aria-hidden="true">${adesivo('raposa')}</div>
-      <div class="bv-texto">
-        <p class="bv-pre">seu cantinho está prontinho</p>
-        <h2 class="bv-titulo">${perfil.saudacao}</h2>
-      </div>
-    </div>`;
-}
+// Cada tema: adesivo principal, adesivos que caem/brilham, frase de abertura e o jeito de se mexer
+const CENAS = {
+  mistica: { heroi: 'lua-mistica', apoio: 'gato-preto', chuva: ['constelacao', 'cristal', 'olho-astral', 'carta-cigana'], pre: 'as estrelas te esperavam', jeito: 'brilho' },
+  punk: { heroi: 'guitarra-estrela', apoio: 'pinguim-punk', chuva: ['estrela-verde', 'respingo', 'vinil-verde', 'coracao-xadrez'], pre: 'o show vai começar', jeito: 'pulo' },
+  laco: { heroi: 'laco-rosa', apoio: 'pinguinzinha', chuva: ['margarida', 'tulipa', 'cerejeira', 'estrelinha'], pre: 'seu jardim está florindo', jeito: 'queda' },
+  onda: { heroi: 'prancha', apoio: 'concha', chuva: ['onda', 'estrela-mar', 'caracol', 'concha'], pre: 'a maré está boa hoje', jeito: 'mare' },
+  aquarela: { heroi: 'casinha', apoio: 'gatinho', chuva: ['nuvem-gordinha', 'flores-campo', 'cravo', 'violao'], pre: 'o vento trouxe você', jeito: 'vento' },
+};
 
-function castelo() {
-  return `<svg viewBox="0 0 400 140" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-    <g fill="#160912">
-      <path d="M0 140V110q40-14 80-6t90 0 120-8 110 10v34z"/>
-      <path d="M120 140V70l14-30 14 30v70z"/><path d="M150 140V86h8v-8h8v8h10v-8h8v8h8v-8h8v8h8v54z"/>
-      <path d="M210 140V52l18-40 18 40v88z"/><path d="M246 140V92h10v-8h8v8h10v48z"/>
-      <path d="M276 140V76l12-24 12 24v64z"/>
-    </g>
-    <g fill="#f6c66b"><rect x="130" y="84" width="8" height="12" rx="4"/><rect x="223" y="64" width="10" height="14" rx="5"/><rect x="284" y="92" width="7" height="11" rx="3.5"/><rect x="172" y="104" width="7" height="10" rx="3.5"/></g>
-  </svg>`;
-}
-
-function cenaDrico(perfil) {
-  const morcegos = Array.from({ length: 8 }, (_, i) =>
-    `<span class="bv-morcego" style="--y:${aleatorio(8, 55)}vh;--atraso:${(i * 0.32).toFixed(2)}s;--dur:${aleatorio(2.6, 3.8)}s;--e:${aleatorio(.5, 1.15)};--onda:${aleatorio(-40, 40)}px">${adesivo('morcego')}</span>`).join('');
-  const estrelas = Array.from({ length: 28 }, () =>
-    `<span class="bv-estrela" style="--x:${aleatorio(0, 100)}%;--y:${aleatorio(0, 60)}%;--atraso:${aleatorio(0, 2)}s"></span>`).join('');
+function cena(tema, perfil) {
+  const c = CENAS[tema] || CENAS.laco;
+  const pecas = Array.from({ length: 14 }, (_, i) =>
+    `<span class="bv-peca" style="--x:${aleatorio(2, 94)}%;--y:${aleatorio(4, 70)}%;--atraso:${aleatorio(0, 1.8)}s;--dur:${aleatorio(2.8, 4.4)}s;--giro:${aleatorio(-200, 200)}deg;--desvio:${aleatorio(-60, 60)}px;--e:${aleatorio(.55, 1.1)}">${adesivo(c.chuva[i % c.chuva.length])}</span>`).join('');
+  const pontos = Array.from({ length: 22 }, () =>
+    `<span class="bv-ponto" style="--x:${aleatorio(0, 100)}%;--y:${aleatorio(0, 100)}%;--atraso:${aleatorio(0, 2)}s"></span>`).join('');
   return `
-    <div class="bv-cena bv-drico">
-      <div class="bv-estrelas" aria-hidden="true">${estrelas}</div>
-      <div class="bv-lua" aria-hidden="true"></div>
-      <div class="bv-castelo" aria-hidden="true">${castelo()}</div>
-      <div class="bv-morcegos" aria-hidden="true">${morcegos}</div>
+    <div class="bv-cena bv-${tema} bv-jeito-${c.jeito}">
+      <div class="bv-pontos" aria-hidden="true">${pontos}</div>
+      <div class="bv-pecas" aria-hidden="true">${pecas}</div>
+      <div class="bv-heroi" aria-hidden="true">${adesivo(c.heroi)}</div>
+      <div class="bv-apoio" aria-hidden="true">${adesivo(c.apoio)}</div>
       <div class="bv-texto">
-        <p class="bv-pre">a noite ficou mais bonita</p>
+        <p class="bv-pre">${c.pre}</p>
         <h2 class="bv-titulo">${perfil.saudacao}</h2>
       </div>
     </div>`;
@@ -70,7 +45,7 @@ export function mostrarBoasVindas(perfil) {
   camada.setAttribute('role', 'dialog');
   camada.setAttribute('aria-label', perfil.saudacao);
   camada.innerHTML = `
-    ${perfil.temaPadrao === 'drico' ? cenaDrico(perfil) : cenaKath(perfil)}
+    ${cena(perfil.temaPadrao, perfil)}
     <button type="button" class="bv-pular">Pular animação</button>`;
   camada.hidden = false;
   try { sessionStorage.setItem('nc:boas-vindas-vista', '1'); } catch { /* ignora */ }

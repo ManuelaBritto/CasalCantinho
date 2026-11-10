@@ -28,7 +28,9 @@ alter table public.perfis add column if not exists tema_padrao text;
 alter table public.perfis drop constraint if exists perfis_tratamento_check;
 alter table public.perfis add constraint perfis_tratamento_check check (tratamento in ('ela', 'ele', 'neutro'));
 alter table public.perfis drop constraint if exists perfis_tema_padrao_check;
-alter table public.perfis add constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('neutro', 'drico', 'kath'));
+update public.perfis set tema_padrao = case tema_padrao when 'kath' then 'laco' when 'drico' then 'punk' when 'neutro' then null else tema_padrao end
+  where tema_padrao in ('kath', 'drico', 'neutro');
+alter table public.perfis add constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('mistica', 'punk', 'laco', 'onda', 'aquarela'));
 
 do $$
 begin
@@ -40,8 +42,8 @@ end
 $$;
 
 -- ---------- 2. Casal 1: Kath e Drico ----------
-update public.perfis set apelido = coalesce(apelido, 'Kath'), tratamento = 'ela', tema_padrao = coalesce(tema_padrao, 'kath') where nome = 'kath';
-update public.perfis set apelido = coalesce(apelido, 'Drico'), tratamento = 'ele', tema_padrao = coalesce(tema_padrao, 'drico') where nome = 'drico';
+update public.perfis set apelido = coalesce(apelido, 'Kath'), tratamento = 'ela', tema_padrao = coalesce(tema_padrao, 'laco') where nome = 'kath';
+update public.perfis set apelido = coalesce(apelido, 'Drico'), tratamento = 'ele', tema_padrao = coalesce(tema_padrao, 'punk') where nome = 'drico';
 
 -- ---------- 3. Casal 2: Lavi e Marih ----------
 do $$
@@ -95,8 +97,8 @@ begin
 
   insert into public.perfis (user_id, casal_id, nome, apelido, tratamento, tema_padrao)
   values
-    (id_lavi,  id_casal, 'lavi',  'Lavi',  'ela', 'neutro'),
-    (id_marih, id_casal, 'marih', 'Marih', 'ela', 'neutro')
+    (id_lavi,  id_casal, 'lavi',  'Lavi',  'ela', 'mistica'),
+    (id_marih, id_casal, 'marih', 'Marih', 'ela', 'aquarela')
   on conflict do nothing;
 
   raise notice 'Pronto! Lavi e Marih no casal %', id_casal;

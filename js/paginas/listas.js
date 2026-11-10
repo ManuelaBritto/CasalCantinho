@@ -1,9 +1,9 @@
 // Listas do casal: listas com categorias, itens, conclusão e progresso.
 import { listar, salvar, remover } from '../store/index.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeitePorTema, ADESIVOS, PACOTES } from '../ui/ilustracoes.js';
+import { adesivo, enfeite, ADESIVOS, PACOTES } from '../ui/ilustracoes.js';
 import { PERFIS } from '../auth.js';
-import { temaAtual } from '../tema.js';
+import { temaAtual, temasDisponiveis } from '../tema.js';
 import { esc, toast, abrirModal, confirmar, gerarId, seloExemplo, lerFormulario, marcarErro, limparErros, normalizarTexto } from '../ui/dom.js';
 
 const CATEGORIAS = ['Passeios', 'Filmes', 'Viagens', 'Restaurantes', 'Metas', 'Coisas para fazer juntos'];
@@ -26,7 +26,8 @@ const PAPEIS_LISTA = {
   quadriculado: 'Quadriculado',
   kraft: 'Kraft',
 };
-const estiloPadraoLista = () => ({ cor: temaAtual() === 'drico' ? 'vinho' : temaAtual() === 'kath' ? 'mostarda' : 'rosa', papel: 'simples', adesivo: '' });
+const COR_LISTA_TEMA = { mistica: 'lavanda', punk: 'salvia', laco: 'rosa', onda: 'azul', aquarela: 'salvia' };
+const estiloPadraoLista = () => ({ cor: COR_LISTA_TEMA[temaAtual()] || 'rosa', papel: 'simples', adesivo: '' });
 
 export async function renderizar(el, ctx) {
   let listas = [];
@@ -114,7 +115,7 @@ export async function renderizar(el, ctx) {
     el.innerHTML = `
       <div class="cabecalho-secao">
         <div>
-          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeitePorTema({ neutro: 'flor', drico: 'aranha', kath: 'folhagem' })}</span>Listas</h1>
+          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeite('listas')}</span>Listas</h1>
           <p>Planos, desejos e coisinhas para fazer juntos. Tudo o que um muda, o outro vê.</p>
         </div>
         <button type="button" class="botao" data-nova-lista>${icone('mais')} Nova lista</button>
@@ -200,7 +201,7 @@ export async function renderizar(el, ctx) {
             <legend>Adesivo</legend>
             <div class="enfeites">
               <label class="enfeite-opcao" title="Sem adesivo"><input type="radio" name="adesivo" value="" ${!estiloAtual.adesivo ? 'checked' : ''}><span class="sem-adesivo">${icone('fechar')}<span class="sr-only">Sem adesivo</span></span></label>
-              ${[temaAtual(), ...Object.keys(PACOTES).filter((x) => x !== temaAtual())].flatMap((pk) => PACOTES[pk].itens).map((id) => `
+              ${[temaAtual(), ...temasDisponiveis().filter((x) => x !== temaAtual())].filter((pk) => PACOTES[pk]).flatMap((pk) => PACOTES[pk].itens).map((id) => `
                 <label class="enfeite-opcao" title="${ADESIVOS[id].nome}"><input type="radio" name="adesivo" value="${id}" ${estiloAtual.adesivo === id ? 'checked' : ''}><span>${adesivo(id)}<span class="sr-only">${ADESIVOS[id].nome}</span></span></label>`).join('')}
             </div>
           </fieldset>

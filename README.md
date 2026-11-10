@@ -1,6 +1,6 @@
 # Nosso Cantinho — versão beta
 
-Site privado e responsivo para um casal guardar **cartinhas, listas, filmes, vídeos e memórias**, com três temas visuais (Neutro, Drico e Kath), entrada por perfil e animação de boas-vindas personalizada.
+Site privado e responsivo para um casal guardar **cartinhas, listas, filmes, vídeos e memórias**, com um tema visual por pessoa (cada casal usa só os dois temas dele), entrada por perfil e animação de boas-vindas personalizada.
 
 Feito em **HTML, CSS e JavaScript puro** (módulos ES), sem framework e sem dependências para instalar.
 
@@ -43,7 +43,7 @@ nosso-cantinho/
 ├── package.json            # Só o script "start"
 ├── .env.example            # Modelo do arquivo de ambiente
 ├── css/
-│   ├── temas.css           # Variáveis dos 3 temas (cores, fontes, sombras, cinema)
+│   ├── temas.css           # Variáveis dos 5 temas (cores, fontes, sombras, cinema)
 │   ├── base.css            # Reset, layout, menu lateral, navegação no celular
 │   ├── componentes.css     # Botões, campos, cartões, modais, avisos, abas…
 │   ├── paginas.css         # Estilos de cada área + cartinhas, cinema, galeria
@@ -88,8 +88,8 @@ nosso-cantinho/
 | Área | O que faz |
 |---|---|
 | **Entrada** | Perfis Kath e Drico. Sessão mantida ao atualizar; botão **Sair** em todo o app. |
-| **Boas-vindas** | Kath: "Bem-vinda, Kath!" com girassóis crescendo, pétalas e raposa. Drico: "Bem-vindo, Drico!" com lua, castelo e morcegos voando. Dura ~4 s, tem botão **Pular animação** (ou Esc) e vira cena estática com movimento reduzido. Depois entra com o tema do perfil. |
-| **Temas** | Neutro, Drico e Kath. Troca imediata pelo topo ou por **Aparência**; muda cores, fontes, fundos, ilustrações, molduras, galeria e a sala de cinema. Salvo por perfil. |
+| **Boas-vindas** | Uma cena por tema: "Bem-vinda, Kath!" com laço e flores caindo, "Bem-vindo, Drico!" com guitarra e estrelas neon, "Bem-vinda, Lavi!" com lua e cristais brilhando, "Bem-vindo, Rick!" com prancha e conchas subindo, "Bem-vinda, Marih!" com casinha e flores levadas pelo vento. Dura ~4 s, tem botão **Pular animação** (ou Esc) e vira cena estática com movimento reduzido. Depois entra com o tema do perfil. |
+| **Temas** | Um por pessoa: **Laço de Rosa** (Kath), **Estrela Punk** (Drico), **Lua Mística** (Lavi), **Onda Coral** (Rick) e **Aquarela** (Marih). Cada casal só vê e escolhe os dois temas das pessoas dele. Troca imediata pelo topo ou por **Aparência**; muda cores, fontes, fundos, ilustrações, molduras, galeria e a sala de cinema. Salvo por perfil. |
 | **Início** | Frase do tema, foto do casal (ou ilustração), aviso de cartinha nova, **"Estamos juntos?"**, contador de anos/meses/dias com data editável, atalhos, memórias recentes e cartinha em destaque. |
 | **Estamos juntos?** | Um botão liga um cronômetro compartilhado: os dois perfis veem o mesmo tempo correndo (também no topo de todas as páginas). Ao encerrar, dá para anotar "como foi" e corrigir o horário de término. Guarda o total juntos, número de encontros, o maior encontro e o histórico (com exclusão). Embaixo aparece uma **curiosidade** comparando o tempo com recordes e fatos (ex.: "Nossa! Vocês ficaram 30 minutos juntos — praticamente o mesmo tempo que o recorde de alguém que ficou embaixo d’água sem respirar"), com a fonte. Os fatos foram pesquisados na web e ficam em `js/curiosidades.js` (fácil de atualizar). |
 | **Cartinhas** | **Enviar para o outro perfil** ou guardar como rascunho. Abas Recebidas / Enviadas / Rascunhos; cartinha nova chega num envelope fechado com selo de cera que se abre ao clicar, contador de novas no menu, "lida em…" para quem enviou e botão **Responder**. Rascunhos não aparecem para o outro perfil. Editor com título, como chamar (opcional), data e mensagem; papel (6), cor do papel, cor da tinta, fonte (6), alinhamento, moldura (4) e até 6 enfeites dos três temas. Prévia ao vivo e em tamanho grande. Coleção com abrir, editar e excluir (com confirmação). |
@@ -97,14 +97,14 @@ nosso-cantinho/
 | **Notificações e app** | O site pode ser instalado no celular (ícone, tela cheia, atalhos ao segurar o ícone). Com o login real, cada um ativa as notificações em **Aparência** e recebe aviso de cartinha, elogio e "Lembre de mim" mesmo com o site fechado; tocar na notificação abre direto o que chegou. No Início aparece um convite discreto para ativar. Configuração na seção 6.2. |
 | **Listas** | Compartilhadas entre os dois, mostrando quem criou a lista, quem adicionou cada item e quem concluiu. Estilo por lista: cor (8), papel (simples, caderno, post-it, quadriculado, kraft) e adesivo. Criar/renomear/excluir listas com descrição e categoria (6 sugeridas + personalizada); adicionar, editar, concluir e excluir itens (com "Desfazer"); barra de progresso; filtro por categoria. |
 | **Cinemateca** | Pesquisa no TMDB com pôsteres (quando configurado), cadastro manual sempre disponível, abas Queremos assistir / Assistindo / Assistidos, detalhes com observações, mudança de status, remoção e bloqueio de duplicatas. |
-| **Cinema** | Sala com letreiro, cortinas, moldura e poltronas (muda com o tema). **Assistir junto:** quem coloca um vídeo, dá play, pausa ou avança faz o mesmo acontecer na tela do outro, sem colar link (Realtime do Supabase; no modo demonstração, entre abas do mesmo navegador). **Sincronia fina:** quem agiu por último guia a sessão e manda a posição a cada 2 s; o outro corrige sozinho (até 0,35 s fica como está, até 1,5 s acelera ou desacelera um pouco por alguns segundos, mais que isso pula). O atraso da internet é medido entre os aparelhos, então relógios diferentes no celular e no PC não atrapalham. Se o vídeo de um travar para carregar ou entrar um anúncio, o do outro pausa com "Esperando … carregar…" e os dois voltam juntos. Um selo embaixo do status mostra "Sincronizados" ou "Ajustando a sincronia…". Mostra se o outro está na sala; quem está fora do Cinema recebe aviso "Assistir junto". **Reações** 😂 😢 🍿 😱 que sobem na tela dos dois (inclusive em tela cheia) e ficam contadas por vídeo. Todo vídeo carregado é salvo em **Sessões** (quantas vezes, quando, por quem, se foi junto) e pode ganhar estrela em **Favoritos**. Vídeos que não permitem incorporação mostram aviso + link para o YouTube. |
+| **Cinema** | Sala com letreiro, cortinas, moldura e poltronas (muda com o tema). **Assistir junto:** quem coloca um vídeo, dá play, pausa ou avança faz o mesmo acontecer na tela do outro, sem colar link (Realtime do Supabase; o letreiro é sempre **Cineminha**; no modo demonstração, entre abas do mesmo navegador). **Sincronia fina:** quem agiu por último guia a sessão e manda a posição a cada 2 s; o outro corrige sozinho (até 0,35 s fica como está, até 1,5 s acelera ou desacelera um pouco por alguns segundos, mais que isso pula). O atraso da internet é medido entre os aparelhos, então relógios diferentes no celular e no PC não atrapalham. Se o vídeo de um travar para carregar ou entrar um anúncio, o do outro pausa com "Esperando … carregar…" e os dois voltam juntos. Um selo embaixo do status mostra "Sincronizados" ou "Ajustando a sincronia…". Mostra se o outro está na sala; quem está fora do Cinema recebe aviso "Assistir junto". **Reações** 😂 😢 🍿 😱 que sobem na tela dos dois (inclusive em tela cheia) e ficam contadas por vídeo. Todo vídeo carregado é salvo em **Sessões** (quantas vezes, quando, por quem, se foi junto) e pode ganhar estrela em **Favoritos**. Vídeos que não permitem incorporação mostram aviso + link para o YouTube. |
 | **Recompensas do Cinema** | O tempo com vídeo tocando no Cinema é somado para o casal (assistindo juntos, conta uma vez só) e libera **14 recompensas** em ciclos de uma hora: aos **15 min** uma pequena (**colecionável**), aos **30 min** uma média (**visual do site**: estilo de nome ou modo da sala) e na **hora cheia** uma grande (**foto de recordação**). Colecionáveis: ingresso dourado, balde de pipoca, claquete, rolo de filme e troféu. Visuais: nome cromado, nome neon e nome em letreiro (cada um escolhe o seu, aparece no topo e na saudação) e os modos **noir** e **Sala VIP** da sala (valem para os dois). Fotos: polaroid, cartaz do casal, tira de cabine e estrela de cinema, geradas no próprio navegador com o tempo, os vídeos mais vistos, as reações e a foto do casal, prontas para **baixar** ou **compartilhar**. Ao desbloquear aparece uma comemoração (se o vídeo estiver tocando, ela espera a pausa); quem não estava junto vê a comemoração quando entrar. Tudo fica na aba **Conquistas** do Cinema. Os limites ficam em `js/recompensas.js`. |
 | **Chat do Cinema** | Conversa do casal ao lado do vídeo (embaixo, no celular). As mensagens chegam na hora; mostra "digitando…", separa por dia e guarda o histórico (últimas 150) na tabela `mensagens`. Cada mensagem marca o ponto do vídeo em que foi escrita ("aos 12:34"): tocar leva os dois para aquele ponto. Link do YouTube no chat vira botão **Colocar na tela**. Mensagens do outro aparecem por cima do vídeo, e em tela cheia aparece um campo para responder sem sair. Fora do Cinema chega um aviso com **Responder**; com o site fechado, uma notificação no celular (no máximo uma a cada 45 s), se estiverem ativadas. |
 | **Sessões do dia** | Fila de vídeos do Cinema, a mesma para os dois e só do dia (recomeça vazia no dia seguinte). **Pôr na fila** pelo link ou pelo **+** de um vídeo das Sessões; dá para subir, descer, tirar e tocar agora. Cada vídeo da fila mostra o título, o canal e quem escolheu. **Começar a sessão** toca o primeiro. |
 | **Cortina e créditos** | Quando um vídeo novo começa, a cortina fecha e abre (pausar e voltar não repete). No fim do vídeo, a tela mostra os créditos por 5 s: "[vídeo] por [canal]" e "vídeo escolhido por: [nome]", e depois some com fade. Se tiver vídeo na fila, o próximo começa sozinho, com a cortina, para os dois. Em tela cheia, os créditos aparecem, mas a cortina não (ela fica fora da tela cheia). |
 | **Chamar para assistir** | Botão **Chamar** no Cinema: mensagem personalizada (com 5 sugestões) e, se houver, o vídeo da tela. O outro recebe uma janela "Fulano te chamou para assistir" com **Entrar no cinema** (ou notificação no celular, se o site estiver fechado). O convite também fica no chat. |
 | **Diversão** *(em desenvolvimento)* | **Quadro branco:** desenhos do casal com pincel, borracha, 12 cores + cor livre, 4 espessuras, desfazer/refazer, limpar e baixar em PNG; funciona com dedo, caneta e mouse. Galeria para criar, abrir, editar e excluir. Se os dois abrirem o mesmo desenho, cada traço aparece na hora na tela do outro ("Fulano está neste desenho com você") e o desfazer de um tira só o traço dele. Salva sozinho alguns segundos depois de desenhar. Quando alguém desenha, o outro recebe um aviso (ou notificação no celular) com **Ver**, no máximo um por desenho a cada 10 minutos, e nenhum se os dois estiverem no mesmo desenho. **Álbum de figurinhas** *(em desenvolvimento, no fim da página)*: álbum de 6 páginas com 36 espaços (alguns especiais), ainda sem figurinhas e com todos os textos como "Desenvolvendo"; os títulos reais das páginas ficam guardados em `js/album.js`. **Como eu te vejo:** uma pergunta por dia (30, a mesma para os dois, troca à meia-noite de Brasília), por exemplo "Como eu te vejo se você fosse um animal". Desenha, escreve um recadinho opcional e envia: chega nas **Cartinhas** do outro com aviso/notificação e botão **Desenhar de volta**. As perguntas ficam em `js/paginas/diversao.js`. |
-| **Memórias** | Galeria (polaroid no tema Kath, moldura gótica no Drico), visualização ampliada com setas, envio de foto ou URL, legenda e data opcionais. |
+| **Memórias** | Galeria (moldura muda com o tema), visualização ampliada com setas, envio de foto ou URL, legenda e data opcionais. |
 | **Aparência** | Cartões de tema com prévia, "ao entrar usar o tema do perfil / o último escolhido", reduzir movimento, decoração discreta, texto maior e (no modo local) restaurar exemplos ou apagar dados. |
 
 **Acessibilidade:** link "Pular para o conteúdo", foco visível, rótulos em todos os campos, botões com nome acessível, `aria-current` no menu, abas navegáveis por setas, modais com `<dialog>` nativo (Esc fecha e o foco volta), avisos em região `aria-live`, ícones SVG + texto (sem depender de emojis), `prefers-reduced-motion` respeitado.
@@ -174,6 +174,16 @@ Rode também `supabase/pessoa-em-varios-casais.sql` (depois do `varios-casais.sq
 - cria o **casal 3**: a Lavi (mesma conta) e o Rick, login `rick` (senha inicial `rick1234`; troque depois).
 
 No site, quem participa de mais de um casal escolhe **"Em qual cantinho?"** ao entrar. A escolha fica guardada no aparelho, e **Trocar de cantinho** (no menu) pergunta de novo. O celular dessa pessoa recebe as notificações dos dois cantinhos, e tocar numa delas abre o cantinho de onde ela veio.
+
+## 5.2 Temas por pessoa (`supabase/temas.sql`)
+
+Rode **uma vez** no SQL Editor, depois dos outros arquivos (pode rodar de novo sem problema). Ele:
+
+- troca as regras da tabela `perfis` para aceitar só os temas novos: `mistica`, `punk`, `laco`, `onda`, `aquarela`;
+- coloca o tema de cada pessoa (`tema_padrao`): kath → `laco`, drico → `punk`, lavi → `mistica`, marih → `aquarela`, ric/rick → `onda`;
+- converte o que estava salvo dos temas antigos (Neutro, Gótico e Girassol deixam de existir).
+
+Para uma pessoa nova, é só preencher o `tema_padrao` dela com um desses ids. O site libera para cada casal só os temas das duas pessoas dele.
 
 ## 6. Configurar a API do TMDB (pesquisa de filmes)
 
@@ -266,8 +276,8 @@ Em **Aparência** tem o botão **Enviar um teste**, que manda uma notificação 
 ### Decisões tomadas sem perguntar (fáceis de mudar)
 
 - A animação aparece logo após entrar e uma vez por aba/sessão do navegador; não se repete ao atualizar.
-- Ao entrar, aplica-se o tema do perfil (Kath → Kath, Drico → Drico). Em **Aparência** dá para trocar para "o último tema escolhido".
-- A tela de entrada usa sempre o tema Neutro.
+- Ao entrar, aplica-se o tema da pessoa (Kath → Laço de Rosa, Drico → Estrela Punk, Lavi → Lua Mística, Rick → Onda Coral, Marih → Aquarela). Em **Aparência** dá para trocar para "o último tema escolhido".
+- A tela de entrada usa sempre o tema Laço de Rosa.
 - Excluir cartinhas, listas, filmes, vídeos e memórias pede confirmação; excluir um **item** de lista é imediato, com botão **Desfazer**.
 - Ao mudar o status de um filme, a coleção acompanha o filme até a aba nova.
 - Recompensas: o ritmo pedido (15 min / 30 min / 1 h) se repete a cada hora, então as 14 recompensas terminam em 4 h 30 min de cinema. Para espaçar mais, basta mudar os minutos em `js/recompensas.js`.
@@ -282,10 +292,10 @@ Marque cada item depois de testar (use uma janela anônima para começar do zero
 
 - [ ] `npm start` abre http://localhost:5173 sem erros no console (F12).
 - [ ] A tela de entrada mostra o aviso **Modo demonstração**.
-- [ ] **Entrar como Kath** → aparece exatamente "Bem-vinda, Kath!" com girassóis e pétalas → entra no tema Kath.
+- [ ] **Entrar como Kath** → aparece exatamente "Bem-vinda, Kath!" com laço e flores → entra no tema Laço de Rosa.
 - [ ] Atualizar a página → não pede entrada de novo e não repete a animação.
-- [ ] Trocar o tema no topo para Neutro e Drico → tudo muda na hora; atualizar → o tema continua.
-- [ ] **Sair** → volta para a entrada. **Entrar como Drico** → "Bem-vindo, Drico!" com morcegos e lua → tema Drico.
+- [ ] Trocar o tema no topo para Estrela Punk (o do par) → tudo muda na hora; atualizar → o tema continua.
+- [ ] **Sair** → volta para a entrada. **Entrar como Drico** → "Bem-vindo, Drico!" com guitarra e estrelas → tema Estrela Punk.
 - [ ] Na animação, **Pular animação** (ou Esc) encerra na hora.
 - [ ] Ativar "reduzir movimento" no sistema (ou em Aparência) → animação estática e curta.
 - [ ] Menu lateral: todas as 7 áreas abrem e a atual fica destacada.

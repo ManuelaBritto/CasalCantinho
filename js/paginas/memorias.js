@@ -1,7 +1,7 @@
 // Memórias: galeria de fotos com legenda, data e visualização ampliada.
 import { listar, salvar, remover, enviarImagem } from '../store/index.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeitePorTema } from '../ui/ilustracoes.js';
+import { adesivo, enfeite } from '../ui/ilustracoes.js';
 import { esc, toast, abrirModal, confirmar, formatarData, seloExemplo, marcarErro, limparErros } from '../ui/dom.js';
 
 export async function renderizar(el, ctx) {
@@ -22,7 +22,7 @@ export async function renderizar(el, ctx) {
     el.innerHTML = `
       <div class="cabecalho-secao">
         <div>
-          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeitePorTema({ neutro: 'flor', drico: 'rosa', kath: 'polaroid' })}</span>Memórias</h1>
+          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeite('memorias')}</span>Memórias</h1>
           <p>Fotos e momentos para guardar com carinho.</p>
         </div>
         <button type="button" class="botao" data-nova>${icone('upload')} Adicionar memória</button>

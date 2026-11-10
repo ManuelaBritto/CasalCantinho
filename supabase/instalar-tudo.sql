@@ -36,8 +36,8 @@ create table if not exists public.perfis (
   nome            text not null constraint perfis_nome_check check (nome ~ '^[a-z0-9._-]{2,30}$'), -- login (kath, drico, lavi…)
   apelido         text,                                   -- nome mostrado no site
   tratamento      text not null default 'neutro' constraint perfis_tratamento_check check (tratamento in ('ela', 'ele', 'neutro')),
-  tema_padrao     text constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('neutro', 'drico', 'kath')),
-  tema_preferido  text check (tema_preferido in ('neutro', 'drico', 'kath')),
+  tema_padrao     text constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('mistica', 'punk', 'laco', 'onda', 'aquarela')),
+  tema_preferido  text constraint perfis_tema_preferido_check check (tema_preferido in ('mistica', 'punk', 'laco', 'onda', 'aquarela')),
   criado_em       timestamptz not null default now(),
   unique (casal_id, nome)
 );
@@ -289,7 +289,7 @@ begin
   end if;
 
   insert into public.perfis (user_id, casal_id, nome, apelido, tratamento, tema_padrao)
-  values (id_kath, id_casal, 'kath', 'Kath', 'ela', 'kath'), (id_drico, id_casal, 'drico', 'Drico', 'ele', 'drico')
+  values (id_kath, id_casal, 'kath', 'Kath', 'ela', 'laco'), (id_drico, id_casal, 'drico', 'Drico', 'ele', 'punk')
   on conflict do nothing;
 
   raise notice 'Pronto! Kath e Drico vinculados ao casal %', id_casal;

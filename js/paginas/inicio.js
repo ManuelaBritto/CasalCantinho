@@ -1,7 +1,7 @@
 // Início: boas-vindas, foto/ilustração, contador de tempo juntos, atalhos e destaques.
 import { listar, obterAjustes, salvarAjustes, enviarImagem } from '../store/index.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, cenaCasal } from '../ui/ilustracoes.js';
+import { adesivo, cenaCasal, ENFEITES } from '../ui/ilustracoes.js';
 import { esc, toast, confirmar, formatarData, seloExemplo, hojeISO, abrirModal, lerFormulario } from '../ui/dom.js';
 import { montarDicaNotificacoes } from '../painel-notificacoes.js';
 import { PERFIS } from '../auth.js';
@@ -12,9 +12,11 @@ import { temaAtual, aoMudarTema } from '../tema.js';
 import { htmlCarta } from './carta-visual.js';
 
 const FRASES = {
-  neutro: 'Um cantinho só nosso, para guardar tudo o que faz o coração sorrir.',
-  drico: 'Sob a luz da lua, cada lembrança nossa ganha um lugar para sempre.',
-  kath: 'Como os girassóis, a gente sempre encontra a luz — e guarda tudo aqui.',
+  mistica: 'Sob a mesma lua, cada lembrança nossa vira estrela no nosso céu.',
+  punk: 'Aumenta o volume: essa história é o nosso som favorito.',
+  laco: 'Cada lembrança nossa é uma flor nova nesse jardim.',
+  onda: 'Toda onda boa a gente pega junto.',
+  aquarela: 'A vida é feita de tardes assim: devagar, com música e com você.',
 };
 
 /** Diferença de calendário entre duas datas (anos, meses, dias) + total de dias. */
@@ -243,17 +245,17 @@ export async function renderizar(el, ctx) {
     const cartaDestaque = novasCartas[0] || [...dados.cartas].filter((c) => !c.tipo).sort((a, b) => String(b.enviadaEm || b.atualizadoEm || '').localeCompare(String(a.enviadaEm || a.atualizadoEm || '')))[0];
     const itensPendentes = dados.listas.reduce((s, l) => s + (l.itens || []).filter((i) => !i.feito).length, 0);
     const atalhos = [
-      { rota: 'cartinhas', titulo: 'Cartinhas', icone: 'carta', texto: plural(dados.cartas.length, 'cartinha guardada', 'cartinhas guardadas'), enfeite: { neutro: 'laco', drico: 'vela', kath: 'selo' } },
-      { rota: 'listas', titulo: 'Listas', icone: 'lista', texto: `${plural(dados.listas.length, 'lista', 'listas')} · ${plural(itensPendentes, 'item pendente', 'itens pendentes')}`, enfeite: { neutro: 'flor', drico: 'aranha', kath: 'folhagem' } },
-      { rota: 'cinemateca', titulo: 'Cinemateca', icone: 'filme', texto: plural(dados.filmes.length, 'filme na coleção', 'filmes na coleção'), enfeite: { neutro: 'brilho', drico: 'lua', kath: 'polaroid' } },
-      { rota: 'cinema', titulo: 'Cinema', icone: 'cinema', texto: plural(dados.videos.length, 'vídeo favorito', 'vídeos favoritos'), enfeite: { neutro: 'coracao', drico: 'morcego', kath: 'girassol' } },
+      { rota: 'cartinhas', titulo: 'Cartinhas', icone: 'carta', texto: plural(dados.cartas.length, 'cartinha guardada', 'cartinhas guardadas'), enfeite: ENFEITES.cartinhas },
+      { rota: 'listas', titulo: 'Listas', icone: 'lista', texto: `${plural(dados.listas.length, 'lista', 'listas')} · ${plural(itensPendentes, 'item pendente', 'itens pendentes')}`, enfeite: ENFEITES.listas },
+      { rota: 'cinemateca', titulo: 'Cinemateca', icone: 'filme', texto: plural(dados.filmes.length, 'filme na coleção', 'filmes na coleção'), enfeite: ENFEITES.cinemateca },
+      { rota: 'cinema', titulo: 'Cinema', icone: 'cinema', texto: plural(dados.videos.length, 'vídeo favorito', 'vídeos favoritos'), enfeite: ENFEITES.cinema },
     ];
 
     el.innerHTML = `
       <section class="hero cartao" aria-labelledby="hero-titulo">
         <div class="hero-texto">
           <p class="hero-saudacao">Olá, <span data-nome-perfil="${ctx.perfil.id}">${esc(ctx.perfil.nome)}</span>!</p>
-          <h1 id="hero-titulo">${FRASES[tema]}</h1>
+          <h1 id="hero-titulo">${FRASES[tema] || FRASES.laco}</h1>
           <p class="hero-resumo">Aqui ficam as cartinhas, as listas, os filmes, os vídeos e as memórias de vocês — tudo num lugar só.</p>
           <div class="grupo-botoes">
             <a class="botao" href="#/cartinhas?nova">${icone('carta')} Escrever cartinha</a>
@@ -291,7 +293,7 @@ export async function renderizar(el, ctx) {
       </section>
 
       <section class="contador cartao" aria-labelledby="titulo-contador">
-        <span class="contador-enfeite" aria-hidden="true">${adesivo(tema === 'drico' ? 'lua' : tema === 'kath' ? 'girassol' : 'coracao')}</span>
+        <span class="contador-enfeite" aria-hidden="true">${adesivo(ENFEITES.contador[tema] || 'coracao')}</span>
         <h2 id="titulo-contador">Tempo juntos</h2>
         <div id="contador-corpo">${htmlContador()}</div>
       </section>

@@ -175,8 +175,8 @@ begin
 
   insert into public.perfis (user_id, casal_id, nome, apelido, tratamento, tema_padrao)
   values
-    (id_ric,  id_casal, 'ric',  'Rick', 'ele', 'neutro'),
-    (id_lavi, id_casal, 'lavi', 'Lavi', 'ela', 'neutro')
+    (id_ric,  id_casal, 'ric',  'Rick', 'ele', 'onda'),
+    (id_lavi, id_casal, 'lavi', 'Lavi', 'ela', 'mistica')
   on conflict (user_id, casal_id) do nothing;
 
   raise notice 'Pronto! Lavi e Rick no casal %', id_casal;

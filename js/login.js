@@ -28,7 +28,7 @@ export function mostrarLogin({ erroInicial = '' } = {}) {
         <h2 class="login-pergunta">Quem está chegando?</h2>
         <div class="login-perfis">
           <button type="button" class="perfil-botao perfil-kath" data-perfil="kath">
-            <span class="perfil-ilustra" aria-hidden="true">${adesivo('girassol')}</span>
+            <span class="perfil-ilustra" aria-hidden="true">${adesivo('laco-rosa')}</span>
             <span class="perfil-nome">Kath</span>
             <span class="perfil-acao">Entrar como Kath</span>
           </button>

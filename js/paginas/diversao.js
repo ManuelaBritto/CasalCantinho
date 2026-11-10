@@ -13,7 +13,7 @@ import { avisarOutro } from '../bilhetes.js';
 import { notificarOutro } from '../notificacoes.js';
 import { cartaVisivelPara } from './cartinhas.js';
 import { icone } from '../ui/icones.js';
-import { enfeitePorTema } from '../ui/ilustracoes.js';
+import { enfeite } from '../ui/ilustracoes.js';
 import { esc, toast, confirmar, formatarData } from '../ui/dom.js';
 
 // Aviso de desenho no quadro branco: no máximo um por desenho a cada 10 minutos,
@@ -163,7 +163,7 @@ export async function renderizar(el, ctx) {
           ${ordenados.length
             ? `<ul class="grade grade-desenhos" role="list">${ordenados.map(htmlDesenho).join('')}</ul>`
             : semTabela ? '' : `<div class="vazio">
-                <span class="ilustracao" aria-hidden="true">${enfeitePorTema({ neutro: 'coracao', drico: 'morcego', kath: 'girassol' })}</span>
+                <span class="ilustracao" aria-hidden="true">${enfeite('diversao')}</span>
                 <h3>Nenhum desenho ainda</h3>
                 <p>Crie um quadro e chame ${esc(outro.nome)} para desenhar junto.</p>
               </div>`}

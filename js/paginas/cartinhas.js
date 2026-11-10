@@ -2,10 +2,10 @@
 // Também recebe os bilhetes rápidos (Enviar elogio e Lembre de mim), ver ../bilhetes.js.
 import { listar, salvar, remover } from '../store/index.js';
 import { icone } from '../ui/icones.js';
-import { adesivo, enfeitePorTema, ADESIVOS, PACOTES } from '../ui/ilustracoes.js';
+import { adesivo, enfeite, ADESIVOS, PACOTES } from '../ui/ilustracoes.js';
 import { esc, toast, abrirModal, confirmar, formatarData, hojeISO, seloExemplo, marcarErro, limparErros } from '../ui/dom.js';
 import { PERFIS } from '../auth.js';
-import { temaAtual } from '../tema.js';
+import { temaAtual, temasDisponiveis } from '../tema.js';
 import {
   htmlCarta, estiloPadrao, PAPEIS, FONTES, ALINHAMENTOS, MOLDURAS, CORES_PAPEL, CORES_TINTA, MAX_ADESIVOS,
 } from './carta-visual.js';
@@ -135,7 +135,7 @@ export async function renderizar(el, ctx) {
     el.innerHTML = `
       <div class="cabecalho-secao">
         <div>
-          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeitePorTema({ neutro: 'laco', drico: 'vela', kath: 'selo' })}</span>Cartinhas</h1>
+          <h1 class="titulo-pagina"><span class="enfeite-titulo" aria-hidden="true">${enfeite('cartinhas')}</span>Cartinhas</h1>
           <p>Escreva, enfeite e mande cartinhas para ${esc(outro.nome)}.</p>
         </div>
         <div class="grupo-botoes acoes-cartinhas">
@@ -317,7 +317,7 @@ export async function renderizar(el, ctx) {
     let alterado = false;
 
     const corPersonalizada = !CORES_PAPEL.includes(base.estilo.cor);
-    const pacotesOrdenados = [temaAtual(), ...Object.keys(PACOTES).filter((p) => p !== temaAtual())];
+    const pacotesOrdenados = [temaAtual(), ...temasDisponiveis().filter((p) => p !== temaAtual())].filter((p) => PACOTES[p]);
 
     el.innerHTML = `
       <div class="cabecalho-secao">

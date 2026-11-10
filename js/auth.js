@@ -5,21 +5,26 @@
 // - Sem Supabase: MODO DEMONSTRAÇÃO, claramente sinalizado. Não há senha
 //   nem autenticação de verdade — só a escolha do perfil neste navegador.
 import { config, supabaseConfigurado } from './config.js';
+import { normalizarTema } from './tema.js';
 
 /** Saudação conforme o tratamento escolhido no cadastro. */
 const saudacaoPara = (nome, tratamento) => (
   tratamento === 'ela' ? `Bem-vinda, ${nome}!` : tratamento === 'ele' ? `Bem-vindo, ${nome}!` : `Boas-vindas, ${nome}!`
 );
 
-export function montarPerfil({ id, nome, tratamento = 'neutro', temaPadrao = 'neutro' }) {
-  return { id, nome, tratamento, temaPadrao, saudacao: saudacaoPara(nome, tratamento) };
+// Tema de cada pessoa (usado enquanto o banco não tem tema_padrao com os temas novos)
+const TEMA_POR_NOME = { kath: 'laco', drico: 'punk', lavi: 'mistica', marih: 'aquarela', ric: 'onda', rick: 'onda' };
+
+export function montarPerfil({ id, nome, tratamento = 'neutro', temaPadrao = null }) {
+  const tema = (temaPadrao && temaPadrao !== 'neutro' ? normalizarTema(temaPadrao) : null) || TEMA_POR_NOME[id] || 'laco';
+  return { id, nome, tratamento, temaPadrao: tema, saudacao: saudacaoPara(nome, tratamento) };
 }
 
 // Perfis do casal que está usando o site. No modo demonstração: Kath e Drico.
 // Com Supabase, é preenchido ao entrar com as duas pessoas do casal da conta.
 const PERFIS_DEMO = {
-  kath: montarPerfil({ id: 'kath', nome: 'Kath', tratamento: 'ela', temaPadrao: 'kath' }),
-  drico: montarPerfil({ id: 'drico', nome: 'Drico', tratamento: 'ele', temaPadrao: 'drico' }),
+  kath: montarPerfil({ id: 'kath', nome: 'Kath', tratamento: 'ela', temaPadrao: 'laco' }),
+  drico: montarPerfil({ id: 'drico', nome: 'Drico', tratamento: 'ele', temaPadrao: 'punk' }),
 };
 export const PERFIS = { ...PERFIS_DEMO };
 
@@ -37,8 +42,8 @@ export function flexao(id, formas) {
 
 // Casal antigo (antes de rodar supabase/varios-casais.sql): completa o que falta
 const PADROES_ANTIGOS = {
-  kath: { nome: 'Kath', tratamento: 'ela', temaPadrao: 'kath' },
-  drico: { nome: 'Drico', tratamento: 'ele', temaPadrao: 'drico' },
+  kath: { nome: 'Kath', tratamento: 'ela', temaPadrao: 'laco' },
+  drico: { nome: 'Drico', tratamento: 'ele', temaPadrao: 'punk' },
 };
 const capitalizar = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -78,7 +83,7 @@ const montarDaLinha = (p) => {
     id: p.nome,
     nome: p.apelido || antigo.nome || capitalizar(p.nome),
     tratamento: p.tratamento && p.tratamento !== 'neutro' ? p.tratamento : antigo.tratamento || p.tratamento || 'neutro',
-    temaPadrao: p.tema_padrao || antigo.temaPadrao || 'neutro',
+    temaPadrao: p.tema_padrao || antigo.temaPadrao || null,
   });
 };
 
@@ -128,8 +133,9 @@ async function carregarPerfil(userId) {
   guardarEscolha(userId, casalId);
   const meu = minhas.find((m) => m.casal_id === casalId);
   definirPerfis(data.filter((p) => p.casal_id === casalId).map(montarDaLinha));
-  if (meu.tema_preferido) {
-    try { localStorage.setItem(`nc:tema:${meu.nome}`, meu.tema_preferido); } catch { /* ignora */ }
+  const preferido = normalizarTema(meu.tema_preferido);
+  if (preferido) {
+    try { localStorage.setItem(`nc:tema:${meu.nome}`, preferido); } catch { /* ignora */ }
   }
   return { ...PERFIS[meu.nome], casalId: meu.casal_id, userId };
 }
@@ -213,7 +219,9 @@ export async function sair() {
 /** Guarda o tema escolhido também no Supabase (se ativo). */
 export async function salvarTemaRemoto(perfil, tema) {
   if (!cliente || !perfil?.userId) return;
-  const { error } = await cliente.from('perfis').update({ tema_preferido: tema }).eq('user_id', perfil.userId);
+  let consulta = cliente.from('perfis').update({ tema_preferido: tema }).eq('user_id', perfil.userId);
+  if (perfil.casalId) consulta = consulta.eq('casal_id', perfil.casalId); // a mesma pessoa pode estar em dois cantinhos
+  const { error } = await consulta;
   if (error) console.warn('[Supabase] não foi possível salvar o tema:', error.message);
 }
 
