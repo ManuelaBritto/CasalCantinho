@@ -122,7 +122,9 @@ html[data-decoracao="discreta"] .decoracao .enfeite.opcional { display: none; }
   text-decoration: none; color: inherit;
 }
 .marca-icone { width: 44px; height: 44px; flex: none; }
-.marca-nome { font-family: var(--fonte-titulo); font-size: 1.35rem; font-weight: var(--peso-titulo); line-height: 1.1; white-space: nowrap; }
+.marca-nome { font-family: var(--fonte-titulo); font-size: 1.35rem; font-weight: var(--peso-titulo); line-height: 1.1; min-width: 0; text-wrap: balance; }
+/* Fontes largas (Cinzel, Bungee) ficam um pouco menores para caber no menu */
+html:is([data-tema="mistica"], [data-tema="punk"]) .marca-nome { font-size: 1.1rem; }
 
 .menu-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
 .menu-link {
