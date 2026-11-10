@@ -59,7 +59,7 @@ begin
       ('marih@nossocantinho.app', 'marih1234')
     ) as v(email, senha)
   loop
-    if not exists (select 1 from auth.users where lower(email) = lower(conta.email)) then
+    if not exists (select 1 from auth.users where lower(split_part(email, '@', 1)) = lower(split_part(conta.email, '@', 1))) then
       novo_id := gen_random_uuid();
       insert into auth.users (
         instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -84,8 +84,8 @@ begin
     end if;
   end loop;
 
-  select id into id_lavi from auth.users where lower(email) = 'lavi@nossocantinho.app';
-  select id into id_marih from auth.users where lower(email) = 'marih@nossocantinho.app';
+  select id into id_lavi from auth.users where lower(split_part(email, '@', 1)) = 'lavi' limit 1;
+  select id into id_marih from auth.users where lower(split_part(email, '@', 1)) = 'marih' limit 1;
 
   -- Casal NOVO (nunca reaproveita o casal da Kath e do Drico)
   select casal_id into id_casal from public.perfis where user_id in (id_lavi, id_marih) limit 1;
@@ -97,7 +97,7 @@ begin
   values
     (id_lavi,  id_casal, 'lavi',  'Lavi',  'ela', 'neutro'),
     (id_marih, id_casal, 'marih', 'Marih', 'ela', 'neutro')
-  on conflict (user_id) do nothing;
+  on conflict do nothing;
 
   raise notice 'Pronto! Lavi e Marih no casal %', id_casal;
 end

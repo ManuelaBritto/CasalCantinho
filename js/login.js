@@ -11,11 +11,6 @@ export function mostrarLogin({ erroInicial = '' } = {}) {
 
   tela.innerHTML = `
     <div class="login-cartao cartao">
-      <div class="login-enfeites" aria-hidden="true">
-        <span class="le le-1">${adesivo('coracao')}</span>
-        <span class="le le-2">${adesivo('girassol')}</span>
-        <span class="le le-3">${adesivo('morcego')}</span>
-      </div>
       <img class="login-logo" src="assets/logo.png" alt="" width="128" height="128">
       <h1 class="login-titulo">Nosso Cantinho</h1>
       <p class="login-sub">Um espaço só de vocês para cartinhas, listas, filmes e memórias.</p>

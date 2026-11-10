@@ -8,8 +8,9 @@
 --    e com o Ric). Ao entrar, ela escolhe em qual cantinho quer ficar.
 --    As regras de segurança passam a ser "os casais de que eu participo":
 --    a Marih continua sem ver nada do Ric, e o Ric nada da Marih.
--- 2. Cria o casal 3: Lavi (a mesma conta) e Ric
---      login "ric" → ric@nossocantinho.app   senha: ric1234
+-- 2. Cria o casal 3: Lavi (a mesma conta) e Rick
+--      login "rick" → rick@nossocantinho.app (senha inicial rick1234: troque depois)
+--    Se a conta já existir (como "rick" ou "ric"), não mexe nela.
 -- =====================================================================
 create extension if not exists pgcrypto;
 
@@ -130,20 +131,20 @@ begin
 end
 $$;
 
--- ---------- 2. Casal 3: Lavi e Ric ----------
+-- ---------- 2. Casal 3: Lavi e Rick ----------
 do $$
 declare
-  email_ric text := 'ric@nossocantinho.app';
+  email_ric text := 'rick@nossocantinho.app';
   id_ric uuid;
   id_lavi uuid;
   id_casal uuid;
 begin
-  select id into id_lavi from auth.users where lower(email) = 'lavi@nossocantinho.app';
+  select id into id_lavi from auth.users where lower(split_part(email, '@', 1)) = 'lavi' limit 1;
   if id_lavi is null then
     raise exception 'Conta da Lavi não encontrada. Rode antes o arquivo supabase/varios-casais.sql.';
   end if;
 
-  select id into id_ric from auth.users where lower(email) = email_ric;
+  select id into id_ric from auth.users where lower(split_part(email, '@', 1)) in ('rick', 'ric') limit 1;
   if id_ric is null then
     id_ric := gen_random_uuid();
     insert into auth.users (
@@ -152,7 +153,7 @@ begin
       confirmation_token, recovery_token, email_change_token_new, email_change
     ) values (
       '00000000-0000-0000-0000-000000000000', id_ric, 'authenticated', 'authenticated',
-      email_ric, crypt('ric1234', gen_salt('bf')), now(),
+      email_ric, crypt('rick1234', gen_salt('bf')), now(),
       '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(),
       '', '', '', ''
     );
@@ -169,16 +170,16 @@ begin
   -- Casal NOVO do Ric (nunca o casal da Lavi com a Marih)
   select casal_id into id_casal from public.perfis where user_id = id_ric limit 1;
   if id_casal is null then
-    insert into public.casais (nome) values ('Cantinho da Lavi e do Ric') returning id into id_casal;
+    insert into public.casais (nome) values ('Cantinho da Lavi e do Rick') returning id into id_casal;
   end if;
 
   insert into public.perfis (user_id, casal_id, nome, apelido, tratamento, tema_padrao)
   values
-    (id_ric,  id_casal, 'ric',  'Ric',  'ele', 'neutro'),
+    (id_ric,  id_casal, 'ric',  'Rick', 'ele', 'neutro'),
     (id_lavi, id_casal, 'lavi', 'Lavi', 'ela', 'neutro')
   on conflict (user_id, casal_id) do nothing;
 
-  raise notice 'Pronto! Lavi e Ric no casal %', id_casal;
+  raise notice 'Pronto! Lavi e Rick no casal %', id_casal;
 end
 $$;
 

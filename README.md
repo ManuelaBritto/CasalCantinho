@@ -129,11 +129,11 @@ Enquanto o Supabase **não** estiver configurado:
 
 1. Crie um projeto em https://supabase.com.
 2. **SQL Editor → New query**: cole `supabase/schema.sql` e rode. Isso cria as tabelas `casais`, `perfis`, `cartas`, `listas`, `filmes`, `videos`, `memorias`, as políticas **RLS** e o bucket **privado** `memorias`.
-3. **Contas de login.** Jeito rápido: rode `supabase/criar-contas.sql` (cria `kath@nossocantinho.app` com senha `kath1234` e `drico@nossocantinho.app` com senha `drico1234`; **troque as senhas depois**). Ou, manualmente, em **Authentication → Users → Add user → Create new user**, crie as duas contas com estes **e-mails internos** e a senha que cada um vai usar (marque *Auto Confirm User*):
-   - `kath@nossocantinho.app`
+3. **Contas de login.** Jeito rápido: rode `supabase/criar-contas.sql` (cria `kathh@nossocantinho.app` com senha `kath1234` e `drico@nossocantinho.app` com senha `drico1234`; **troque as senhas depois**). Ou, manualmente, em **Authentication → Users → Add user → Create new user**, crie as duas contas com estes **e-mails internos** e a senha que cada um vai usar (marque *Auto Confirm User*):
+   - `kathh@nossocantinho.app`
    - `drico@nossocantinho.app`
 
-   O login no site é só por **nome + senha**: quem digita "Kath" entra com `kath@nossocantinho.app`. Nenhum e-mail é enviado para esses endereços. Para usar outro domínio, defina `LOGIN_DOMINIO` no `.env`/Vercel e crie as contas com ele.
+   O login no site é só por **nome + senha**: quem digita "Kath" entra com `kathh@nossocantinho.app`. Nenhum e-mail é enviado para esses endereços. Para usar outro domínio, defina `LOGIN_DOMINIO` no `.env`/Vercel e crie as contas com ele.
 4. **Authentication → Sign In / Providers → Email**: desligue *Allow new users to sign up*, para ninguém mais criar conta.
 5. *(Para "Assistir junto" no Cinema)* No **SQL Editor**, rode também `supabase/cinema-juntos.sql`. Quem rodou o `schema.sql` depois de 31/10/2026 já tem isso.
 6. *(Para guardar o histórico do chat do Cinema)* No **SQL Editor**, rode `supabase/chat-cinema.sql`. Sem ele o chat funciona na hora, mas as mensagens não ficam salvas.
@@ -171,7 +171,7 @@ Para criar outro casal, copie o bloco "Casal 2" de `varios-casais.sql` trocando 
 
 Rode também `supabase/pessoa-em-varios-casais.sql` (depois do `varios-casais.sql`). Ele:
 - deixa uma conta participar de vários casais: as regras do banco passam a ser "os casais de que a pessoa participa". A Marih continua sem ver nada do Ric, e o Ric nada da Marih;
-- cria o **casal 3**: a Lavi (mesma conta) e o Ric, login `ric` / senha `ric1234`.
+- cria o **casal 3**: a Lavi (mesma conta) e o Rick, login `rick` (senha inicial `rick1234`; troque depois).
 
 No site, quem participa de mais de um casal escolhe **"Em qual cantinho?"** ao entrar. A escolha fica guardada no aparelho, e **Trocar de cantinho** (no menu) pergunta de novo. O celular dessa pessoa recebe as notificações dos dois cantinhos, e tocar numa delas abre o cantinho de onde ela veio.
 

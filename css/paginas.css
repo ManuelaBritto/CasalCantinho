@@ -33,9 +33,6 @@ section + section, .inicio-destaques { margin-top: 1.5rem; }
 .login-titulo { margin: 0; font-size: clamp(2rem, 1.5rem + 2vw, 2.7rem); }
 .login-sub { margin: 0; color: var(--cor-texto-suave); }
 .login-pergunta { margin: .25rem 0 0; font-size: 1.2rem; }
-.login-enfeites { display: flex; justify-content: center; gap: .75rem; }
-.login-enfeites .le { width: 46px; height: 46px; animation: flutuar 3s ease-in-out infinite alternate; }
-.login-enfeites .le-2 { animation-delay: .4s; } .login-enfeites .le-3 { animation-delay: .8s; }
 .login-perfis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 .perfil-botao {
   display: grid; justify-items: center; gap: .35rem;

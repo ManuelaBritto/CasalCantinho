@@ -3,13 +3,13 @@
 --
 -- ANTES: crie as duas contas em Authentication > Users > Add user, com
 -- estes e-mails internos (o login no site é só pelo NOME + senha):
---     kath@nossocantinho.app      e      drico@nossocantinho.app
+--     kathh@nossocantinho.app      e      drico@nossocantinho.app
 -- Se mudou LOGIN_DOMINIO no .env/Vercel, troque o domínio abaixo também.
 -- Pode rodar mais de uma vez sem problema (não duplica o casal nem os perfis).
 -- =====================================================================
 do $$
 declare
-  email_kath text := 'kath@nossocantinho.app';
+  email_kath text := 'kathh@nossocantinho.app';
   email_drico text := 'drico@nossocantinho.app';
   id_kath   uuid;
   id_drico  uuid;
@@ -33,7 +33,7 @@ begin
 
   insert into public.perfis (user_id, casal_id, nome)
   values (id_kath, id_casal, 'kath'), (id_drico, id_casal, 'drico')
-  on conflict (user_id) do nothing;
+  on conflict do nothing;
 
   raise notice 'Pronto! Kath e Drico vinculados ao casal %', id_casal;
 end

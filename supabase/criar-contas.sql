@@ -2,7 +2,7 @@
 -- Nosso Cantinho — criar as contas de login direto pelo SQL (opcional)
 --
 -- Cria (se ainda não existirem) as duas contas já confirmadas:
---     login "kath"  → kath@nossocantinho.app   senha: kath1234
+--     login "kathh" → kathh@nossocantinho.app   senha: kath1234
 --     login "drico" → drico@nossocantinho.app  senha: drico1234
 -- No site a pessoa digita só o NOME (kath / drico) e a senha.
 --
@@ -21,7 +21,7 @@ declare
 begin
   for conta in
     select * from (values
-      ('kath@nossocantinho.app',  'kath1234'),
+      ('kathh@nossocantinho.app',  'kath1234'),
       ('drico@nossocantinho.app', 'drico1234')
     ) as v(email, senha)
   loop
