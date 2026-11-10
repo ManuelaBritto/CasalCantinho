@@ -1,0 +1,125 @@
+/* Diversão: quadro branco, "Como eu te vejo" e o desenho nas Cartinhas */
+.selo-desenvolvimento { vertical-align: middle; margin-left: .4rem; font-family: var(--fonte-corpo); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); }
+.selo-ok { display: inline-flex; align-items: center; gap: .3rem; background: color-mix(in srgb, var(--cor-sucesso) 14%, transparent); color: var(--cor-sucesso); }
+.selo-ok .icone { width: 14px; height: 14px; }
+.cabecalho-secao.pequeno { margin-bottom: 1rem; }
+.secao-quadro { margin-top: 2rem; }
+.subtitulo-pequeno { margin: 1.4rem 0 .7rem; font-size: 1rem; font-family: var(--fonte-corpo); font-weight: 700; color: var(--cor-texto-suave); }
+
+/* Como eu te vejo */
+.como-eu-te-vejo { display: grid; gap: 1rem; }
+.como-topo { display: flex; gap: 1rem; align-items: flex-start; }
+.como-icone { flex: none; width: 54px; height: 54px; display: grid; place-items: center; border-radius: 16px; background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); }
+.como-icone .icone { width: 28px; height: 28px; }
+.sobretitulo-como { margin: 0; font-size: .78rem; font-family: var(--fonte-corpo); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--cor-primaria-texto); }
+.como-pergunta { margin: .2rem 0 .3rem; font-family: var(--fonte-titulo); font-weight: var(--peso-titulo); font-size: clamp(1.3rem, 1.1rem + 1vw, 1.8rem); line-height: 1.2; }
+.como-topo .dica { margin: 0; }
+.grade-respostas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: .8rem; }
+.resposta-como p { margin: .3rem 0 0; }
+.resposta-pergunta { font-size: .85rem; font-weight: 600; }
+.resposta-como .meta { font-size: .78rem; }
+.resposta-link { display: block; aspect-ratio: 3 / 2; border-radius: var(--raio-pequeno); overflow: hidden; background: #fff; border: 1px solid var(--cor-borda); box-shadow: var(--sombra-suave); }
+.resposta-link img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.resposta-fechada { width: 100%; height: 100%; display: flex; flex-direction: column; gap: .4rem; align-items: center; justify-content: center; text-align: center; padding: .5rem; font-weight: 700; font-size: .85rem; color: #7a3a52; background: linear-gradient(135deg, #ffe3ea 0 50%, #ffd2de 50% 100%); }
+.envio-como { margin-top: 1rem; }
+
+/* Galeria */
+.grade-desenhos { list-style: none; margin: 0; padding: 0; }
+.cartao-desenho { display: grid; gap: .6rem; }
+.desenho-miniatura { display: block; padding: 0; border: 1px solid var(--cor-borda); border-radius: var(--raio-pequeno); overflow: hidden; background: #fff; aspect-ratio: 3 / 2; cursor: pointer; box-shadow: var(--sombra-suave); }
+.desenho-miniatura img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.desenho-vazio { width: 100%; height: 100%; display: flex; flex-direction: column; gap: .3rem; align-items: center; justify-content: center; color: #9a8a90; font-size: .85rem; }
+.desenho-info h3 { margin: 0; font-size: 1.02rem; }
+.desenho-info .meta { margin: .15rem 0 .45rem; }
+
+/* Editor */
+.editor-desenho-titulo { flex: 1; min-width: min(100%, 260px); }
+.titulo-desenho { font-family: var(--fonte-titulo); font-size: 1.4rem; font-weight: var(--peso-titulo); width: 100%; }
+.editor-desenho-titulo .meta { margin: .3rem 0 0; }
+.presenca-quadro { display: flex; align-items: center; gap: .5rem; min-height: 1.4em; margin: 0 0 .6rem; font-size: .9rem; color: var(--cor-texto-suave); }
+
+/* Quadro */
+.quadro { display: grid; gap: .6rem; }
+.quadro-ferramentas { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; padding: .55rem .7rem; border-radius: var(--raio); background: var(--cartao-fundo); border: var(--cartao-borda); box-shadow: var(--sombra-suave); position: sticky; top: calc(var(--altura-topo, 64px) + .4rem); z-index: 5; }
+.quadro-grupo { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; }
+.botao-ferramenta { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 10px; border: 1.5px solid var(--cor-borda); background: var(--cor-superficie); color: var(--cor-texto); cursor: pointer; }
+.botao-ferramenta[aria-pressed="true"] { border-color: var(--cor-primaria); background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); }
+.botao-ferramenta:disabled { opacity: .4; cursor: default; }
+.botao-ferramenta.perigo { color: var(--cor-erro); }
+.botao-ferramenta.espelhado .icone { transform: scaleX(-1); }
+.cor-quadro, .tamanho-quadro { position: relative; display: inline-grid; }
+.cor-quadro input[type="radio"], .tamanho-quadro input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cor-quadro > span:not(.sr-only) { width: 30px; height: 30px; border-radius: 50%; background: var(--c); border: 2px solid rgba(0, 0, 0, .15); cursor: pointer; box-sizing: border-box; }
+.cor-quadro input:checked + span { outline: 3px solid var(--cor-primaria); outline-offset: 2px; }
+.cor-quadro input:focus-visible + span, .tamanho-quadro input:focus-visible + span { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+.cor-livre-quadro input { width: 34px; height: 34px; padding: 0; border: 0; background: none; cursor: pointer; }
+.tamanho-quadro > span:not(.sr-only) { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; border: 1.5px solid var(--cor-borda); background: var(--cor-superficie); cursor: pointer; }
+.tamanho-quadro > span i { width: var(--t); height: var(--t); border-radius: 50%; background: var(--cor-texto); }
+.tamanho-quadro input:checked + span { border-color: var(--cor-primaria); background: var(--cor-primaria-suave); }
+.quadro-tela { border-radius: var(--raio); overflow: hidden; border: 1px solid var(--cor-borda); box-shadow: var(--sombra); background: #fff; }
+.quadro-tela canvas { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; touch-action: none; cursor: crosshair; }
+@media (max-width: 640px) {
+  .quadro-ferramentas { gap: .4rem .6rem; padding: .45rem; }
+  .cor-quadro > span:not(.sr-only) { width: 26px; height: 26px; }
+  .botao-ferramenta { width: 40px; height: 40px; }
+  .tamanho-quadro > span:not(.sr-only) { width: 36px; height: 36px; }
+}
+
+/* Desenho recebido nas Cartinhas */
+.bilhete-desenho { background: #fffdf8; padding: 1rem 1rem 1.1rem; border-radius: 4px; transform: rotate(-.8deg); }
+.bilhete-desenho img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: #fff; border: 1px solid #eee3dc; }
+.bilhete-desenho .bilhete-rotulo { justify-content: center; }
+.bilhete-desenho .bilhete-texto { margin-top: .5rem; font-size: 1.45rem; }
+.bilhete-desenho.compacto { padding: .7rem; }
+.bilhete-desenho.compacto .bilhete-texto { font-size: 1.15rem; }
+.bilhete-dobrado.tipo-desenho { background: linear-gradient(135deg, #e3f0ff 0 50%, #cfe3fb 50% 100%); color: #1f4b7a; }
+.bilhete-leitura .bilhete-desenho { width: min(560px, 100%); }
+
+/* Chamar para assistir */
+.convite-conteudo { display: grid; justify-items: center; gap: .5rem; text-align: center; padding-top: .4rem; }
+.convite-icone { width: 60px; height: 60px; display: grid; place-items: center; border-radius: 50%; background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); animation: convite-pulso 1.6s ease-in-out infinite; }
+.convite-icone .icone { width: 30px; height: 30px; }
+.convite-conteudo .sobretitulo { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--cor-primaria-texto); }
+.convite-texto { margin: 0; font-family: var(--fonte-titulo); font-size: 1.45rem; line-height: 1.25; }
+.convite-conteudo .dica { display: inline-flex; align-items: center; gap: .3rem; margin: 0; }
+@keyframes convite-pulso { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--cor-primaria) 35%, transparent); } 50% { box-shadow: 0 0 0 12px transparent; } }
+html[data-movimento="reduzir"] .convite-icone { animation: none; }
+.msg-convite { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; opacity: .85; }
+.msg-convite .icone { width: 14px; height: 14px; }
+
+/* ---------- Álbum de figurinhas (placeholder) ---------- */
+.album { margin-top: 2rem; display: grid; gap: 1rem; }
+.album-topo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: .5rem 1rem; }
+.album-topo .subtitulo { margin: 0; display: inline-flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
+.album-topo .dica { margin: .25rem 0 0; }
+.album-contador { margin: 0; padding: .35rem .8rem; border-radius: 999px; background: var(--cor-superficie-2); font-size: .9rem; }
+.album-livro {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr; border-radius: 14px; overflow: hidden;
+  background: #7a3a52; padding: 10px; gap: 0; box-shadow: 0 18px 40px rgba(60, 25, 35, .28);
+}
+html[data-tema="drico"] .album-livro { background: #2a0f22; }
+html[data-tema="kath"] .album-livro { background: #a5541b; }
+.album-pagina { position: relative; padding: 1.1rem 1.1rem 2rem; background: #fdf8ef; color: #3b2a2f;
+  background-image: radial-gradient(rgba(122, 58, 82, .07) 1px, transparent 1px); background-size: 14px 14px; }
+.album-pagina.esquerda { border-radius: 6px 0 0 6px; box-shadow: inset -18px 0 22px -16px rgba(60, 30, 30, .35); }
+.album-pagina.direita { border-radius: 0 6px 6px 0; box-shadow: inset 18px 0 22px -16px rgba(60, 30, 30, .35); }
+.album-pagina-titulo { margin: 0 0 .9rem; display: flex; align-items: center; gap: .45rem; font-family: "Caveat", var(--fonte-mao), cursive; font-size: 1.7rem; font-weight: 700; color: #7a3a52; }
+.album-pagina-titulo .icone { width: 22px; height: 22px; }
+.album-espacos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem .8rem; align-items: center; justify-items: center; }
+.album-espaco { position: relative; width: 100%; display: grid; place-items: center; border: 2px dashed #cdb7a8; background: rgba(255, 255, 255, .55); color: #c8b2a4; }
+.album-espaco.formato-retrato { aspect-ratio: 3 / 4; border-radius: 8px; }
+.album-espaco.formato-quadrado { aspect-ratio: 1; border-radius: 8px; }
+.album-espaco.formato-redondo { aspect-ratio: 1; border-radius: 50%; width: 92%; }
+.album-espaco.especial { border-color: #e2b23c; background: linear-gradient(135deg, rgba(255, 236, 170, .5), rgba(255, 255, 255, .6) 50%, rgba(255, 220, 140, .5)); color: #d4a02a; }
+.album-silhueta .icone { width: clamp(22px, 3vw, 34px); height: clamp(22px, 3vw, 34px); opacity: .55; }
+.album-num { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font-family: "Courier Prime", monospace; font-weight: 700; font-size: .78rem; color: #a8907f; }
+.album-espaco.formato-redondo .album-num { bottom: 12%; }
+.album-brilho { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); padding: 0 .4rem; border-radius: 999px; background: #e2b23c; color: #4a3207; font-size: .6rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.album-rodape-pagina { position: absolute; bottom: .55rem; font-family: "Courier Prime", monospace; font-size: .8rem; color: #a8907f; }
+.album-pagina.esquerda .album-rodape-pagina { left: 1rem; }
+.album-pagina.direita .album-rodape-pagina { right: 1rem; }
+.album-nav { display: flex; align-items: center; justify-content: center; gap: 1rem; font-weight: 600; color: var(--cor-texto-suave); }
+@media (max-width: 720px) {
+  .album-livro { grid-template-columns: 1fr; gap: 8px; }
+  .album-pagina.esquerda, .album-pagina.direita { border-radius: 6px; box-shadow: none; }
+}

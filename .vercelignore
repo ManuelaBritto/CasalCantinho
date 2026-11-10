@@ -1,0 +1,7 @@
+# Arquivos que NÃO vão para a Vercel
+servidor-local.mjs
+supabase/
+.env
+.env.*
+!.env.example
+scripts/

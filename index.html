@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="neutro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nosso Cantinho</title>
+  <meta name="description" content="Nosso Cantinho — um espaço privado do casal para cartinhas, listas, filmes, vídeos e memórias.">
+  <meta name="theme-color" content="#f7f2ee">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="assets/icones/favicon-64.png" sizes="64x64" type="image/png">
+  <link rel="icon" href="assets/icones/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/icones/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cantinho">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Courier+Prime:wght@400;700&family=Dancing+Script:wght@600&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/temas.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/paginas.css">
+  <link rel="stylesheet" href="css/boas-vindas.css">
+  <link rel="stylesheet" href="css/intro.css">
+  <link rel="stylesheet" href="css/recompensas.css">
+  <link rel="stylesheet" href="css/diversao.css">
+
+  <script>
+    /* Aplica o último tema antes da primeira pintura para evitar "piscar" de cores. */
+    (function () {
+      try {
+        var t = localStorage.getItem('nc:tema-atual');
+        if (t === 'neutro' || t === 'drico' || t === 'kath') document.documentElement.dataset.tema = t;
+      } catch (e) { /* armazenamento indisponível: segue com o tema neutro */ }
+    })();
+  </script>
+  <!-- Configuração pública (URL/chave anon do Supabase, proxy TMDB). Gerada pelo servidor-local.mjs a partir do .env. -->
+  <script src="config.js"></script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="pular-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- Camada decorativa do tema (ilustrações de fundo). Puramente visual. -->
+  <div class="decoracao" id="decoracao" aria-hidden="true"></div>
+
+  <div id="carregando" class="carregando" role="status">
+    <span class="spinner" aria-hidden="true"></span>
+    <span>Abrindo o cantinho…</span>
+  </div>
+
+  <!-- Tela de entrada (preenchida por js/auth-ui.js) -->
+  <section id="tela-login" class="tela-login" hidden></section>
+
+  <!-- Aplicação (preenchida por js/app.js) -->
+  <div id="app-shell" class="shell" hidden></div>
+
+  <!-- Animação de boas-vindas -->
+  <div id="boas-vindas" class="boas-vindas" hidden></div>
+
+  <!-- Avisos rápidos -->
+  <div id="toasts" class="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <noscript>
+    <p class="noscript">O Nosso Cantinho precisa de JavaScript ativado para funcionar.</p>
+  </noscript>
+</body>
+</html>

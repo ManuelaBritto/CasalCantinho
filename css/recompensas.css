@@ -1,0 +1,133 @@
+/* Recompensas do Cinema: estilos de nome, modos da sala, painel de conquistas e comemoração */
+
+/* ---------- Estilos de nome ---------- */
+.nome-estilo { font-weight: 800; }
+.nome-cromado {
+  background: linear-gradient(180deg, #4d4d57 0%, #c9c9d1 34%, #6e6e78 52%, #ececf1 66%, #5a5a64 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .5));
+}
+html[data-tema="drico"] .nome-cromado {
+  background-image: linear-gradient(180deg, #ffffff 0%, #d4d4dc 30%, #8a8a95 52%, #f3f3f6 64%, #a3a3ad 100%);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .6));
+}
+.nome-neon {
+  color: #d1127a;
+  text-shadow: 0 0 2px #fff, 0 0 6px #ff4fb2, 0 0 14px #ff4fb2;
+  animation: neon-piscar 4s infinite;
+}
+html[data-tema="drico"] .nome-neon { color: #ffe3f3; text-shadow: 0 0 4px #ff4fb2, 0 0 10px #ff4fb2, 0 0 22px #ff2f9e; }
+@keyframes neon-piscar { 0%, 91%, 95%, 100% { opacity: 1; } 93% { opacity: .55; } }
+.nome-letreiro {
+  display: inline-block; padding: .02em .4em; border-radius: .35em;
+  background: #2a1a10; color: #ffd36b; line-height: 1.25;
+  text-shadow: 0 0 6px rgba(255, 190, 60, .75);
+  outline: 2px dotted #ffe9a8; outline-offset: 2px;
+}
+html[data-movimento="reduzir"] .nome-neon { animation: none; }
+
+/* ---------- Modos da sala ---------- */
+.sala.modo-noir { filter: grayscale(1) contrast(1.08); }
+.sala.modo-noir::after {
+  content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: .16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  animation: granulado .6s steps(3) infinite;
+}
+@keyframes granulado { 0% { background-position: 0 0; } 33% { background-position: -40px 25px; } 66% { background-position: 30px -35px; } 100% { background-position: 0 0; } }
+html[data-movimento="reduzir"] .sala.modo-noir::after { animation: none; }
+
+.sala.modo-vip {
+  --cortina-1: #8f0f24; --cortina-2: #5c0816;
+  --palco-fundo: radial-gradient(ellipse at 50% 0%, #4a0d1b 0%, #22050c 60%, #120206 100%);
+  --letreiro-fundo: #1a0b05; --letreiro-texto: #ffd36b; --lampada: #ffe7a3;
+  --poltrona: #a3192f; --poltrona-sombra: #6e0f1f;
+  box-shadow: 0 0 0 2px #b8862b, 0 0 50px rgba(184, 134, 43, .25), var(--sombra-forte);
+}
+.sala.modo-vip .letreiro { border-color: #b8862b; }
+.sala.modo-vip .letreiro-texto { font-family: "Fraunces", Georgia, serif; text-transform: uppercase; letter-spacing: .12em; }
+
+/* ---------- Painel de conquistas ---------- */
+.conquistas { display: grid; gap: 1.25rem; }
+.resumo-conquistas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1.25rem 2rem; align-items: center; }
+.resumo-conquistas .sobretitulo { margin: 0; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cor-primaria-texto); }
+.tempo-cinema { margin: .1rem 0 .3rem; font-family: var(--fonte-titulo); font-weight: var(--peso-titulo); font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.6rem); line-height: 1.1; }
+.resumo-proxima p { margin: 0 0 .5rem; }
+.resumo-proxima .progresso { height: 12px; margin-bottom: .45rem; }
+.resumo-conquistas .dica { margin: 0; }
+@media (max-width: 680px) { .resumo-conquistas { grid-template-columns: 1fr; } }
+
+.escolhas-conquistas { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; }
+.escolhas-conquistas fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.escolhas-conquistas legend { font-weight: 700; margin-bottom: .45rem; padding: 0; }
+.opcao-escolha { position: relative; }
+.opcao-escolha input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opcao-escolha > span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: .35rem .9rem; border-radius: var(--raio-pequeno);
+  border: 1.5px solid var(--cor-borda); background: var(--cor-superficie); cursor: pointer; font-weight: 600;
+}
+.opcao-escolha input:checked + span { border-color: var(--cor-primaria); background: var(--cor-primaria-suave); }
+.opcao-escolha input:focus-visible + span { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+
+.titulo-ciclo { margin: 0 0 .6rem; font-size: 1rem; font-family: var(--fonte-corpo); font-weight: 700; color: var(--cor-texto-suave); letter-spacing: .04em; }
+.grade-conquistas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: .9rem; }
+.conquista {
+  display: flex; flex-direction: column; border-radius: var(--raio); background: var(--cartao-fundo); border: var(--cartao-borda);
+  box-shadow: var(--sombra); overflow: hidden;
+}
+.conquista.porte-grande { border-top: 4px solid var(--cor-primaria); }
+.conquista.porte-media { border-top: 4px solid var(--cor-destaque); }
+.conquista-arte { position: relative; height: 130px; display: grid; place-items: center; background: var(--cor-superficie-2); }
+.conquista-arte .arte-recompensa { width: 104px; height: 104px; }
+.conquista.trancada .conquista-arte > :first-child { filter: grayscale(1); opacity: .35; }
+.conquista-cadeado {
+  position: absolute; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--cor-superficie); color: var(--cor-texto-suave); box-shadow: var(--sombra);
+}
+.conquista-info { padding: .85rem 1rem 1rem; display: flex; flex-direction: column; gap: .35rem; flex: 1; align-items: flex-start; }
+.conquista-info h4 { margin: 0; font-size: 1.08rem; font-family: var(--fonte-titulo); }
+.conquista-desc { margin: 0; font-size: .92rem; color: var(--cor-texto-suave); }
+.conquista-info .meta { margin: auto 0 .2rem; font-size: .85rem; color: var(--cor-texto-suave); }
+.conquista-tag { margin: 0; display: flex; flex-wrap: wrap; gap: .3rem .6rem; font-size: .76rem; font-weight: 700; color: var(--cor-texto-suave); }
+.selo-porte { padding: .05rem .5rem; border-radius: 999px; background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); }
+.conquista-info [aria-pressed="true"] { border-color: var(--cor-primaria); background: var(--cor-primaria-suave); }
+
+.previa-nome { display: grid; place-items: center; width: 100%; height: 100%; font-size: 2.2rem; font-family: "Fraunces", Georgia, serif; }
+.previa-cromado { background: #2a2026; }
+.previa-neon { background: #1c0f1a; }
+.previa-neon .nome-neon { color: #ffe3f3; text-shadow: 0 0 4px #ff4fb2, 0 0 10px #ff4fb2, 0 0 22px #ff2f9e; }
+.previa-cromado .nome-cromado { background-image: linear-gradient(180deg, #ffffff 0%, #d4d4dc 30%, #8a8a95 52%, #f3f3f6 64%, #a3a3ad 100%); filter: none; }
+.previa-letreiro { background: var(--cor-superficie-2); }
+
+/* ---------- Colecionável de perto ---------- */
+.colecionavel-detalhe { text-align: center; }
+.colecionavel-arte { display: grid; place-items: center; padding: 1rem; border-radius: var(--raio); background: var(--cor-superficie-2); margin-bottom: 1rem; }
+.colecionavel-arte .arte-recompensa { width: 180px; height: 180px; }
+
+/* ---------- Foto de recordação ---------- */
+.foto-recordacao { display: grid; gap: .75rem; }
+.foto-previa { display: grid; place-items: center; gap: .5rem; min-height: 240px; border-radius: var(--raio); background: var(--cor-superficie-2); }
+.foto-previa img { width: 100%; max-height: 62vh; object-fit: contain; border-radius: var(--raio-pequeno); }
+a.botao[aria-disabled="true"] { opacity: .55; pointer-events: none; }
+
+/* ---------- Comemoração ---------- */
+dialog.modal.comemoracao { overflow: hidden; }
+.comemoracao .modal-corpo { position: relative; }
+.comemoracao-conteudo { position: relative; z-index: 1; display: grid; justify-items: center; gap: .55rem; text-align: center; padding-top: .5rem; }
+.comemoracao-conteudo h2 { margin: 0; font-family: var(--fonte-titulo); font-size: 1.7rem; line-height: 1.15; }
+.comemoracao-conteudo p { margin: 0; }
+.comemoracao-conteudo .sobretitulo { font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cor-primaria-texto); }
+.comemoracao-icone { width: 60px; height: 60px; display: grid; place-items: center; border-radius: 50%; background: var(--cor-primaria-suave); color: #d6a21a; }
+.comemoracao-icone .icone { width: 30px; height: 30px; }
+.comemoracao-arte { width: 100%; height: 150px; display: grid; place-items: center; border-radius: var(--raio); background: var(--cor-superficie-2); overflow: hidden; margin-top: .3rem; }
+.comemoracao-arte .arte-recompensa { width: 130px; height: 130px; }
+.comemoracao-arte .previa-nome { font-size: 2.6rem; }
+.festa-confete { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.festa-confete span {
+  position: absolute; top: -20px; left: var(--x); width: 8px; height: 14px; border-radius: 2px; opacity: 0;
+  transform: rotate(var(--giro)); animation: confete-cair 2.6s var(--atraso) ease-in forwards;
+}
+@keyframes confete-cair {
+  0% { opacity: 1; transform: translateY(0) rotate(var(--giro)); }
+  100% { opacity: 0; transform: translateY(420px) rotate(calc(var(--giro) + 540deg)); }
+}
+html[data-movimento="reduzir"] .festa-confete { display: none; }
