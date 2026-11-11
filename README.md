@@ -211,6 +211,32 @@ Precisa das notificações (6.2) e do aviso de atualização (6.3, por causa da 
 
 Cada lembrete sai uma vez só (o banco anota os enviados). Com o site aberto, ele também confere os lembretes de 5 em 5 minutos, como reserva.
 
+## 5.5 Lembretes do cantinho (`supabase/engajamento.sql`)
+
+Avisos para o casal voltar ao app, além das notificações de ação. Rode `supabase/engajamento.sql` no SQL Editor (depois de `calendario.sql`; pode rodar de novo sem problema). Usa o mesmo agendador de 5 em 5 minutos (`agendar-lembretes.sql`) e a mesma senha `AVISO_SEGREDO`: nada novo na Vercel.
+
+| Aviso | Quando (Brasília) | Exemplo |
+|---|---|---|
+| Datas especiais | 9h | "500 dias juntos! 💕", "Hoje fazem 2 anos e 3 meses juntos 💕" |
+| Nesse dia | 10h | "Há 1 ano, Drico te mandou uma cartinha 💌" |
+| Pergunta do dia | 12h, se não respondeu | "Pergunta do dia 💭 · O que você mais gosta de fazer comigo num dia de chuva?" |
+| Resumo da semana | domingo 18h | "Essa semana: 3 cartinhas, 1 memória nova e 3 partidas (você ganhou de 2×1)." |
+| Sua vez num jogo parado | 19h, jogo parado há 1+ dia | "Sua vez no jogo da velha 😏" |
+| Saudade | 19h, 3+ dias sem abrir (1 por semana) | "Tem 2 cartinhas da Kath esperando você 💌" |
+| Sexta de cinema | sexta 19h | "Que tal ver "A Viagem de Chihiro", da lista de vocês, no Cineminha hoje?" |
+| Falta você | 20h30 | "Lavi já respondeu a pergunta de hoje 👀" |
+
+**Regras:** no máximo 2 por dia por pessoa (1 de dia, 1 à noite, somando todos os cantinhos dela), nada entre 22h e 8h, "jogo parado" e "saudade" só se a pessoa ainda não abriu o site no dia. Cada pessoa liga/desliga cada tipo em **Aparência → Notificações → Lembretes do cantinho** (todos vêm ligados).
+
+**Para acompanhar o que funciona**, rode no SQL Editor:
+
+```sql
+select e.tipo, count(*) as enviados,
+       (select count(*) from privado.engajamento_aberturas a where a.tipo = e.tipo and a.dia >= current_date - 30) as abertos
+from privado.engajamento_envios e where e.dia >= current_date - 30
+group by e.tipo order by enviados desc;
+```
+
 ## 6. Configurar a API do TMDB (pesquisa de filmes)
 
 1. Crie uma conta em https://www.themoviedb.org e peça uma chave em **Configurações → API**.

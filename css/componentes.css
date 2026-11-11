@@ -234,3 +234,12 @@ dialog.modal[open] { animation: surgir .22s ease; display: flex; flex-direction:
 /* Drico: ícones escuros ganham um brilho suave para aparecer no fundo escuro */
 html[data-tema="mistica"] :is(.seletor-tema span svg, .marca-icone svg, .avatar svg, .decoracao .enfeite svg) { filter: drop-shadow(0 0 4px rgba(201, 167, 255, .55)); }
 html[data-tema="punk"] :is(.seletor-tema span svg, .marca-icone svg, .avatar svg, .decoracao .enfeite svg) { filter: drop-shadow(0 0 4px rgba(93, 255, 122, .5)); }
+
+/* Lembretes do cantinho (Aparência) */
+.painel-lembretes { margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid var(--cor-borda); display: grid; gap: .6rem; }
+.painel-lembretes .subtitulo-pequeno { display: flex; align-items: center; gap: .45rem; margin: 0; font-size: 1.05rem; }
+.painel-lembretes .subtitulo-pequeno .icone { width: 18px; height: 18px; color: var(--cor-primaria-texto); }
+.painel-lembretes .dica { margin: 0; }
+.lembretes-opcoes .opcao span { display: grid; gap: .1rem; text-align: left; }
+.lembretes-opcoes .opcao small { font-weight: 500; color: var(--cor-texto-suave); }
+.painel-lembretes fieldset[disabled] { opacity: .6; }

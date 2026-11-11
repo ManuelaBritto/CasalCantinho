@@ -6,6 +6,7 @@ import { TEMAS, temaAtual, temasDisponiveis, aplicarTema, lerPreferencias, salva
 import { salvarTemaRemoto } from '../auth.js';
 import { storeAtual } from '../store/index.js';
 import { montarPainelNotificacoes } from '../painel-notificacoes.js';
+import { montarPainelLembretes } from '../engajamento.js';
 
 const PREVIA = {
   mistica: ['lua-mistica', 'gato-preto', 'carta-cigana'],
@@ -96,6 +97,7 @@ export async function renderizar(el, ctx) {
     <section class="cartao" aria-labelledby="titulo-notificacoes" id="notificacoes">
       <h2 id="titulo-notificacoes">Notificações e app no celular</h2>
       <div data-painel-notificacoes></div>
+      <div class="painel-lembretes" data-painel-lembretes></div>
     </section>
 
     <section class="cartao" aria-labelledby="titulo-dados">
@@ -144,5 +146,6 @@ export async function renderizar(el, ctx) {
     }
   });
 
+  montarPainelLembretes(el.querySelector('[data-painel-lembretes]'), perfil);
   return montarPainelNotificacoes(el.querySelector('[data-painel-notificacoes]'), perfil);
 }

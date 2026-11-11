@@ -1,4 +1,5 @@
 // Ponto de entrada: sessão → boas-vindas → estrutura da página → rotas.
+import { guardarOrigemDaUrl, registrarVisita } from './engajamento.js';
 import { injetarSpriteIcones, icone } from './ui/icones.js';
 import { ICONE_TEMA } from './ui/ilustracoes.js';
 import { esc, toast, abrirModal } from './ui/dom.js';
@@ -44,6 +45,11 @@ async function iniciar() {
   conferirLembretes();
   registrarServiceWorker();
   aplicarPreferencias(lerPreferencias(null));
+  // Veio de um "lembrete do cantinho"? (?origem=…) guarda para contar a abertura
+  guardarOrigemDaUrl();
+  if (new URLSearchParams(location.search).has('origem') && !new URLSearchParams(location.search).has('cantinho')) {
+    history.replaceState(null, '', location.pathname + location.hash);
+  }
   // Notificação de outro cantinho (?cantinho=…): abre direto nele
   const pedido = new URLSearchParams(location.search).get('cantinho');
   if (pedido) {
@@ -77,6 +83,9 @@ async function abrirApp(perfil, { primeiraEntrada, animar }) {
   } else {
     definirStore(criarStoreLocal());
   }
+
+  // Anota a visita do dia (lembretes do cantinho)
+  registrarVisita(perfil);
 
   // Sala do cinema (sessão juntos): um canal só para o site todo
   const sala = iniciarSala(perfil, { modo: modoAuth(), cliente: clienteSupabase() });

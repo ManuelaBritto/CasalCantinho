@@ -14,6 +14,7 @@
 import { config } from './config.js';
 import { modoAuth, clienteSupabase, PERFIS, participacoesDaConta, pedirCantinho } from './auth.js';
 import { salaAtual } from './sala-cinema.js';
+import { registrarAbertura } from './engajamento.js';
 
 let registro = null;
 let perfilAtivo = null;
@@ -50,12 +51,13 @@ export async function registrarServiceWorker() {
       const cantinho = e.data.cantinho;
       if (cantinho && perfilAtivo?.casalId && cantinho !== perfilAtivo.casalId && participacoesDaConta().some((p) => p.casalId === cantinho)) {
         pedirCantinho(cantinho);
-        try { sessionStorage.removeItem('nc:boas-vindas-vista'); } catch { /* ignora */ }
+        try { sessionStorage.removeItem('nc:boas-vindas-vista'); if (e.data.origem) sessionStorage.setItem('nc:origem-push', e.data.origem); } catch { /* ignora */ }
         location.hash = e.data.hash;
         location.reload();
         return;
       }
       location.hash = e.data.hash;
+      if (e.data.origem) registrarAbertura(perfilAtivo, e.data.origem);
     });
   } catch (e) {
     console.warn('[notificações] service worker não registrado:', e?.message || e);
