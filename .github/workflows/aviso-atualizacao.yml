@@ -1,0 +1,36 @@
+# Manda "Hey, chegou uma atualização nova no cantinho! Venha ver!" para todos os aparelhos
+# logo depois que a Vercel termina de publicar uma versão nova (produção).
+#
+# Precisa de UMA configuração no GitHub:
+#   Settings > Secrets and variables > Actions > aba "Variables" > New repository variable
+#   Nome: SITE_URL   Valor: o endereço do site (ex.: https://meu-cantinho.vercel.app)
+#
+# Para subir uma correção sem avisar ninguém, coloque [sem aviso] na mensagem do commit.
+name: Avisar atualização
+
+on: deployment_status
+
+jobs:
+  avisar:
+    if: github.event.deployment_status.state == 'success' && startsWith(github.event.deployment.environment, 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Avisar os cantinhos
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          SHA: ${{ github.event.deployment.sha }}
+        run: |
+          if [ -z "$SITE_URL" ]; then
+            echo "Falta a variável SITE_URL (Settings > Secrets and variables > Actions > Variables)."
+            exit 0
+          fi
+          SITE_URL="${SITE_URL%/}"
+          for tentativa in 1 2 3 4 5 6; do
+            resposta=$(curl -s -w '\n%{http_code}' -X POST "$SITE_URL/api/avisar-atualizacao" \
+              -H 'Content-Type: application/json' -d "{\"sha\":\"$SHA\"}")
+            codigo=$(echo "$resposta" | tail -n1)
+            echo "Tentativa $tentativa: $codigo $(echo "$resposta" | head -n -1)"
+            # 409 = o endereço ainda está com a versão anterior; espera e tenta de novo
+            if [ "$codigo" != "409" ]; then exit 0; fi
+            sleep 20
+          done

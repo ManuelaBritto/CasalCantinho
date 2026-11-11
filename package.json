@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node servidor-local.mjs",
-    "chaves": "node scripts/gerar-chaves-notificacao.mjs"
+    "chaves": "node scripts/gerar-chaves-notificacao.mjs",
+    "segredo-aviso": "node scripts/gerar-segredo-aviso.mjs"
   },
   "engines": {
     "node": ">=18"

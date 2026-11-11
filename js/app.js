@@ -9,7 +9,7 @@ import { mostrarBoasVindas } from './boas-vindas.js';
 import { definirStore, storeAtual, listar, obterAjustes, salvarAjustes } from './store/index.js';
 import { lerJuntos, normalizarJuntos, tempoAtualMs, relogio } from './juntos.js';
 import { iniciarSala, encerrarSala } from './sala-cinema.js';
-import { vigiarVersao } from './versao.js';
+import { vigiarVersao, pedirAvisoDeVersaoNova } from './versao.js';
 import { criarStoreLocal } from './store/local.js';
 import { registrarServiceWorker, sincronizarNotificacoes, esquecerPerfilNotificacoes, estadoNotificacoes } from './notificacoes.js';
 import { carregarRecompensas, verificarConquistas, aplicarEstilosNome, gravarTempoCinema, esperarGravacao, limparCacheRecompensas } from './recompensas.js';
@@ -39,6 +39,7 @@ const midiaCelular = window.matchMedia('(max-width: 920px)');
 async function iniciar() {
   injetarSpriteIcones();
   vigiarVersao();
+  pedirAvisoDeVersaoNova();
   registrarServiceWorker();
   aplicarPreferencias(lerPreferencias(null));
   // Notificação de outro cantinho (?cantinho=…): abre direto nele

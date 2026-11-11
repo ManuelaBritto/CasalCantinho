@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { buscarTmdb, tmdbAtivo } from './lib/tmdb.mjs';
 import { configPublicaJs } from './lib/config-publica.mjs';
 import { enviarNotificacao, notificacoesAtivas } from './lib/notificar.mjs';
+import { avisarAtualizacao } from './lib/aviso-atualizacao.mjs';
 
 const RAIZ = resolve(fileURLToPath(new URL('.', import.meta.url)));
 
@@ -84,6 +85,23 @@ async function proxyTmdb(url, res) {
   return enviar(res, status, corpo, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': status === 200 ? 'private, max-age=300' : 'no-store' });
 }
 
+// POST /api/avisar-atualizacao (mesma lógica da função da Vercel)
+async function rotaAvisarAtualizacao(req, res) {
+  const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
+  if (req.method !== 'POST') return enviar(res, 405, JSON.stringify({ erro: 'Use POST.' }), json);
+  let bruto = '';
+  for await (const parte of req) { bruto += parte; if (bruto.length > 2000) return enviar(res, 413, JSON.stringify({ erro: 'Pedido grande demais.' }), json); }
+  let dados = {};
+  try { dados = JSON.parse(bruto || '{}'); } catch { /* corpo inválido */ }
+  try {
+    const { status, corpo } = await avisarAtualizacao(dados);
+    return enviar(res, status, JSON.stringify(corpo), json);
+  } catch (e) {
+    console.error('[avisar-atualizacao]', e.message);
+    return enviar(res, 500, JSON.stringify({ erro: 'Erro ao avisar a atualização.' }), json);
+  }
+}
+
 // POST /api/notificar (mesma lógica da função da Vercel)
 async function rotaNotificar(req, res) {
   const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
@@ -109,6 +127,7 @@ const servidor = createServer(async (req, res) => {
     let caminho = decodeURIComponent(url.pathname);
 
     if (caminho === '/api/notificar') return rotaNotificar(req, res);
+    if (caminho === '/api/avisar-atualizacao') return rotaAvisarAtualizacao(req, res);
     if (req.method !== 'GET' && req.method !== 'HEAD') return enviar(res, 405, 'Método não permitido');
 
     if (caminho === '/config.js') {

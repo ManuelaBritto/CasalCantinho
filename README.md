@@ -244,6 +244,21 @@ Em **Aparência** tem o botão **Enviar um teste**, que manda uma notificação 
 
 **Instalar como app** (`manifest.webmanifest`) também dá o ícone na tela inicial, abertura em tela cheia e atalhos ao segurar o ícone: **Lembre de mim**, **Elogio**, **Cinema** e **Cartinhas**.
 
+## 6.3 Aviso "chegou uma atualização nova" (opcional)
+
+Toda vez que uma versão nova vai ao ar na Vercel, todos os aparelhos com notificação ativada recebem: **"Hey, chegou uma atualização nova no cantinho! Venha ver!"**. Cada versão avisa **uma vez só** (um *Redeploy* do mesmo código não avisa de novo). Quem está em dois cantinhos recebe uma vez só por aparelho.
+
+Precisa das notificações (6.2) funcionando. Depois, uma vez:
+
+1. **Senha.** No seu computador: `npm run segredo-aviso`. Aparecem duas coisas: a linha `AVISO_SEGREDO=...` e uma linha de SQL.
+2. **Vercel.** Adicione `AVISO_SEGREDO` (*Settings → Environment Variables*, Production) e faça **Redeploy**. Confira também se *Automatically expose System Environment Variables* está marcado (é assim por padrão).
+3. **Supabase.** No *SQL Editor*, rode `supabase/aviso-atualizacao.sql` e depois a linha de SQL do passo 1.
+4. **GitHub (para avisar na hora).** No repositório: *Settings → Secrets and variables → Actions → aba Variables → New repository variable*, nome `SITE_URL`, valor o endereço do site (ex.: `https://meu-cantinho.vercel.app`). O arquivo `.github/workflows/aviso-atualizacao.yml` chama o site assim que a Vercel termina o deploy. Sem esse passo, o aviso sai quando a primeira pessoa abrir a versão nova do site.
+
+**Subir sem avisar:** escreva `[sem aviso]` na mensagem do commit (ex.: `corrige texto [sem aviso]`).
+
+**Como funciona por dentro.** `api/avisar-atualizacao.js` → `lib/aviso-atualizacao.mjs` pede ao banco os aparelhos com a senha `AVISO_SEGREDO` (o banco guarda só o resumo sha256 dela, numa área que o site não enxerga). O banco anota cada versão avisada em `privado.avisos_atualizacao`. Nenhuma chave secreta do Supabase é usada.
+
 ---
 
 **Importante:** sem o Supabase, o site publicado fica em **modo demonstração**: qualquer pessoa com o link pode "entrar como Kath ou Drico". Os dados não vazam (cada visitante só vê o que está no próprio navegador), mas o espaço **não é privado**. Configure o Supabase antes de guardar coisas pessoais no site publicado.

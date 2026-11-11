@@ -34,3 +34,18 @@ export function vigiarVersao() {
   document.addEventListener('visibilitychange', conferir);
   return () => { clearInterval(timer); document.removeEventListener('visibilitychange', conferir); };
 }
+
+/**
+ * Reserva do aviso "chegou uma atualização nova": a primeira visita a uma versão nova
+ * pede ao servidor para avisar todo mundo. O servidor só avisa uma vez por versão
+ * (o normal é o GitHub já ter avisado logo depois do deploy; aí ele só responde "já avisado").
+ */
+export function pedirAvisoDeVersaoNova() {
+  const versao = config.versao;
+  if (!versao || !config.notificacoes) return;
+  try {
+    if (localStorage.getItem('nc:aviso-versao') === versao) return;
+    localStorage.setItem('nc:aviso-versao', versao);
+  } catch { return; }
+  fetch('/api/avisar-atualizacao', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}', keepalive: true }).catch(() => {});
+}
