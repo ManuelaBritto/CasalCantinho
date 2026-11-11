@@ -1,0 +1,115 @@
+/* =========================================================
+   Diversão: jogos (jogo da velha e forca) e Resposta do dia
+   ========================================================= */
+
+/* ---------- Resposta do dia (cartão na visão geral) ---------- */
+.resposta-dia .rd-topo { display: flex; gap: .9rem; align-items: flex-start; }
+.rd-icone { flex: none; width: 46px; height: 46px; display: grid; place-items: center; border-radius: var(--raio-pequeno); background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); }
+.rd-icone .icone { width: 24px; height: 24px; }
+.rd-pergunta { margin: .2rem 0 .3rem; font-family: var(--fonte-titulo); font-weight: var(--peso-titulo); font-size: clamp(1.3rem, 1.1rem + 1vw, 1.8rem); line-height: 1.2; }
+.rd-form { display: grid; gap: .6rem; margin-top: 1rem; }
+.rd-form textarea { min-height: 92px; resize: vertical; }
+.rd-form .grupo-botoes { justify-content: space-between; align-items: center; }
+.rd-contador { font-size: .8rem; color: var(--cor-texto-suave); }
+
+/* Resposta do outro escondida até você responder */
+.rd-trancada {
+  position: relative; margin-top: 1rem; padding: 1rem 1.1rem; border-radius: var(--raio-pequeno);
+  border: 2px dashed var(--cor-borda); background: var(--cor-superficie-2);
+  display: flex; gap: .8rem; align-items: center;
+}
+.rd-trancada .icone { width: 22px; height: 22px; flex: none; color: var(--cor-primaria-texto); }
+.rd-trancada p { margin: 0; }
+.rd-borrado { display: block; margin-top: .3rem; color: transparent; text-shadow: 0 0 8px color-mix(in srgb, var(--cor-texto) 55%, transparent); user-select: none; }
+
+/* As duas respostas reveladas */
+.rd-respostas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .8rem; margin-top: 1rem; }
+.rd-balao { margin: 0; padding: .9rem 1rem; border-radius: var(--raio-pequeno); background: var(--cor-superficie-2); border: 1px solid var(--cor-borda); }
+.rd-balao.minha { background: var(--cor-primaria-suave); }
+.rd-balao figcaption { display: flex; align-items: center; gap: .45rem; font-weight: 700; font-size: .9rem; margin-bottom: .35rem; }
+.rd-balao figcaption svg { width: 26px; height: 26px; }
+.rd-balao blockquote { margin: 0; font-family: var(--fonte-mao); font-size: 1.35rem; line-height: 1.3; }
+.rd-esperando { display: flex; align-items: center; gap: .5rem; margin: 1rem 0 0; color: var(--cor-texto-suave); }
+
+/* Histórico */
+.rd-historico { margin-top: 1.2rem; }
+.rd-historico summary { cursor: pointer; font-weight: 700; }
+.rd-dia { padding: .8rem 0; border-top: 1px solid var(--cor-borda); }
+.rd-dia:first-of-type { border-top: 0; }
+.rd-dia h4 { margin: 0 0 .4rem; font-size: 1rem; }
+.rd-dia .meta { margin: 0 0 .3rem; }
+.rd-dia ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .25rem; }
+.rd-dia li strong { margin-right: .3rem; }
+
+/* ---------- Jogos (cartões na visão geral) ---------- */
+.jogos-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.jogo-cartao { display: grid; gap: .7rem; align-content: start; }
+.jogo-cartao-topo { display: flex; align-items: center; gap: .8rem; }
+.jogo-cartao-topo h3 { margin: 0; font-size: 1.15rem; }
+.jogo-cartao-topo .meta { margin: .1rem 0 0; }
+.jogo-miniatura { flex: none; width: 58px; height: 58px; display: grid; place-items: center; border-radius: var(--raio-pequeno); background: var(--cor-superficie-2); border: 1px solid var(--cor-borda); }
+.jogo-miniatura svg { width: 44px; height: 44px; }
+.placar { display: flex; align-items: center; gap: .5rem; margin: 0; font-variant-numeric: tabular-nums; }
+.placar b { font-size: 1.3rem; font-family: var(--fonte-titulo); }
+.placar .vs { color: var(--cor-texto-suave); font-size: .85rem; }
+.placar .empates { margin-left: auto; font-size: .8rem; color: var(--cor-texto-suave); }
+.jogo-status { display: flex; align-items: center; gap: .45rem; margin: 0; padding: .5rem .7rem; border-radius: var(--raio-pequeno); background: var(--cor-superficie-2); font-size: .9rem; }
+.jogo-status.sua-vez { background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); font-weight: 700; }
+.jogo-status .icone { width: 16px; height: 16px; flex: none; }
+
+/* ---------- Tela de um jogo ---------- */
+.jogo-tela { display: grid; gap: 1.2rem; }
+.jogo-cabecalho { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; justify-content: space-between; }
+.jogo-cabecalho h1 { margin: 0; }
+.jogadores { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.jogador { display: flex; align-items: center; gap: .5rem; padding: .4rem .7rem .4rem .45rem; border-radius: var(--raio-pequeno); border: 2px solid var(--cor-borda); background: var(--cor-superficie); }
+.jogador svg { width: 30px; height: 30px; }
+.jogador .pontos { font-family: var(--fonte-titulo); font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.jogador.da-vez { border-color: var(--cor-primaria); box-shadow: 0 0 0 3px var(--cor-primaria-suave); }
+.jogador small { display: block; font-size: .72rem; color: var(--cor-texto-suave); line-height: 1; }
+.jogadores .vs { font-weight: 700; color: var(--cor-texto-suave); }
+
+.aviso-vez { margin: 0; text-align: center; font-family: var(--fonte-titulo); font-weight: var(--peso-titulo); font-size: clamp(1.2rem, 1rem + 1vw, 1.6rem); }
+.aviso-vez small { display: block; font-family: var(--fonte-corpo); font-size: .85rem; font-weight: 500; color: var(--cor-texto-suave); }
+
+/* Jogo da velha */
+.velha { --lado: min(100%, 360px); width: var(--lado); aspect-ratio: 1; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; padding: 8px; border-radius: var(--raio); background: var(--cor-borda); }
+.velha button { position: relative; display: grid; place-items: center; padding: 14%; border: 0; border-radius: var(--raio-pequeno); background: var(--cor-superficie); cursor: pointer; transition: background-color .15s; }
+.velha button:not(:disabled):hover { background: var(--cor-superficie-2); }
+.velha button:disabled { cursor: default; opacity: 1; }
+.velha button svg { pointer-events: none; }
+.velha button svg { width: 100%; height: 100%; }
+.velha button.ultima svg { animation: peca-entra .25s ease-out; }
+.velha button.vitoria { background: var(--cor-primaria-suave); box-shadow: inset 0 0 0 3px var(--cor-primaria); }
+.velha button.ultima::after { content: ""; position: absolute; right: 8px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--cor-primaria); }
+@keyframes peca-entra { from { transform: scale(.4); opacity: 0; } }
+.velha-legenda { display: flex; justify-content: center; gap: 1.2rem; margin: 0; font-size: .85rem; color: var(--cor-texto-suave); }
+.velha-legenda span { display: inline-flex; align-items: center; gap: .3rem; }
+.velha-legenda svg { width: 20px; height: 20px; }
+
+/* Forca */
+.forca-area { display: grid; grid-template-columns: minmax(200px, 300px) 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 700px) { .forca-area { grid-template-columns: 1fr; } }
+.forca-desenho { width: 100%; max-width: 300px; margin: 0 auto; display: block; color: var(--cor-texto); }
+.forca-desenho .parte { transition: opacity .3s; }
+.forca-desenho .parte.oculta { opacity: 0; }
+.forca-dica { margin: 0 0 .8rem; padding: .6rem .8rem; border-left: 4px solid var(--cor-primaria); background: var(--cor-superficie-2); border-radius: 0 var(--raio-pequeno) var(--raio-pequeno) 0; }
+.forca-dica b { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--cor-primaria-texto); }
+.forca-palavra { display: flex; flex-wrap: wrap; gap: .45rem; margin: .4rem 0 1rem; }
+.forca-palavra span { width: 1.9rem; height: 2.4rem; display: grid; place-items: end center; padding-bottom: .15rem; border-bottom: 3px solid var(--cor-texto); font-family: var(--fonte-titulo); font-size: 1.6rem; text-transform: uppercase; }
+.forca-palavra span.espaco { border-bottom: 0; width: .8rem; }
+.forca-erros { display: flex; align-items: center; gap: .5rem; margin: 0 0 1rem; font-weight: 700; }
+.forca-erros i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--cor-erro); }
+.forca-erros i.cheio { background: var(--cor-erro); }
+.teclado { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.6rem, 1fr)); gap: .35rem; }
+.teclado button { min-height: 44px; border-radius: var(--raio-pequeno); border: 1.5px solid var(--cor-borda); background: var(--cor-superficie); color: var(--cor-texto); font-weight: 700; font-size: 1rem; cursor: pointer; }
+.teclado button:not(:disabled):hover { border-color: var(--cor-primaria); }
+.teclado button:disabled { opacity: 1; cursor: default; }
+.teclado button.acerto { background: color-mix(in srgb, var(--cor-sucesso) 22%, var(--cor-superficie)); border-color: var(--cor-sucesso); }
+.teclado button.erro { background: var(--cor-superficie-2); color: var(--cor-texto-suave); text-decoration: line-through; opacity: .7; }
+.forca-quem { margin: 0; font-size: .9rem; color: var(--cor-texto-suave); }
+
+/* Nova forca */
+.forca-nova { max-width: 520px; }
+.forca-nova .dica { font-size: .85rem; }
+.jogo-tela > .botao-fantasma { justify-self: start; }

@@ -1,14 +1,14 @@
 // Diversão (em desenvolvimento):
 //  - Quadro branco: desenhos do casal. Os dois veem, editam, criam e excluem.
 //    Se os dois abrirem o mesmo desenho, cada traço aparece na hora na tela do outro.
-//  - Álbum de figurinhas: por enquanto só o álbum com os espaços (../album.js)
+//  - Resposta do dia, jogo da velha e forca: ../jogos/ (dados protegidos por supabase/jogos.sql)
 //  - Como eu te vejo: uma pergunta nova por dia ("Como eu te vejo se você fosse um animal").
 //    Cada um desenha a resposta e envia; o desenho chega nas Cartinhas do outro.
 import { listar, salvar, remover, enviarImagem, removerImagem } from '../store/index.js';
 import { salaAtual } from '../sala-cinema.js';
 import { PERFIS } from '../auth.js';
 import { criarQuadro } from '../quadro.js';
-import { montarAlbum } from '../album.js';
+import { criarJogos } from '../jogos/telas.js';
 import { avisarOutro } from '../bilhetes.js';
 import { notificarOutro } from '../notificacoes.js';
 import { cartaVisivelPara } from './cartinhas.js';
@@ -62,9 +62,11 @@ export async function renderizar(el, ctx) {
   let desenhos = [];
   let respostas = [];
   let semTabela = false;
-  let limparModo = null; // limpeza do modo atual (editor/como)
+  let limparModo = null; // limpeza do modo atual (editor/como/jogo)
+  const jogos = criarJogos({ el, perfil: ctx.perfil, sala, trocarModo: (fn) => trocarModo(fn), voltar: () => { mostrarVisaoGeral({ focar: true }); jogos.atualizar(); } });
 
   async function carregar() {
+    const carregandoJogos = jogos.carregar();
     try {
       desenhos = await listar('desenhos');
       semTabela = false;
@@ -75,6 +77,7 @@ export async function renderizar(el, ctx) {
     try {
       respostas = (await listar('cartas')).filter((c) => c.tipo === 'desenho' && cartaVisivelPara(c, eu));
     } catch { respostas = []; }
+    await carregandoJogos;
   }
 
   function trocarModo(fn) {
@@ -124,14 +127,19 @@ export async function renderizar(el, ctx) {
       const pergunta = perguntaDoDia();
       const respondiHoje = respostas.some((c) => c.de === eu && c.pergunta === pergunta.texto);
       const ordenados = [...desenhos].sort((a, b) => String(b.atualizadoEm || b.criadoEm || '').localeCompare(String(a.atualizadoEm || a.criadoEm || '')));
+      const espacos = jogos.htmlEspacos();
       const trocadas = [...respostas].sort((a, b) => String(b.enviadaEm || '').localeCompare(String(a.enviadaEm || '')));
       el.innerHTML = `
         <div class="cabecalho-secao">
           <div>
-            <h1 class="titulo-pagina">Diversão <span class="selo selo-desenvolvimento">Em desenvolvimento</span></h1>
+            <h1 class="titulo-pagina">Diversão</h1>
             <p>Desenhos, brincadeiras e o que mais vier por aí. Tudo aqui é de vocês dois.</p>
           </div>
         </div>
+
+        ${espacos.resposta}
+
+        ${espacos.jogos}
 
         <section class="cartao como-eu-te-vejo" aria-labelledby="titulo-como">
           <div class="como-topo">
@@ -167,19 +175,8 @@ export async function renderizar(el, ctx) {
                 <h3>Nenhum desenho ainda</h3>
                 <p>Crie um quadro e chame ${esc(outro.nome)} para desenhar junto.</p>
               </div>`}
-        </section>
-        <section class="cartao album" aria-label="Álbum de figurinhas (em desenvolvimento)">
-          <div class="album-topo">
-            <div>
-              <h2 class="subtitulo">${icone('estrela')} Desenvolvendo <span class="selo selo-desenvolvimento">Desenvolvendo</span></h2>
-              <p class="dica">Desenvolvendo</p>
-            </div>
-            <p class="album-contador">Desenvolvendo</p>
-          </div>
-          <div data-album-livro></div>
         </section>`;
       if (focar) el.querySelector('h1')?.focus();
-      montarAlbum(el.querySelector('[data-album-livro]'));
 
       const aoReceber = (msg) => {
         if (msg.de === eu) return;
@@ -196,7 +193,7 @@ export async function renderizar(el, ctx) {
   async function atualizarVisao() {
     if (atualizando) return;
     atualizando = true;
-    try { await carregar(); if (el.isConnected && !el.querySelector('.quadro')) mostrarVisaoGeral(); } finally { atualizando = false; }
+    try { await carregar(); if (el.isConnected && !el.querySelector('.quadro') && !jogos.estaNumJogo()) mostrarVisaoGeral(); } finally { atualizando = false; }
   }
 
   async function novoDesenho() {
@@ -487,10 +484,15 @@ export async function renderizar(el, ctx) {
   await carregar();
   const parametros = new URLSearchParams(location.hash.split('?')[1] || '');
   const alvo = parametros.get('desenho') && desenhos.find((d) => d.id === parametros.get('desenho'));
+  const jogo = parametros.get('jogo');
   if (parametros.has('como')) abrirComo();
   else if (alvo) abrirEditor(alvo);
-  else mostrarVisaoGeral();
+  else if (['velha', 'forca', 'forca-nova'].includes(jogo)) jogos.abrir(jogo);
+  else {
+    mostrarVisaoGeral();
+    if (parametros.has('resposta')) el.querySelector('[data-resposta-dia]')?.scrollIntoView({ block: 'start' });
+  }
 
-  return () => { limparModo?.(); limparModo = null; };
+  return () => { limparModo?.(); limparModo = null; jogos.destruir(); };
 }
 

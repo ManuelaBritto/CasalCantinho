@@ -59,7 +59,7 @@ nosso-cantinho/
 │   ├── notificacoes.js     # Service worker, ativar/desativar e enviar notificações
 │   ├── painel-notificacoes.js # Painel em Aparência e convite no Início
 │   ├── fila-cinema.js      # Sessões do dia (fila do Cinema)
-│   ├── album.js            # Álbum de figurinhas (páginas e espaços)
+│   ├── jogos/             # Diversão: regras, dados e telas do jogo da velha, forca e Resposta do dia
 │   ├── quadro.js           # Quadro de desenho (traços ao vivo, desfazer, exportar PNG)
 │   ├── chat-cinema.js      # Chat do Cinema (mensagens, digitando, histórico)
 │   ├── sincronia-cinema.js # Sincronia fina do "Assistir junto" (relógio, correção, maestro)
@@ -103,7 +103,7 @@ nosso-cantinho/
 | **Sessões do dia** | Fila de vídeos do Cinema, a mesma para os dois e só do dia (recomeça vazia no dia seguinte). **Pôr na fila** pelo link ou pelo **+** de um vídeo das Sessões; dá para subir, descer, tirar e tocar agora. Cada vídeo da fila mostra o título, o canal e quem escolheu. **Começar a sessão** toca o primeiro. |
 | **Cortina e créditos** | Quando um vídeo novo começa, a cortina fecha e abre (pausar e voltar não repete). No fim do vídeo, a tela mostra os créditos por 5 s: "[vídeo] por [canal]" e "vídeo escolhido por: [nome]", e depois some com fade. Se tiver vídeo na fila, o próximo começa sozinho, com a cortina, para os dois. Em tela cheia, os créditos aparecem, mas a cortina não (ela fica fora da tela cheia). |
 | **Chamar para assistir** | Botão **Chamar** no Cinema: mensagem personalizada (com 5 sugestões) e, se houver, o vídeo da tela. O outro recebe uma janela "Fulano te chamou para assistir" com **Entrar no cinema** (ou notificação no celular, se o site estiver fechado). O convite também fica no chat. |
-| **Diversão** *(em desenvolvimento)* | **Quadro branco:** desenhos do casal com pincel, borracha, 12 cores + cor livre, 4 espessuras, desfazer/refazer, limpar e baixar em PNG; funciona com dedo, caneta e mouse. Galeria para criar, abrir, editar e excluir. Se os dois abrirem o mesmo desenho, cada traço aparece na hora na tela do outro ("Fulano está neste desenho com você") e o desfazer de um tira só o traço dele. Salva sozinho alguns segundos depois de desenhar. Quando alguém desenha, o outro recebe um aviso (ou notificação no celular) com **Ver**, no máximo um por desenho a cada 10 minutos, e nenhum se os dois estiverem no mesmo desenho. **Álbum de figurinhas** *(em desenvolvimento, no fim da página)*: álbum de 6 páginas com 36 espaços (alguns especiais), ainda sem figurinhas e com todos os textos como "Desenvolvendo"; os títulos reais das páginas ficam guardados em `js/album.js`. **Como eu te vejo:** uma pergunta por dia (30, a mesma para os dois, troca à meia-noite de Brasília), por exemplo "Como eu te vejo se você fosse um animal". Desenha, escreve um recadinho opcional e envia: chega nas **Cartinhas** do outro com aviso/notificação e botão **Desenhar de volta**. As perguntas ficam em `js/paginas/diversao.js`. |
+| **Diversão** | **Resposta do dia, jogo da velha e forca** (ver 5.3). **Quadro branco:** desenhos do casal com pincel, borracha, 12 cores + cor livre, 4 espessuras, desfazer/refazer, limpar e baixar em PNG; funciona com dedo, caneta e mouse. Galeria para criar, abrir, editar e excluir. Se os dois abrirem o mesmo desenho, cada traço aparece na hora na tela do outro ("Fulano está neste desenho com você") e o desfazer de um tira só o traço dele. Salva sozinho alguns segundos depois de desenhar. Quando alguém desenha, o outro recebe um aviso (ou notificação no celular) com **Ver**, no máximo um por desenho a cada 10 minutos, e nenhum se os dois estiverem no mesmo desenho. **Como eu te vejo:** uma pergunta por dia (30, a mesma para os dois, troca à meia-noite de Brasília), por exemplo "Como eu te vejo se você fosse um animal". Desenha, escreve um recadinho opcional e envia: chega nas **Cartinhas** do outro com aviso/notificação e botão **Desenhar de volta**. As perguntas ficam em `js/paginas/diversao.js`. |
 | **Memórias** | Galeria (moldura muda com o tema), visualização ampliada com setas, envio de foto ou URL, legenda e data opcionais. |
 | **Aparência** | Cartões de tema com prévia, "ao entrar usar o tema do perfil / o último escolhido", reduzir movimento, decoração discreta, texto maior e (no modo local) restaurar exemplos ou apagar dados. |
 
@@ -184,6 +184,16 @@ Rode **uma vez** no SQL Editor, depois dos outros arquivos (pode rodar de novo s
 - converte o que estava salvo dos temas antigos (Neutro, Gótico e Girassol deixam de existir).
 
 Para uma pessoa nova, é só preencher o `tema_padrao` dela com um desses ids. O site libera para cada casal só os temas das duas pessoas dele.
+
+## 5.3 Diversão: jogos e Resposta do dia (`supabase/jogos.sql`)
+
+Rode **uma vez** no SQL Editor (depois de `pessoa-em-varios-casais.sql`; pode rodar de novo sem problema). Ele cria:
+
+- **Jogo da velha:** as peças são o ícone do tema de cada um; quem começa reveza a cada partida; placar do casal; botão **Revanche**.
+- **Forca:** um escolhe a palavra (e uma dica), o outro chuta as letras. A cabeça do boneco é o mascote do tema. A palavra fica guardada à parte no banco: quem adivinha só recebe as letras que já acertou (nem mexendo no navegador dá para ver).
+- **Resposta do dia:** uma pergunta por dia, igual para os dois (120 perguntas, muda à meia-noite de Brasília). A resposta do outro só aparece depois que você responde a sua, ou quando o dia acaba. Histórico dos outros dias.
+
+O banco confere tudo: só joga quem está na vez, só em casa vazia, ninguém altera a tabela de jogos direto, e cada casal só vê os próprios jogos e respostas. As jogadas aparecem na hora para o outro (mesma conexão do Cineminha) e, se a pessoa não estiver com o site aberto, chega notificação ("Sua vez no jogo da velha!", "Fulano respondeu a pergunta do dia").
 
 ## 6. Configurar a API do TMDB (pesquisa de filmes)
 
