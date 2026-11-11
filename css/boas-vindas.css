@@ -58,6 +58,11 @@
 .bv-aquarela::before { content: ""; position: absolute; inset: 0; background: var(--textura-papel); opacity: .7; }
 .bv-aquarela .bv-titulo { font-family: "Fraunces", Georgia, serif; color: #4f7a52; text-shadow: 2px 2px 0 rgba(255, 255, 255, .7); }
 
+.bv-cinza { --bv-ponto: #bdbdbd; background: #ededed; color: #262626; }
+.bv-cinza .bv-titulo { font-family: "DM Sans", system-ui, sans-serif; font-weight: 700; color: #3a3a3a; }
+.bv-azul { --bv-ponto: #ffffff; background: linear-gradient(180deg, #eaf2fc 0%, #b9d6f7 100%); color: #0f2a4d; }
+.bv-azul .bv-titulo { font-family: "DM Sans", system-ui, sans-serif; font-weight: 700; color: #1e5bb8; }
+
 .bv-mistica .bv-pular, .bv-punk .bv-pular { background: rgba(10, 4, 20, .85); color: #efe6ff; }
 
 /* ---------------- Movimento reduzido: cena estática ---------------- */

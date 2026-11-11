@@ -103,18 +103,21 @@ export const ICONE_TEMA = {
   laco: () => adesivo('laco-rosa'),
   onda: () => adesivo('onda'),
   aquarela: () => adesivo('gatinho'),
+  cinza: () => adesivo('coracao-cinza'),
+  azul: () => adesivo('coracao-azul'),
 };
 
 /** Enfeites de cada página, por tema (o CSS mostra só o do tema ativo). */
 export const ENFEITES = {
-  cartinhas: { mistica: 'carta-cigana', punk: 'coracao-xadrez', laco: 'laco-rosa', onda: 'concha', aquarela: 'cravo' },
-  listas: { mistica: 'constelacao', punk: 'paisley', laco: 'livros', onda: 'trilha', aquarela: 'coruja' },
-  cinemateca: { mistica: 'olho-astral', punk: 'vinil-verde', laco: 'tulipa', onda: 'estrela-mar', aquarela: 'nuvem-gordinha' },
-  cinematecaVazia: { mistica: 'cristal', punk: 'caixa-som', laco: 'margarida', onda: 'por-do-sol', aquarela: 'casinha' },
-  memorias: { mistica: 'lua-mistica', punk: 'estrela-verde', laco: 'cerejeira', onda: 'onda', aquarela: 'flores-campo' },
-  cinema: { mistica: 'gato-preto', punk: 'guitarra-estrela', laco: 'pinguinzinha', onda: 'prancha', aquarela: 'vinil' },
-  diversao: { mistica: 'mapa-astral', punk: 'respingo', laco: 'estrelinha', onda: 'bola', aquarela: 'violao' },
-  contador: { mistica: 'lua-mistica', punk: 'estrela-verde', laco: 'laco-rosa', onda: 'concha', aquarela: 'gatinho' },
+  cartinhas: { mistica: 'carta-cigana', punk: 'coracao-xadrez', laco: 'laco-rosa', onda: 'concha', aquarela: 'cravo', cinza: 'coracao-cinza', azul: 'coracao-azul' },
+  listas: { mistica: 'constelacao', punk: 'paisley', laco: 'livros', onda: 'trilha', aquarela: 'coruja', cinza: 'casinha-cinza', azul: 'casinha-azul' },
+  cinemateca: { mistica: 'olho-astral', punk: 'vinil-verde', laco: 'tulipa', onda: 'estrela-mar', aquarela: 'nuvem-gordinha', cinza: 'estrela-cinza', azul: 'estrela-azul' },
+  cinematecaVazia: { mistica: 'cristal', punk: 'caixa-som', laco: 'margarida', onda: 'por-do-sol', aquarela: 'casinha', cinza: 'nuvem-cinza', azul: 'nuvem-azul' },
+  memorias: { mistica: 'lua-mistica', punk: 'estrela-verde', laco: 'cerejeira', onda: 'onda', aquarela: 'flores-campo', cinza: 'flor-cinza', azul: 'flor-azul' },
+  cinema: { mistica: 'gato-preto', punk: 'guitarra-estrela', laco: 'pinguinzinha', onda: 'prancha', aquarela: 'vinil', cinza: 'balao-cinza', azul: 'balao-azul' },
+  diversao: { mistica: 'mapa-astral', punk: 'respingo', laco: 'estrelinha', onda: 'bola', aquarela: 'violao', cinza: 'brilho-cinza', azul: 'brilho-azul' },
+  vazio: { mistica: 'coracao', punk: 'coracao-xadrez', laco: 'coracao', onda: 'coracao', aquarela: 'coracao', cinza: 'coracao-cinza', azul: 'coracao-azul' },
+  contador: { mistica: 'lua-mistica', punk: 'estrela-verde', laco: 'laco-rosa', onda: 'concha', aquarela: 'gatinho', cinza: 'coracao-cinza', azul: 'coracao-azul' },
 };
 export const enfeite = (nome) => enfeitePorTema(ENFEITES[nome]);
 
@@ -161,6 +164,22 @@ const DECORACOES = {
     { id: 'gatinho', x: '92%', y: '84%', t: 62, o: .5, r: 0 },
     { id: 'vinil', x: '48%', y: '94%', t: 36, o: .3, r: 0, opcional: true },
   ],
+  cinza: [
+    { id: 'nuvem-cinza', x: '90%', y: '5%', t: 74, o: .5, r: 0 },
+    { id: 'estrela-cinza', x: '4%', y: '12%', t: 46, o: .45, r: -10 },
+    { id: 'brilho-cinza', x: '86%', y: '46%', t: 38, o: .4, r: 0, opcional: true },
+    { id: 'flor-cinza', x: '6%', y: '70%', t: 44, o: .4, r: 8, opcional: true },
+    { id: 'coracao-cinza', x: '92%', y: '84%', t: 54, o: .45, r: 0 },
+    { id: 'lua-cinza', x: '48%', y: '94%', t: 36, o: .3, r: 0, opcional: true },
+  ],
+  azul: [
+    { id: 'nuvem-azul', x: '90%', y: '5%', t: 74, o: .5, r: 0 },
+    { id: 'estrela-azul', x: '4%', y: '12%', t: 46, o: .45, r: -10 },
+    { id: 'brilho-azul', x: '86%', y: '46%', t: 38, o: .4, r: 0, opcional: true },
+    { id: 'flor-azul', x: '6%', y: '70%', t: 44, o: .4, r: 8, opcional: true },
+    { id: 'coracao-azul', x: '92%', y: '84%', t: 54, o: .45, r: 0 },
+    { id: 'lua-azul', x: '48%', y: '94%', t: 36, o: .3, r: 0, opcional: true },
+  ],
 };
 
 export function renderizarDecoracao(tema) {
@@ -178,6 +197,8 @@ const CENAS = {
   laco: { ceu: ['#ffe3ee', '#fff4f8'], chao: '#f7c4d6', itens: [['laco-rosa', 128, 14, 1.2], ['cerejeira', 24, 30, 1], ['livros', 200, 110, 1.4], ['pinguinzinha', 60, 110, 1.4], ['estrelinha', 246, 24, .8]] },
   onda: { ceu: ['#bfe3f6', '#ffe1d2'], chao: '#f4e3c1', itens: [['por-do-sol', 110, 50, 1.6], ['prancha', 228, 70, 1.6], ['concha', 30, 140, 1], ['estrela-mar', 150, 150, .9]] },
   aquarela: { ceu: ['#cfe6f3', '#fbf6ea'], chao: '#b7d3b0', itens: [['nuvem-gordinha', 30, 14, 1.3], ['nuvem-gordinha', 200, 30, 1], ['casinha', 190, 96, 1.6], ['gatinho', 40, 128, 1.3]] },
+  cinza: { ceu: ['#d9d9d9', '#f4f4f4'], chao: '#bdbdbd', itens: [['nuvem-cinza', 30, 18, 1.3], ['lua-cinza', 220, 16, 1.2], ['casinha-cinza', 180, 100, 1.5], ['coracao-cinza', 50, 120, 1.2]] },
+  azul: { ceu: ['#b9d6f7', '#eaf2fc'], chao: '#8fb8ea', itens: [['nuvem-azul', 30, 18, 1.3], ['balao-azul', 220, 16, 1.3], ['casinha-azul', 180, 100, 1.5], ['coracao-azul', 50, 120, 1.2]] },
 };
 
 export function cenaCasal(tema) {

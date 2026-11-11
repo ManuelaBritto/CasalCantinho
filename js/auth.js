@@ -13,7 +13,7 @@ const saudacaoPara = (nome, tratamento) => (
 );
 
 // Tema de cada pessoa (usado enquanto o banco não tem tema_padrao com os temas novos)
-const TEMA_POR_NOME = { kath: 'laco', drico: 'punk', lavi: 'mistica', marih: 'aquarela', ric: 'onda', rick: 'onda' };
+const TEMA_POR_NOME = { kath: 'laco', drico: 'punk', lavi: 'mistica', marih: 'aquarela', ric: 'onda', rick: 'onda', admin: 'cinza', admin2: 'azul' };
 
 export function montarPerfil({ id, nome, tratamento = 'neutro', temaPadrao = null }) {
   const tema = (temaPadrao && temaPadrao !== 'neutro' ? normalizarTema(temaPadrao) : null) || TEMA_POR_NOME[id] || 'laco';

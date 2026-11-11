@@ -17,6 +17,8 @@ const FRASES = {
   laco: 'Cada lembrança nossa é uma flor nova nesse jardim.',
   onda: 'Toda onda boa a gente pega junto.',
   aquarela: 'A vida é feita de tardes assim: devagar, com música e com você.',
+  cinza: 'Um cantinho simples para guardar o que importa.',
+  azul: 'Um cantinho azul para guardar o que importa.',
 };
 
 /** Diferença de calendário entre duas datas (anos, meses, dias) + total de dias. */

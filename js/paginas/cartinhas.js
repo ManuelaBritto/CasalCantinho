@@ -153,7 +153,7 @@ export async function renderizar(el, ctx) {
       <div id="painel-cartas" role="tabpanel" aria-labelledby="aba-cartas-${aba}">
         ${lista.length ? `<ul class="grade colecao-cartas" role="list">${lista.map(htmlCartao).join('')}</ul>` : `
           <div class="vazio">
-            <span class="ilustracao" aria-hidden="true">${adesivo('coracao')}</span>
+            <span class="ilustracao" aria-hidden="true">${enfeite('vazio')}</span>
             <h3>${vazios[aba].t}</h3>
             <p>${vazios[aba].p}</p>
             <button type="button" class="botao" data-nova>${icone('carta')} Escrever cartinha</button>

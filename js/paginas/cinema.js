@@ -85,6 +85,8 @@ const SALA_ENFEITES = {
   laco: ['laco-rosa', 'laco-rosa', 'tulipa', 'pinguinzinha'],
   onda: ['concha', 'estrela-mar', 'onda', 'prancha'],
   aquarela: ['nuvem-gordinha', 'flores-campo', 'gatinho', 'vinil'],
+  cinza: ['estrela-cinza', 'brilho-cinza', 'coracao-cinza', 'balao-cinza'],
+  azul: ['estrela-azul', 'brilho-azul', 'coracao-azul', 'balao-azul'],
 };
 
 function enfeitesSala(tema) {

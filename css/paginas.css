@@ -9,7 +9,9 @@ html[data-tema="mistica"] .por-tema:not(.so-mistica),
 html[data-tema="punk"] .por-tema:not(.so-punk),
 html[data-tema="laco"] .por-tema:not(.so-laco),
 html[data-tema="onda"] .por-tema:not(.so-onda),
-html[data-tema="aquarela"] .por-tema:not(.so-aquarela) { display: none; }
+html[data-tema="aquarela"] .por-tema:not(.so-aquarela),
+html[data-tema="cinza"] .por-tema:not(.so-cinza),
+html[data-tema="azul"] .por-tema:not(.so-azul) { display: none; }
 
 .subtitulo { display: flex; align-items: center; gap: .5rem; font-size: 1.15rem; margin: 0 0 .25rem; }
 .meta { margin: 0; font-size: .85rem; color: var(--cor-texto-suave); }
@@ -395,6 +397,10 @@ dialog.modal.visualizador { background: #120a10; color: #fbeff3; border-color: #
 .tema-previa-aquarela .tema-cartao-corpo { background: radial-gradient(circle at 20% 15%, #e3efd9, transparent 55%), linear-gradient(160deg, #fffaf0, #f7e3d3); color: #4a3b2f; }
 .tema-previa-aquarela .tema-nome { font-family: "Fraunces", serif; }
 .tema-previa-aquarela .tema-cores i:nth-child(1) { background: #fbf6ea; } .tema-previa-aquarela .tema-cores i:nth-child(2) { background: #b7d3b0; } .tema-previa-aquarela .tema-cores i:nth-child(3) { background: #f4c6c6; } .tema-previa-aquarela .tema-cores i:nth-child(4) { background: #4f7a52; }
+.tema-previa-cinza .tema-cartao-corpo { background: #f2f2f2; color: #262626; }
+.tema-previa-cinza .tema-cores i:nth-child(1) { background: #ededed; } .tema-previa-cinza .tema-cores i:nth-child(2) { background: #a8a8a8; } .tema-previa-cinza .tema-cores i:nth-child(3) { background: #4a4a4a; } .tema-previa-cinza .tema-cores i:nth-child(4) { background: #262626; }
+.tema-previa-azul .tema-cartao-corpo { background: #dce9fa; color: #0f2a4d; }
+.tema-previa-azul .tema-cores i:nth-child(1) { background: #eaf2fc; } .tema-previa-azul .tema-cores i:nth-child(2) { background: #5b9be6; } .tema-previa-azul .tema-cores i:nth-child(3) { background: #1e5bb8; } .tema-previa-azul .tema-cores i:nth-child(4) { background: #0f2a4d; }
 .acoes-dados { margin-top: 1rem; }
 @media (max-width: 760px) { .temas-grade { grid-template-columns: 1fr; } }
 

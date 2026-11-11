@@ -10,6 +10,8 @@ export const TEMAS = {
   laco: { nome: 'Laço de Rosa', descricao: 'Rosa em todos os tons, laços, flores, livros e uma pinguinzinha de laço.', corMeta: '#fff4f8' },
   onda: { nome: 'Onda Coral', descricao: 'Mar azul, coral e areia: ondas, prancha, conchas, trilha e pôr do sol.', corMeta: '#f2f8fb' },
   aquarela: { nome: 'Aquarela', descricao: 'Tons pastéis de livro antigo: gatinho, casinha no campo, flores, vinil e corujinha.', corMeta: '#fbf6ea' },
+  cinza: { nome: 'Cinza', descricao: 'Tudo em tons de cinza, simples e limpo.', corMeta: '#ededed' },
+  azul: { nome: 'Azul', descricao: 'Tudo em tons de azul, do claro ao marinho.', corMeta: '#eaf2fc' },
 };
 
 /** Tema da tela de entrada (antes de saber quem é): o rosa da marca. */

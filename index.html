@@ -34,7 +34,7 @@
       try {
         var t = localStorage.getItem('nc:tema-atual');
         var escuros = { mistica: 1, punk: 1 };
-        if ({ mistica: 1, punk: 1, laco: 1, onda: 1, aquarela: 1 }[t]) {
+        if ({ mistica: 1, punk: 1, laco: 1, onda: 1, aquarela: 1, cinza: 1, azul: 1 }[t]) {
           document.documentElement.dataset.tema = t;
           document.documentElement.dataset.tom = escuros[t] ? 'escuro' : 'claro';
         }

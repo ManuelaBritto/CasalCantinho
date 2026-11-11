@@ -61,10 +61,32 @@ export const ADESIVOS_TEMAS = {
   coruja: { nome: 'Corujinha', pacote: 'aquarela', svg: () => svg('<rect x="12" y="52" width="40" height="8" rx="2" fill="#bcdcef" stroke="#6b5444" stroke-width="1.6"/><path d="M14 20l6 6M50 20l-6 6" stroke="#6b5444" stroke-width="2" stroke-linecap="round"/><path d="M14 18c4 2 6 6 18 6s14-4 18-6c2 10 2 20-2 26-3 5-9 8-16 8s-13-3-16-8c-4-6-4-16-2-26z" fill="#c9a27a" stroke="#6b5444" stroke-width="2" stroke-linejoin="round"/><path d="M22 40c3 6 7 8 10 8s7-2 10-8c-3 2-6 3-10 3s-7-1-10-3z" fill="#f3ecdb"/><circle cx="24" cy="31" r="7" fill="#fffaf0" stroke="#6b5444" stroke-width="1.6"/><circle cx="40" cy="31" r="7" fill="#fffaf0" stroke="#6b5444" stroke-width="1.6"/><circle cx="24" cy="31" r="3" fill="#4a3b2f"/><circle cx="40" cy="31" r="3" fill="#4a3b2f"/><path d="M30 36l2 3 2-3z" fill="#e8b678"/>') },
 };
 
+// ---------------- Kits de uma cor só (contas de teste: Cinza e Azul) ----------------
+function kitMono(sufixo, nomeCor, c) {
+  // c = { claro, medio, escuro, fundo }
+  return {
+    [`coracao-${sufixo}`]: { nome: `Coração ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="M32 56C12 42 5 31 5 21A13 13 0 0 1 32 15a13 13 0 0 1 27 6c0 10-7 21-27 35z" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2"/><path d="M15 19a7 7 0 0 1 8-5" stroke="${c.claro}" stroke-width="3" stroke-linecap="round" fill="none"/>`) },
+    [`estrela-${sufixo}`]: { nome: `Estrela ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="${ESTRELA5}" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2" stroke-linejoin="round"/><circle cx="26" cy="30" r="2" fill="${c.escuro}"/><circle cx="38" cy="30" r="2" fill="${c.escuro}"/><path d="M28 36q4 3 8 0" stroke="${c.escuro}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`) },
+    [`nuvem-${sufixo}`]: { nome: `Nuvem ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="M18 48h30a10 10 0 0 0 1-20 14 14 0 0 0-27-4 12 12 0 0 0-4 24z" fill="${c.claro}" stroke="${c.escuro}" stroke-width="2.5"/>`) },
+    [`lua-${sufixo}`]: { nome: `Lua ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="M40 8a24 24 0 1 0 16 38A19 19 0 1 1 40 8z" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2"/><circle cx="24" cy="32" r="3" fill="${c.escuro}" opacity=".35"/><circle cx="30" cy="46" r="2" fill="${c.escuro}" opacity=".35"/>`) },
+    [`flor-${sufixo}`]: { nome: `Flor ${nomeCor}`, pacote: sufixo, svg: () => svg(`<g fill="${c.claro}" stroke="${c.escuro}" stroke-width="2">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="32" cy="17" rx="9" ry="13" transform="rotate(${a} 32 32)"/>`).join('')}</g><circle cx="32" cy="32" r="7" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2"/>`) },
+    [`brilho-${sufixo}`]: { nome: `Brilho ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="M30 6c2 16 7 22 22 24-15 2-20 8-22 24-2-16-7-22-22-24 15-2 20-8 22-24z" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2" stroke-linejoin="round"/><path d="M52 6c1 5 2 7 7 8-5 1-6 3-7 8-1-5-2-7-7-8 5-1 6-3 7-8z" fill="${c.claro}" stroke="${c.escuro}" stroke-width="1.5"/>`) },
+    [`casinha-${sufixo}`]: { nome: `Casinha ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="M10 30 32 10l22 20" fill="none" stroke="${c.escuro}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15 28v26h34V28L32 13z" fill="${c.claro}" stroke="${c.escuro}" stroke-width="2.5" stroke-linejoin="round"/><rect x="27" y="38" width="10" height="16" rx="1" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2"/>`) },
+    [`balao-${sufixo}`]: { nome: `Balão ${nomeCor}`, pacote: sufixo, svg: () => svg(`<path d="M32 44c-11 0-18-10-18-20a18 18 0 0 1 36 0c0 10-7 20-18 20z" fill="${c.medio}" stroke="${c.escuro}" stroke-width="2"/><path d="M29 44h6l-3 4z" fill="${c.escuro}"/><path d="M32 48q-4 6 0 12" stroke="${c.escuro}" stroke-width="1.6" fill="none"/><path d="M23 20a10 10 0 0 1 6-7" stroke="${c.claro}" stroke-width="3" stroke-linecap="round" fill="none"/>`) },
+  };
+}
+Object.assign(ADESIVOS_TEMAS,
+  kitMono('cinza', 'cinza', { claro: '#f4f4f4', medio: '#a8a8a8', escuro: '#4a4a4a' }),
+  kitMono('azul', 'azul', { claro: '#e6f0fc', medio: '#5b9be6', escuro: '#163f78' }));
+
+const itensMono = (s) => ['coracao', 'estrela', 'nuvem', 'lua', 'flor', 'brilho', 'casinha', 'balao'].map((x) => `${x}-${s}`);
+
 export const PACOTES_TEMAS = {
   mistica: { nome: 'Lua Mística', itens: ['lua-mistica', 'gato-preto', 'carta-cigana', 'mapa-astral', 'olho-astral', 'cristal', 'pedra-runica', 'constelacao'] },
   punk: { nome: 'Estrela Punk', itens: ['pinguim-punk', 'guitarra-estrela', 'estrela-verde', 'respingo', 'vinil-verde', 'caixa-som', 'paisley', 'coracao-xadrez'] },
   laco: { nome: 'Laço de Rosa', itens: ['laco-rosa', 'pinguinzinha', 'margarida', 'tulipa', 'rosa-rosa', 'cerejeira', 'livros', 'estrelinha'] },
   onda: { nome: 'Onda Coral', itens: ['onda', 'prancha', 'concha', 'caracol', 'estrela-mar', 'trilha', 'por-do-sol', 'bola'] },
   aquarela: { nome: 'Aquarela', itens: ['gatinho', 'casinha', 'nuvem-gordinha', 'flores-campo', 'cravo', 'vinil', 'violao', 'coruja'] },
+  cinza: { nome: 'Cinza', itens: itensMono('cinza') },
+  azul: { nome: 'Azul', itens: itensMono('azul') },
 };

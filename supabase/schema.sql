@@ -29,8 +29,8 @@ create table if not exists public.perfis (
   nome            text not null constraint perfis_nome_check check (nome ~ '^[a-z0-9._-]{2,30}$'), -- login (kath, drico, lavi…)
   apelido         text,                                   -- nome mostrado no site
   tratamento      text not null default 'neutro' constraint perfis_tratamento_check check (tratamento in ('ela', 'ele', 'neutro')),
-  tema_padrao     text constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('mistica', 'punk', 'laco', 'onda', 'aquarela')),
-  tema_preferido  text constraint perfis_tema_preferido_check check (tema_preferido in ('mistica', 'punk', 'laco', 'onda', 'aquarela')),
+  tema_padrao     text constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('mistica', 'punk', 'laco', 'onda', 'aquarela', 'cinza', 'azul')),
+  tema_preferido  text constraint perfis_tema_preferido_check check (tema_preferido in ('mistica', 'punk', 'laco', 'onda', 'aquarela', 'cinza', 'azul')),
   criado_em       timestamptz not null default now(),
   unique (casal_id, nome)
 );

@@ -30,7 +30,7 @@ alter table public.perfis add constraint perfis_tratamento_check check (tratamen
 alter table public.perfis drop constraint if exists perfis_tema_padrao_check;
 update public.perfis set tema_padrao = case tema_padrao when 'kath' then 'laco' when 'drico' then 'punk' when 'neutro' then null else tema_padrao end
   where tema_padrao in ('kath', 'drico', 'neutro');
-alter table public.perfis add constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('mistica', 'punk', 'laco', 'onda', 'aquarela'));
+alter table public.perfis add constraint perfis_tema_padrao_check check (tema_padrao is null or tema_padrao in ('mistica', 'punk', 'laco', 'onda', 'aquarela', 'cinza', 'azul'));
 
 do $$
 begin

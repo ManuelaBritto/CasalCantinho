@@ -13,6 +13,8 @@ const PREVIA = {
   laco: ['laco-rosa', 'pinguinzinha', 'tulipa'],
   onda: ['onda', 'concha', 'prancha'],
   aquarela: ['gatinho', 'casinha', 'flores-campo'],
+  cinza: ['coracao-cinza', 'nuvem-cinza', 'estrela-cinza'],
+  azul: ['coracao-azul', 'nuvem-azul', 'balao-azul'],
 };
 
 export async function renderizar(el, ctx) {

@@ -43,6 +43,8 @@ export function estiloPadrao(tema) {
   if (tema === 'punk') return { papel: 'noite', cor: '#1e1b2e', tinta: 'auto', fonte: 'courier', alinhamento: 'esquerda', moldura: 'nenhuma', adesivos: [] };
   if (tema === 'laco') return { papel: 'pautado', cor: '#fde4ec', tinta: 'auto', fonte: 'caveat', alinhamento: 'esquerda', moldura: 'delicada', adesivos: [] };
   if (tema === 'onda') return { papel: 'liso', cor: '#fff4d6', tinta: 'auto', fonte: 'dancing', alinhamento: 'esquerda', moldura: 'nenhuma', adesivos: [] };
+  if (tema === 'cinza') return { papel: 'liso', cor: '#ffffff', tinta: 'auto', fonte: 'nunito', alinhamento: 'esquerda', moldura: 'nenhuma', adesivos: [] };
+  if (tema === 'azul') return { papel: 'pautado', cor: '#ffffff', tinta: '#2f3b6b', fonte: 'caveat', alinhamento: 'esquerda', moldura: 'delicada', adesivos: [] };
   if (tema === 'aquarela') return { papel: 'envelhecido', cor: '#f8e7c2', tinta: 'auto', fonte: 'fraunces', alinhamento: 'esquerda', moldura: 'vintage', adesivos: [] };
   return { papel: 'pautado', cor: '#fff4f6', tinta: 'auto', fonte: 'caveat', alinhamento: 'esquerda', moldura: 'delicada', adesivos: [] };
 }

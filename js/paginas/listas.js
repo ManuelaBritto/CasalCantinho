@@ -26,7 +26,7 @@ const PAPEIS_LISTA = {
   quadriculado: 'Quadriculado',
   kraft: 'Kraft',
 };
-const COR_LISTA_TEMA = { mistica: 'lavanda', punk: 'salvia', laco: 'rosa', onda: 'azul', aquarela: 'salvia' };
+const COR_LISTA_TEMA = { mistica: 'lavanda', punk: 'salvia', laco: 'rosa', onda: 'azul', aquarela: 'salvia', cinza: 'grafite', azul: 'azul' };
 const estiloPadraoLista = () => ({ cor: COR_LISTA_TEMA[temaAtual()] || 'rosa', papel: 'simples', adesivo: '' });
 
 export async function renderizar(el, ctx) {

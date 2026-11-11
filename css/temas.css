@@ -3,6 +3,8 @@
      mistica  · Lua Mística (Lavi)     punk     · Estrela Punk (Drico)
      laco     · Laço de Rosa (Kath)    onda     · Onda Coral (Rick)
      aquarela · Aquarela (Marih)
+     cinza    · Cinza (admin, conta de teste)
+     azul     · Azul (admin2, conta de teste)
    html[data-tom="escuro"|"claro"] vem junto, para ajustes que valem para todos
    os temas escuros ou claros. Para mudar cores/fontes de um tema, edite só este arquivo.
    ========================================================= */
@@ -266,4 +268,94 @@ html[data-tema="aquarela"] {
   --lampada: #f6e3a1;
   --poltrona: #b7d3b0;
   --poltrona-sombra: #7aa576;
+}
+
+/* ---------------- Cinza (conta de teste admin): tudo em tons de cinza ---------------- */
+html[data-tema="cinza"] {
+  color-scheme: light;
+  --cor-fundo: #ededed;
+  --fundo-imagem: none;
+  --cor-superficie: #ffffff;
+  --cor-superficie-2: #f2f2f2;
+  --cor-texto: #262626;
+  --cor-texto-suave: #666666;
+  --cor-link: #3d3d3d;
+  --cor-foco: #555555;
+  --cor-primaria: #4a4a4a;
+  --cor-sobre-primaria: #ffffff;
+  --cor-primaria-suave: #e2e2e2;
+  --cor-primaria-texto: #333333;
+  --cor-destaque: #9a9a9a;
+  --cor-borda: #d4d4d4;
+  --sombra-suave: 0 1px 3px rgba(0, 0, 0, .08);
+  --sombra: 0 1px 2px rgba(0, 0, 0, .06), 0 6px 16px rgba(0, 0, 0, .07);
+  --sombra-forte: 0 16px 40px rgba(0, 0, 0, .18);
+  --raio: 12px;
+  --raio-pequeno: 8px;
+  --fonte-titulo: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fonte-corpo: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fonte-mao: "Caveat", cursive;
+  --peso-titulo: 700;
+  --espaco-titulo: -.01em;
+  --menu-fundo: #f7f7f7;
+  --menu-ativo-fundo: #e2e2e2;
+  --menu-ativo-texto: #1f1f1f;
+  --menu-ativo-borda: transparent;
+  --topo-fundo: rgba(237, 237, 237, .92);
+  --cartao-borda: 1px solid var(--cor-borda);
+  --cartao-fundo: var(--cor-superficie);
+  --cortina-1: #8a8a8a;
+  --cortina-2: #6b6b6b;
+  --moldura-cinema: #d9d9d9;
+  --palco-fundo: #3a3a3a;
+  --letreiro-fundo: #2b2b2b;
+  --letreiro-texto: #f2f2f2;
+  --lampada: #e6e6e6;
+  --poltrona: #7a7a7a;
+  --poltrona-sombra: #555555;
+}
+
+/* ---------------- Azul (conta de teste admin2): tudo em tons de azul ---------------- */
+html[data-tema="azul"] {
+  color-scheme: light;
+  --cor-fundo: #eaf2fc;
+  --fundo-imagem: none;
+  --cor-superficie: #ffffff;
+  --cor-superficie-2: #dce9fa;
+  --cor-texto: #0f2a4d;
+  --cor-texto-suave: #4a6a91;
+  --cor-link: #1a56b0;
+  --cor-foco: #1e5bb8;
+  --cor-primaria: #1e5bb8;
+  --cor-sobre-primaria: #ffffff;
+  --cor-primaria-suave: #dce9fa;
+  --cor-primaria-texto: #174a96;
+  --cor-destaque: #5b9be6;
+  --cor-borda: #c3d8f3;
+  --sombra-suave: 0 1px 3px rgba(15, 42, 77, .08);
+  --sombra: 0 1px 2px rgba(15, 42, 77, .06), 0 6px 16px rgba(15, 42, 77, .08);
+  --sombra-forte: 0 16px 40px rgba(15, 42, 77, .2);
+  --raio: 12px;
+  --raio-pequeno: 8px;
+  --fonte-titulo: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fonte-corpo: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fonte-mao: "Caveat", cursive;
+  --peso-titulo: 700;
+  --espaco-titulo: -.01em;
+  --menu-fundo: #f4f8fe;
+  --menu-ativo-fundo: #dce9fa;
+  --menu-ativo-texto: #0f2a4d;
+  --menu-ativo-borda: transparent;
+  --topo-fundo: rgba(234, 242, 252, .92);
+  --cartao-borda: 1px solid var(--cor-borda);
+  --cartao-fundo: var(--cor-superficie);
+  --cortina-1: #2f6fcc;
+  --cortina-2: #1a4c96;
+  --moldura-cinema: #c3d8f3;
+  --palco-fundo: #0f2a4d;
+  --letreiro-fundo: #0f2a4d;
+  --letreiro-texto: #e6f0fc;
+  --lampada: #a9cbf5;
+  --poltrona: #2f6fcc;
+  --poltrona-sombra: #1a4c96;
 }

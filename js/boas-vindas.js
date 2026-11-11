@@ -16,6 +16,8 @@ const CENAS = {
   laco: { heroi: 'laco-rosa', apoio: 'pinguinzinha', chuva: ['margarida', 'tulipa', 'cerejeira', 'estrelinha'], jeito: 'queda' },
   onda: { heroi: 'prancha', apoio: 'concha', chuva: ['onda', 'estrela-mar', 'caracol', 'concha'], jeito: 'mare' },
   aquarela: { heroi: 'casinha', apoio: 'gatinho', chuva: ['nuvem-gordinha', 'flores-campo', 'cravo', 'violao'], jeito: 'vento' },
+  cinza: { heroi: 'coracao-cinza', apoio: 'casinha-cinza', chuva: ['estrela-cinza', 'nuvem-cinza', 'flor-cinza', 'brilho-cinza'], jeito: 'queda' },
+  azul: { heroi: 'coracao-azul', apoio: 'casinha-azul', chuva: ['balao-azul', 'nuvem-azul', 'estrela-azul', 'brilho-azul'], jeito: 'mare' },
 };
 
 function cena(tema, perfil) {
