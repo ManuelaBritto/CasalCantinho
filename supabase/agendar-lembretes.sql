@@ -21,7 +21,7 @@ select cron.schedule(
   '*/5 * * * *',
   $$
   select net.http_post(
-    url := 'https://casalcantinho.vercel.app/api/lembretes',
+    url := 'https://SEU-SITE.vercel.app/api/lembretes',
     headers := '{"Content-Type": "application/json"}'::jsonb,
     body := '{}'::jsonb
   );

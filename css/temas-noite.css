@@ -1,0 +1,200 @@
+/* =========================================================
+   Modo noite: versão escura dos temas claros
+   (Laço de Rosa, Onda Coral, Aquarela, Cinza e Azul).
+   Mesmos elementos, fontes, formatos e enfeites: só as cores mudam.
+   Ativa com html[data-noite] (Aparência > Modo: Claro / Noite / Automático).
+   data-tom continua "claro" de propósito: as regras dos temas escuros
+   mudam formatos, e aqui só as cores mudam.
+   ========================================================= */
+html[data-noite] {
+  color-scheme: dark;
+  --sombra-suave: 0 1px 3px rgba(0, 0, 0, .35);
+  --sombra: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 22px rgba(0, 0, 0, .35);
+  --sombra-forte: 0 18px 48px rgba(0, 0, 0, .55);
+  --cor-sucesso: #6fcf97;
+  --cor-erro: #ff8a80;
+  --cor-aviso: #f2c46d;
+}
+
+/* ---------- Laço de Rosa · noite: vinho e rosa ---------- */
+html[data-tema="laco"][data-noite] {
+  --cor-fundo: #1f1018;
+  --fundo-imagem:
+    radial-gradient(circle at 90% 10%, rgba(240, 106, 159, .18), transparent 32%),
+    radial-gradient(circle at 6% 90%, rgba(255, 211, 110, .1), transparent 30%),
+    radial-gradient(circle 3px at 20% 20%, rgba(244, 154, 185, .4), transparent 70%),
+    radial-gradient(circle 3px at 60% 12%, rgba(244, 154, 185, .35), transparent 70%),
+    radial-gradient(circle 3px at 80% 60%, rgba(244, 154, 185, .3), transparent 70%);
+  --cor-superficie: #2b1722;
+  --cor-superficie-2: #3a1f2e;
+  --cor-texto: #fbe6ef;
+  --cor-texto-suave: #d3a7bb;
+  --cor-link: #ff9cc2;
+  --cor-foco: #ff8fb8;
+  --cor-primaria: #f06a9f;
+  --cor-sobre-primaria: #2a0f1c;
+  --cor-primaria-suave: #4a2236;
+  --cor-primaria-texto: #ff9cc2;
+  --cor-destaque: #ffd36e;
+  --cor-borda: #5a2c42;
+  --menu-fundo: rgba(31, 16, 24, .94);
+  --menu-ativo-fundo: #4a2236;
+  --menu-ativo-texto: #ffc2d9;
+  --topo-fundo: rgba(31, 16, 24, .88);
+  --cortina-1: #c2366f;
+  --cortina-2: #8f2150;
+  --moldura-cinema: linear-gradient(145deg, #3a1f2e, #2b1722);
+  --palco-fundo: radial-gradient(ellipse at 50% 0%, #4a2236 0%, #2b1722 60%, #1a0b12 100%);
+  --letreiro-fundo: #2b1722;
+  --letreiro-texto: #ff9cc2;
+  --poltrona: #c2366f;
+  --poltrona-sombra: #8f2150;
+}
+
+/* ---------- Onda Coral · noite: mar à noite e coral ---------- */
+html[data-tema="onda"][data-noite] {
+  --cor-fundo: #081a2b;
+  --fundo-imagem:
+    radial-gradient(circle at 92% 6%, rgba(255, 122, 110, .14), transparent 28%),
+    radial-gradient(ellipse at 50% 110%, rgba(74, 163, 232, .16), transparent 55%);
+  --cor-superficie: #0f2840;
+  --cor-superficie-2: #15344f;
+  --cor-texto: #e6f2fa;
+  --cor-texto-suave: #9fbcd2;
+  --cor-link: #8fcbf5;
+  --cor-foco: #7cc0f0;
+  --cor-primaria: #4aa3e8;
+  --cor-sobre-primaria: #061626;
+  --cor-primaria-suave: #173a5a;
+  --cor-primaria-texto: #8fcbf5;
+  --cor-destaque: #ff7a6e;
+  --cor-borda: #23486a;
+  --menu-fundo: rgba(8, 26, 43, .95);
+  --menu-ativo-fundo: #173a5a;
+  --menu-ativo-texto: #cfe8f8;
+  --menu-ativo-borda: #ff7a6e;
+  --topo-fundo: rgba(8, 26, 43, .88);
+  --cortina-1: #d23b33;
+  --cortina-2: #8f231c;
+  --moldura-cinema: linear-gradient(145deg, #15344f, #0f2840);
+  --palco-fundo: linear-gradient(180deg, #04121f 0%, #0b2a45 70%, #123c62 100%);
+  --letreiro-fundo: #04121f;
+  --letreiro-texto: #ffd2c8;
+  --poltrona: #2a6ea8;
+  --poltrona-sombra: #0d3b66;
+}
+
+/* ---------- Aquarela · noite: livro antigo à luz de vela ---------- */
+html[data-tema="aquarela"][data-noite] {
+  --cor-fundo: #1e1c17;
+  --fundo-imagem:
+    radial-gradient(ellipse at 88% 8%, rgba(188, 220, 239, .12), transparent 34%),
+    radial-gradient(ellipse at 6% 92%, rgba(183, 211, 176, .12), transparent 34%),
+    radial-gradient(ellipse at 50% 50%, rgba(244, 198, 198, .05), transparent 60%),
+    var(--textura-papel);
+  --cor-superficie: #2a2620;
+  --cor-superficie-2: #353026;
+  --cor-texto: #f3ead9;
+  --cor-texto-suave: #c9b8a0;
+  --cor-link: #b5d9ae;
+  --cor-foco: #a8cfa0;
+  --cor-primaria: #8fbf8a;
+  --cor-sobre-primaria: #1a2418;
+  --cor-primaria-suave: #2f3b2b;
+  --cor-primaria-texto: #b5d9ae;
+  --cor-destaque: #e8b678;
+  --cor-borda: #4a4236;
+  --menu-fundo: rgba(30, 28, 23, .95);
+  --menu-ativo-fundo: #2f3b2b;
+  --menu-ativo-texto: #d6ecd0;
+  --topo-fundo: rgba(30, 28, 23, .88);
+  --cortina-1: #b97a7a;
+  --cortina-2: #8e5555;
+  --moldura-cinema: linear-gradient(145deg, #353026, #2a2620);
+  --palco-fundo: linear-gradient(180deg, #2c3640 0%, #161b20 100%);
+  --letreiro-fundo: #2a2620;
+  --letreiro-texto: #f3ead9;
+  --poltrona: #6f9a6b;
+  --poltrona-sombra: #4a6d47;
+}
+
+/* ---------- Cinza · noite ---------- */
+html[data-tema="cinza"][data-noite] {
+  --cor-fundo: #161616;
+  --cor-superficie: #212121;
+  --cor-superficie-2: #2a2a2a;
+  --cor-texto: #ececec;
+  --cor-texto-suave: #a6a6a6;
+  --cor-link: #d0d0d0;
+  --cor-foco: #bdbdbd;
+  --cor-primaria: #d6d6d6;
+  --cor-sobre-primaria: #161616;
+  --cor-primaria-suave: #333333;
+  --cor-primaria-texto: #e6e6e6;
+  --cor-destaque: #8a8a8a;
+  --cor-borda: #3a3a3a;
+  --menu-fundo: #1b1b1b;
+  --menu-ativo-fundo: #333333;
+  --menu-ativo-texto: #ffffff;
+  --topo-fundo: rgba(22, 22, 22, .92);
+  --cortina-1: #5a5a5a;
+  --cortina-2: #3f3f3f;
+  --moldura-cinema: #2a2a2a;
+  --palco-fundo: #0d0d0d;
+  --letreiro-fundo: #0d0d0d;
+  --letreiro-texto: #ececec;
+  --lampada: #bdbdbd;
+  --poltrona: #555555;
+  --poltrona-sombra: #3a3a3a;
+}
+
+/* ---------- Azul · noite ---------- */
+html[data-tema="azul"][data-noite] {
+  --cor-fundo: #0b1626;
+  --cor-superficie: #12223a;
+  --cor-superficie-2: #1a2e4c;
+  --cor-texto: #e6f0fc;
+  --cor-texto-suave: #9db6d6;
+  --cor-link: #8ab8f2;
+  --cor-foco: #8ab8f2;
+  --cor-primaria: #5b9be6;
+  --cor-sobre-primaria: #08142a;
+  --cor-primaria-suave: #1d3557;
+  --cor-primaria-texto: #a9cbf5;
+  --cor-destaque: #2f6fcc;
+  --cor-borda: #27416a;
+  --menu-fundo: #0e1b2e;
+  --menu-ativo-fundo: #1d3557;
+  --menu-ativo-texto: #e6f0fc;
+  --topo-fundo: rgba(11, 22, 38, .92);
+  --cortina-1: #2f6fcc;
+  --cortina-2: #1a4c96;
+  --moldura-cinema: #1a2e4c;
+  --palco-fundo: #050c17;
+  --letreiro-fundo: #050c17;
+  --letreiro-texto: #a9cbf5;
+  --lampada: #5b9be6;
+  --poltrona: #2f6fcc;
+  --poltrona-sombra: #1a4c96;
+}
+
+/* ---------- Partes com cor clara fixa: mesma forma, cor da noite ---------- */
+html[data-noite]:is([data-tema="laco"], [data-tema="onda"]) .moldura-foto { border-color: var(--cor-superficie-2); }
+html[data-noite]:is([data-tema="laco"], [data-tema="onda"]) .memoria:not(.mini) figure { background: var(--cor-superficie-2); }
+html[data-noite][data-tema="aquarela"] .moldura-foto,
+html[data-noite][data-tema="aquarela"] .filme-capa,
+html[data-noite][data-tema="aquarela"] .memoria figure { background: #3a342a; border-color: var(--cor-borda); }
+html[data-noite][data-tema="aquarela"] .memoria figure { box-shadow: 2px 6px 16px rgba(0, 0, 0, .45); }
+html[data-noite][data-tema="aquarela"] .moldura-foto::after { background: rgba(143, 191, 138, .55); }
+html[data-noite][data-tema="aquarela"] .lista-cartao::after { background: rgba(185, 122, 122, .6); }
+html[data-noite][data-tema="aquarela"] .hero::after { background: rgba(232, 182, 120, .4); }
+html[data-noite][data-tema="aquarela"] .album-livro { background: #5e3e2a; }
+/* Envelopes, lembretes e reações: só a cor (igual aos temas escuros) */
+html[data-noite] .envelope-fechado { background: var(--cor-superficie-2); }
+html[data-noite] .envelope-fechado::after { background: var(--cor-primaria-suave); }
+html[data-noite] .envelope-costas { background: var(--cor-superficie); }
+html[data-noite] .envelope-frente { background: var(--cor-superficie-2); }
+html[data-noite] .envelope-aba { background: var(--cor-primaria-suave); }
+html[data-noite] .bilhete-lembrete { background: var(--cor-superficie-2); border-color: var(--cor-borda); color: var(--cor-texto); }
+html[data-noite] .bilhete-lembrete .bilhete-assinatura { color: var(--cor-primaria-texto); }
+html[data-noite][data-tom="claro"] .botao-reacao { background: rgba(20, 10, 16, .55); color: #fff; border-color: rgba(255, 255, 255, .25); }

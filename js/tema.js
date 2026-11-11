@@ -35,7 +35,11 @@ export const temasDisponiveis = () => [...disponiveis];
 const chaveTema = (perfil) => `nc:tema:${perfil || 'visitante'}`;
 const chavePrefs = (perfil) => `nc:prefs:${perfil || 'visitante'}`;
 
-const PREFS_PADRAO = { aoEntrar: 'perfil', movimento: 'sistema', decoracao: 'normal', texto: 'padrao' };
+const PREFS_PADRAO = { aoEntrar: 'perfil', movimento: 'sistema', decoracao: 'normal', texto: 'padrao', modo: 'claro' };
+
+// Modo noite dos temas claros: cor da barra do navegador em cada um
+const COR_META_NOITE = { laco: '#1f1018', onda: '#081a2b', aquarela: '#1e1c17', cinza: '#161616', azul: '#0b1626' };
+const midiaEscuro = window.matchMedia('(prefers-color-scheme: dark)');
 
 function ler(chave) { try { return localStorage.getItem(chave); } catch { return null; } }
 function gravar(chave, valor) { try { localStorage.setItem(chave, valor); } catch { /* armazenamento cheio/bloqueado */ } }
@@ -59,7 +63,7 @@ export function aplicarTema(tema, { perfil = null, salvar = true, livre = false 
   const mudou = raiz.dataset.tema !== tema;
   raiz.dataset.tema = tema;
   raiz.dataset.tom = TEMAS[tema].escuro ? 'escuro' : 'claro';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', TEMAS[tema].corMeta);
+  aplicarModo();
   renderizarDecoracao(tema);
   gravar('nc:tema-atual', tema);
   if (salvar && perfil) gravar(chaveTema(perfil), tema);
@@ -103,7 +107,25 @@ export function aplicarPreferencias(prefs) {
   if (reduzir) raiz.dataset.movimento = 'reduzir'; else delete raiz.dataset.movimento;
   raiz.dataset.decoracao = prefsAtuais.decoracao;
   raiz.dataset.texto = prefsAtuais.texto;
+  aplicarModo();
 }
+
+/**
+ * Modo noite: os temas claros ganham a versão escura (css/temas-noite.css).
+ * "auto" segue o modo escuro do celular/computador. Os temas que já são escuros não mudam.
+ */
+function aplicarModo() {
+  const raiz = document.documentElement;
+  const tema = TEMAS[raiz.dataset.tema] ? raiz.dataset.tema : TEMA_ENTRADA;
+  const modo = prefsAtuais.modo;
+  const noite = !TEMAS[tema].escuro && (modo === 'noite' || (modo === 'auto' && midiaEscuro.matches));
+  if (noite) raiz.dataset.noite = ''; else delete raiz.dataset.noite;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', noite ? COR_META_NOITE[tema] || TEMAS[tema].corMeta : TEMAS[tema].corMeta);
+  gravar('nc:noite-atual', noite ? '1' : '0');
+}
+midiaEscuro.addEventListener?.('change', () => aplicarModo());
+
+export const modoNoiteAtivo = () => 'noite' in document.documentElement.dataset;
 midiaMovimento.addEventListener?.('change', () => aplicarPreferencias(prefsAtuais));
 
 export function movimentoReduzido() { return document.documentElement.dataset.movimento === 'reduzir'; }

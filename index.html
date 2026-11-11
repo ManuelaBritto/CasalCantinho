@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="css/diversao.css">
   <link rel="stylesheet" href="css/jogos.css">
   <link rel="stylesheet" href="css/calendario.css">
+  <link rel="stylesheet" href="css/temas-noite.css">
 
   <script>
     /* Aplica o último tema antes da primeira pintura para evitar "piscar" de cores. */
@@ -39,6 +40,7 @@
         if ({ mistica: 1, punk: 1, laco: 1, onda: 1, aquarela: 1, cinza: 1, azul: 1 }[t]) {
           document.documentElement.dataset.tema = t;
           document.documentElement.dataset.tom = escuros[t] ? 'escuro' : 'claro';
+          if (!escuros[t] && localStorage.getItem('nc:noite-atual') === '1') document.documentElement.dataset.noite = '';
         }
       } catch (e) { /* armazenamento indisponível: segue com o tema de entrada */ }
     })();

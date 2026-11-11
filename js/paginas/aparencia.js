@@ -55,6 +55,15 @@ export async function renderizar(el, ctx) {
     <section class="cartao formulario" aria-labelledby="titulo-prefs">
       <h2 id="titulo-prefs">Preferências visuais</h2>
       <fieldset>
+        <legend>Modo</legend>
+        <div class="opcoes">
+          ${opcao('modo', 'claro', 'Claro', prefs.modo)}
+          ${opcao('modo', 'noite', 'Noite', prefs.modo)}
+          ${opcao('modo', 'auto', 'Automático (segue o celular)', prefs.modo)}
+        </div>
+        <p class="dica" data-dica-modo>${TEMAS[temaAtual()]?.escuro ? `O tema ${esc(TEMAS[temaAtual()].nome)} já é escuro: o modo vale para os temas claros.` : 'Noite deixa o tema escuro, com os mesmos enfeites e cores do tema.'}</p>
+      </fieldset>
+      <fieldset>
         <legend>Ao entrar na conta, usar</legend>
         <div class="opcoes">
           ${opcao('aoEntrar', 'perfil', `O tema do perfil (${TEMAS[perfil.temaPadrao]?.nome || ''})`, prefs.aoEntrar)}
@@ -105,9 +114,11 @@ export async function renderizar(el, ctx) {
     if (alvo.name === 'tema-aparencia') {
       aplicarTema(alvo.value, { perfil: perfil.id });
       salvarTemaRemoto(perfil, alvo.value);
+      const dica = el.querySelector('[data-dica-modo]');
+      if (dica) dica.textContent = TEMAS[alvo.value]?.escuro ? `O tema ${TEMAS[alvo.value].nome} já é escuro: o modo vale para os temas claros.` : 'Noite deixa o tema escuro, com os mesmos enfeites e cores do tema.';
       return;
     }
-    if (['aoEntrar', 'movimento', 'decoracao', 'texto'].includes(alvo.name)) {
+    if (['aoEntrar', 'movimento', 'decoracao', 'texto', 'modo'].includes(alvo.name)) {
       salvarPreferencias(perfil.id, { [alvo.name]: alvo.value });
       toast('Preferência salva.', 'sucesso', { duracao: 1800 });
     }
