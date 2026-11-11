@@ -524,8 +524,11 @@ export function criarJogos({ el, perfil, sala, trocarModo, voltar }) {
     htmlEspacos: () => ({
       resposta: `<div data-resposta-dia>${htmlRespostaDoDia()}</div>`,
       jogos: `
-        <section aria-labelledby="titulo-jogos">
-          <div class="cabecalho-secao pequeno"><div><h2 id="titulo-jogos" class="subtitulo">${icone('estrela')} Jogos</h2></div></div>
+        <section class="secao-jogos" aria-labelledby="titulo-jogos">
+          <div class="cabecalho-secao pequeno"><div>
+            <h2 id="titulo-jogos" class="subtitulo">${icone('estrela')} Jogos</h2>
+            <p>Joguem juntos: cada jogada aparece na hora para ${esc(nomeOutro)}.</p>
+          </div></div>
           <div data-jogos>${htmlCartoesJogos()}</div>
         </section>`,
     }),
