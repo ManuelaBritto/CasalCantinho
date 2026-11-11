@@ -1,0 +1,57 @@
+/* =========================================================
+   Calendário do casal
+   ========================================================= */
+.calendario-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: 1.2rem; align-items: start; }
+@media (max-width: 900px) { .calendario-layout { grid-template-columns: 1fr; } }
+.calendario-layout > .cartao { padding: 1.1rem 1.2rem; }
+
+.sugestao-namoro { align-items: center; flex-wrap: wrap; margin-bottom: 1.2rem; }
+.sugestao-namoro p { flex: 1 1 260px; }
+
+/* Próximas datas */
+.lista-proximas { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: .6rem; }
+.proxima { display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: center; padding: .7rem .75rem; border-radius: var(--raio-pequeno); border: 1px solid var(--cor-borda); background: var(--cor-superficie); }
+.proxima.e-hoje { border-color: var(--cor-primaria); background: var(--cor-primaria-suave); }
+.proxima-data { width: 54px; display: grid; justify-items: center; padding: .35rem 0; border-radius: var(--raio-pequeno); background: var(--cor-primaria); color: var(--cor-sobre-primaria); line-height: 1; }
+.proxima-data b { font-family: var(--fonte-corpo); font-size: 1.45rem; font-weight: 800; }
+.proxima-data span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-top: .15rem; }
+.proxima-info { min-width: 0; }
+.proxima-info h3 { margin: 0; font-size: 1.02rem; font-family: var(--fonte-corpo); font-weight: 700; overflow-wrap: anywhere; }
+.proxima-info .meta { margin: .15rem 0 0; }
+.proxima-contagem { margin: .2rem 0 0; font-family: var(--fonte-mao); font-size: 1.2rem; color: var(--cor-primaria-texto); line-height: 1.1; }
+.proxima-nota { margin: .25rem 0 0; font-size: .88rem; color: var(--cor-texto-suave); }
+.acoes-evento { flex-wrap: nowrap; }
+.lista-proximas.compacta .proxima { padding: .55rem .6rem; }
+.vazio.pequeno { padding: 1.5rem .5rem; }
+
+/* Mês */
+.mes-topo { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .6rem; }
+.mes-topo .subtitulo { margin: 0; }
+.mes-grade { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.dia-semana { text-align: center; font-size: .75rem; font-weight: 700; color: var(--cor-texto-suave); padding: .2rem 0; }
+.dia { position: relative; aspect-ratio: 1; min-height: 40px; display: grid; place-items: center; align-content: center; gap: 1px;
+  border: 1px solid transparent; border-radius: var(--raio-pequeno); background: var(--cor-superficie-2); color: var(--cor-texto); cursor: pointer; padding: 2px; }
+.dia:hover { border-color: var(--cor-primaria); }
+.dia.vazio-dia { background: transparent; cursor: default; }
+.dia-num { font-weight: 600; font-size: .92rem; line-height: 1; }
+.dia-marcas { font-size: .7rem; line-height: 1; }
+.dia.tem { background: var(--cor-primaria-suave); }
+.dia.tem .dia-num { font-weight: 800; color: var(--cor-primaria-texto); }
+.dia.hoje { box-shadow: inset 0 0 0 2px var(--cor-primaria); }
+.dia.selecionado { background: var(--cor-primaria); }
+.dia.selecionado .dia-num { color: var(--cor-sobre-primaria); }
+.calendario-mes [data-ir-hoje] { margin-top: .6rem; }
+.dia-detalhe { margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--cor-borda); display: grid; gap: .5rem; justify-items: start; }
+.dia-detalhe h3 { margin: 0; font-size: 1rem; }
+.dia-detalhe .lista-proximas { width: 100%; margin: 0; }
+
+/* Formulário */
+.form-evento { display: grid; gap: .9rem; }
+.opcoes.coluna { flex-direction: column; align-items: stretch; }
+.opcoes.coluna .opcao span small { color: var(--cor-texto-suave); font-weight: 500; }
+
+/* Cartinha agendada */
+.selo-agendada { display: inline-flex; align-items: center; gap: .3rem; background: var(--cor-primaria-suave); color: var(--cor-primaria-texto); }
+.selo-agendada .icone { width: 14px; height: 14px; }
+.agendar-quando { display: grid; gap: .35rem; margin-top: .6rem; max-width: 320px; }
+.agendar-quando[hidden] { display: none; }

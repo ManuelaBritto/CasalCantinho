@@ -12,10 +12,21 @@ import {
 import { ehBilhete, htmlBilhete, abrirElogio, abrirLembrete, avisarOutro, TIPOS_BILHETE } from '../bilhetes.js';
 
 /** Quem pode ver a cartinha: quem escreveu e, depois de enviada, quem recebeu. */
+/** Cartinha agendada que ainda não chegou na hora (quem recebe não vê; com Supabase o banco nem entrega). */
+export const aindaAgendada = (c) => Boolean(c?.agendadaPara) && Date.parse(c.agendadaPara) > Date.now();
+
 export function cartaVisivelPara(c, perfilId) {
   if (!c.de) return true; // cartinhas antigas/exemplos sem autor definido
   if (c.de === perfilId) return true;
-  return c.para === perfilId && Boolean(c.enviadaEm);
+  return c.para === perfilId && Boolean(c.enviadaEm) && !aindaAgendada(c);
+}
+
+const DATA_HORA = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
+/** "AAAA-MM-DDTHH:MM" no horário do aparelho (para o campo datetime-local) */
+function paraCampoDataHora(data) {
+  const d = new Date(data);
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
 function grupoDa(c, eu) {
@@ -92,6 +103,7 @@ export async function renderizar(el, ctx) {
     const fechada = naoLida(c);
     let meta = '';
     if (grupo === 'recebidas') meta = `De ${esc(nome(c.de))} · ${esc(formatarData(c.enviadaEm))}`;
+    else if (grupo === 'enviadas' && aindaAgendada(c)) meta = `<span class="selo selo-agendada">${icone('calendario')} Agendada</span> Chega para ${esc(nome(c.para))} em ${esc(formatarData(c.agendadaPara, DATA_HORA))}`;
     else if (grupo === 'enviadas') meta = `Para ${esc(nome(c.para))} · ${c.lidaEm ? `${icone('check')} lida em ${esc(formatarData(c.lidaEm))}` : 'ainda não lida'}`;
     else meta = c.data ? `Rascunho · ${esc(formatarData(c.data))}` : 'Rascunho';
     const podeEditar = grupo !== 'recebidas';
@@ -170,7 +182,9 @@ export async function renderizar(el, ctx) {
       corpo: `<div class="bilhete-leitura ${revelar ? 'revelar' : ''}">${htmlBilhete(carta)}</div>
         <p class="meta centro">${grupo === 'recebidas'
           ? `Recebido em ${esc(formatarData(carta.enviadaEm, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))}`
-          : `Enviado em ${esc(formatarData(carta.enviadaEm, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))} · ${carta.lidaEm ? 'visto' : 'ainda não visto'}`}</p>`,
+          : aindaAgendada(carta)
+            ? `Agendada: chega para ${esc(nome(carta.para))} em ${esc(formatarData(carta.agendadaPara, DATA_HORA))}`
+            : `Enviado em ${esc(formatarData(carta.enviadaEm, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))} · ${carta.lidaEm ? 'visto' : 'ainda não visto'}`}</p>`,
       rodape: grupo === 'recebidas' && carta.tipo === 'desenho'
         ? `<button type="button" class="botao-fantasma" data-fechar>Fechar</button>
            <a class="botao" href="#/diversao?como" data-fechar>${icone('pincel')} Desenhar de volta</a>`
@@ -310,8 +324,11 @@ export async function renderizar(el, ctx) {
     const base = original
       ? structuredClone(original)
       : { titulo: respostaA ? `Resposta: ${respostaA.titulo}`.slice(0, 80) : '', destinatario: '', mensagem: '', data: hojeISO(), estilo: estiloPadrao(temaAtual()) };
-    const jaEnviada = Boolean(original?.enviadaEm);
-    const entregaInicial = jaEnviada ? 'enviar' : (original ? 'rascunho' : 'enviar');
+    const agendadaPendente = aindaAgendada(original);
+    const jaEnviada = Boolean(original?.enviadaEm) && !agendadaPendente;
+    const entregaInicial = jaEnviada ? 'enviar' : agendadaPendente ? 'agendar' : (original ? 'rascunho' : 'enviar');
+    const amanha8 = new Date(); amanha8.setDate(amanha8.getDate() + 1); amanha8.setHours(8, 0, 0, 0);
+    const valorAgendar = paraCampoDataHora(agendadaPendente ? original.agendadaPara : amanha8);
     base.estilo = { ...estiloPadrao(temaAtual()), ...(base.estilo || {}) };
     let adesivosSel = [...(base.estilo.adesivos || [])];
     let alterado = false;
@@ -337,9 +354,15 @@ export async function renderizar(el, ctx) {
               <legend class="sr-only">O que fazer com a cartinha</legend>
               <div class="opcoes entrega">
                 <label class="opcao"><input type="radio" name="entrega" value="enviar" ${entregaInicial === 'enviar' ? 'checked' : ''}><span>${icone('carta')} Enviar para ${esc(outro.nome)}</span></label>
+                <label class="opcao"><input type="radio" name="entrega" value="agendar" ${entregaInicial === 'agendar' ? 'checked' : ''}><span>${icone('calendario')} Agendar a entrega</span></label>
                 <label class="opcao"><input type="radio" name="entrega" value="rascunho" ${entregaInicial === 'rascunho' ? 'checked' : ''}><span>${icone('salvar')} Guardar como rascunho</span></label>
               </div>
-            </fieldset>`}
+            </fieldset>
+            <div class="campo agendar-quando" data-agendar-quando ${entregaInicial === 'agendar' ? '' : 'hidden'}>
+              <label for="carta-agendar">Entregar em</label>
+              <input id="carta-agendar" name="agendarPara" type="datetime-local" value="${valorAgendar}" min="${paraCampoDataHora(Date.now() + 2 * 60 * 1000)}">
+              <span class="dica">${esc(outro.nome)} só consegue ver a cartinha nesse horário, e recebe a notificação na hora.</span>
+            </div>`}
           </section>
 
           <section class="cartao formulario" aria-labelledby="sec-conteudo">
@@ -479,11 +502,14 @@ export async function renderizar(el, ctx) {
       const b = form.querySelector('[data-botao-salvar]');
       if (jaEnviada) b.innerHTML = `${icone('salvar')} Salvar alterações`;
       else if (entregaEscolhida() === 'enviar') b.innerHTML = `${icone('carta')} Enviar para ${esc(outro.nome)}`;
+      else if (entregaEscolhida() === 'agendar') b.innerHTML = `${icone('calendario')} Agendar entrega`;
       else b.innerHTML = `${icone('salvar')} Salvar rascunho`;
     }
 
     function atualizarPrevia() {
       atualizarBotao();
+      const quando = form.querySelector('[data-agendar-quando]');
+      if (quando) quando.hidden = entregaEscolhida() !== 'agendar';
       const atual = estadoAtual();
       previa.innerHTML = htmlCarta({ ...atual, titulo: atual.titulo || 'Título da cartinha' });
       contador.textContent = `${form.elements.mensagem.value.length} de 5000 caracteres`;
@@ -533,8 +559,19 @@ export async function renderizar(el, ctx) {
       if (!doc.mensagem.trim()) return marcarErro(form.elements.mensagem, 'Escreva a mensagem.');
       if (!original) { doc.autor = ctx.perfil.nome; doc.de = eu; }
       if (!doc.de) doc.de = eu; // cartinhas antigas passam a ter autor
-      const enviar = !jaEnviada && entregaEscolhida() === 'enviar';
-      if (enviar) { doc.para = outro.id; doc.enviadaEm = new Date().toISOString(); doc.lidaEm = null; }
+      const entrega = entregaEscolhida();
+      const enviar = !jaEnviada && entrega === 'enviar';
+      const agendar = !jaEnviada && entrega === 'agendar';
+      let quandoAgendada = null;
+      if (agendar) {
+        const campo = form.elements.agendarPara;
+        quandoAgendada = campo.value ? new Date(campo.value) : null;
+        if (!quandoAgendada || Number.isNaN(quandoAgendada.getTime())) return marcarErro(campo, 'Escolha o dia e a hora da entrega.');
+        if (quandoAgendada.getTime() < Date.now() + 60 * 1000) return marcarErro(campo, 'Escolha um horário daqui a pelo menos 1 minuto.');
+        doc.para = outro.id; doc.agendadaPara = quandoAgendada.toISOString(); doc.enviadaEm = doc.agendadaPara; doc.lidaEm = null;
+      }
+      if (enviar) { doc.para = outro.id; doc.enviadaEm = new Date().toISOString(); doc.lidaEm = null; doc.agendadaPara = null; }
+      if (!jaEnviada && entrega === 'rascunho' && agendadaPendente) { doc.enviadaEm = null; doc.agendadaPara = null; }
       if (respostaA) doc.respostaA = respostaA.id;
       doc.exemplo = false;
       const botao = form.querySelector('button[type="submit"]');
@@ -544,7 +581,9 @@ export async function renderizar(el, ctx) {
         const i = cartas.findIndex((c) => c.id === salvo.id);
         if (i >= 0) cartas[i] = salvo; else cartas.unshift(salvo);
         if (enviar) avisarOutro(salvo);
-        toast(enviar ? `Cartinha enviada para ${outro.nome}!` : (original ? 'Cartinha atualizada!' : 'Rascunho guardado.'), 'sucesso');
+        toast(agendar
+          ? `Cartinha agendada para ${formatarData(doc.agendadaPara, DATA_HORA)}. ${outro.nome} só vê nessa hora.`
+          : enviar ? `Cartinha enviada para ${outro.nome}!` : (original ? 'Cartinha atualizada!' : 'Rascunho guardado.'), 'sucesso', { duracao: agendar ? 6000 : 4200 });
         if (location.hash.includes('?')) history.replaceState(null, '', '#/cartinhas');
         aba = grupoDa(salvo, eu);
         alterado = false;

@@ -60,6 +60,7 @@ nosso-cantinho/
 │   ├── painel-notificacoes.js # Painel em Aparência e convite no Início
 │   ├── fila-cinema.js      # Sessões do dia (fila do Cinema)
 │   ├── jogos/             # Diversão: regras, dados e telas do jogo da velha, forca e Resposta do dia
+│   ├── calendario/        # Calendário: regras das datas e dados (Supabase ou este navegador)
 │   ├── quadro.js           # Quadro de desenho (traços ao vivo, desfazer, exportar PNG)
 │   ├── chat-cinema.js      # Chat do Cinema (mensagens, digitando, histórico)
 │   ├── sincronia-cinema.js # Sincronia fina do "Assistir junto" (relógio, correção, maestro)
@@ -103,6 +104,7 @@ nosso-cantinho/
 | **Sessões do dia** | Fila de vídeos do Cinema, a mesma para os dois e só do dia (recomeça vazia no dia seguinte). **Pôr na fila** pelo link ou pelo **+** de um vídeo das Sessões; dá para subir, descer, tirar e tocar agora. Cada vídeo da fila mostra o título, o canal e quem escolheu. **Começar a sessão** toca o primeiro. |
 | **Cortina e créditos** | Quando um vídeo novo começa, a cortina fecha e abre (pausar e voltar não repete). No fim do vídeo, a tela mostra os créditos por 5 s: "[vídeo] por [canal]" e "vídeo escolhido por: [nome]", e depois some com fade. Se tiver vídeo na fila, o próximo começa sozinho, com a cortina, para os dois. Em tela cheia, os créditos aparecem, mas a cortina não (ela fica fora da tela cheia). |
 | **Chamar para assistir** | Botão **Chamar** no Cinema: mensagem personalizada (com 5 sugestões) e, se houver, o vídeo da tela. O outro recebe uma janela "Fulano te chamou para assistir" com **Entrar no cinema** (ou notificação no celular, se o site estiver fechado). O convite também fica no chat. |
+| **Calendário** | Datas do casal com lembrete na véspera e no dia; cartinha agendada (ver 5.4). |
 | **Diversão** | **Resposta do dia, jogo da velha e forca** (ver 5.3). **Quadro branco:** desenhos do casal com pincel, borracha, 12 cores + cor livre, 4 espessuras, desfazer/refazer, limpar e baixar em PNG; funciona com dedo, caneta e mouse. Galeria para criar, abrir, editar e excluir. Se os dois abrirem o mesmo desenho, cada traço aparece na hora na tela do outro ("Fulano está neste desenho com você") e o desfazer de um tira só o traço dele. Salva sozinho alguns segundos depois de desenhar. Quando alguém desenha, o outro recebe um aviso (ou notificação no celular) com **Ver**, no máximo um por desenho a cada 10 minutos, e nenhum se os dois estiverem no mesmo desenho. **Como eu te vejo:** uma pergunta por dia (30, a mesma para os dois, troca à meia-noite de Brasília), por exemplo "Como eu te vejo se você fosse um animal". Desenha, escreve um recadinho opcional e envia: chega nas **Cartinhas** do outro com aviso/notificação e botão **Desenhar de volta**. As perguntas ficam em `js/paginas/diversao.js`. |
 | **Memórias** | Galeria (moldura muda com o tema), visualização ampliada com setas, envio de foto ou URL, legenda e data opcionais. |
 | **Aparência** | Cartões de tema com prévia, "ao entrar usar o tema do perfil / o último escolhido", reduzir movimento, decoração discreta, texto maior e (no modo local) restaurar exemplos ou apagar dados. |
@@ -194,6 +196,19 @@ Rode **uma vez** no SQL Editor (depois de `pessoa-em-varios-casais.sql`; pode ro
 - **Resposta do dia:** uma pergunta por dia, igual para os dois (120 perguntas, muda à meia-noite de Brasília). A resposta do outro só aparece depois que você responde a sua, ou quando o dia acaba. Histórico dos outros dias.
 
 O banco confere tudo: só joga quem está na vez, só em casa vazia, ninguém altera a tabela de jogos direto, e cada casal só vê os próprios jogos e respostas. As jogadas aparecem na hora para o outro (mesma conexão do Cineminha) e, se a pessoa não estiver com o site aberto, chega notificação ("Sua vez no jogo da velha!", "Fulano respondeu a pergunta do dia").
+
+## 5.4 Calendário e cartinha agendada (`supabase/calendario.sql` + `supabase/agendar-lembretes.sql`)
+
+Precisa das notificações (6.2) e do aviso de atualização (6.3, por causa da senha `AVISO_SEGREDO`) já configurados.
+
+1. No SQL Editor, rode `supabase/calendario.sql` (pode rodar de novo sem problema).
+2. Abra `supabase/agendar-lembretes.sql`, **troque `https://SEU-SITE.vercel.app` pelo endereço do site** e rode. A partir daí o próprio Supabase chama `/api/lembretes` a cada 5 minutos. Se der erro em `create extension`, ative **pg_cron** e **pg_net** em *Database → Extensions* e rode de novo.
+
+**Calendário** (menu → Calendário): aniversário de namoro, aniversários, viagens, compromissos e outras datas, que podem repetir todo ano ou todo mês. Os dois veem e editam. Lembrete para os dois **na véspera, às 19h** e **no dia, às 8h** (ou 1 hora antes, se a data tiver horário), mesmo com o site fechado. Se o contador do Início tiver a data de início do namoro, o calendário sugere adicionar o aniversário de namoro. Mostra "2 anos de namoro", "Amanhã", "Em 3 dias"...
+
+**Cartinha agendada** (Nova cartinha → Entrega → **Agendar a entrega**): escolhe o dia e a hora. Quem recebe **não consegue ver** a cartinha antes disso (o banco esconde, nem mexendo no navegador dá). Na hora chega a notificação "Chegou uma cartinha de…". Dá para editar a data ou voltar para rascunho antes de chegar.
+
+Cada lembrete sai uma vez só (o banco anota os enviados). Com o site aberto, ele também confere os lembretes de 5 em 5 minutos, como reserva.
 
 ## 6. Configurar a API do TMDB (pesquisa de filmes)
 

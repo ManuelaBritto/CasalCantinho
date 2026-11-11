@@ -22,6 +22,7 @@ import { buscarTmdb, tmdbAtivo } from './lib/tmdb.mjs';
 import { configPublicaJs } from './lib/config-publica.mjs';
 import { enviarNotificacao, notificacoesAtivas } from './lib/notificar.mjs';
 import { avisarAtualizacao } from './lib/aviso-atualizacao.mjs';
+import { enviarLembretes } from './lib/lembretes.mjs';
 
 const RAIZ = resolve(fileURLToPath(new URL('.', import.meta.url)));
 
@@ -85,6 +86,18 @@ async function proxyTmdb(url, res) {
   return enviar(res, status, corpo, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': status === 200 ? 'private, max-age=300' : 'no-store' });
 }
 
+// POST /api/lembretes (mesma lógica da função da Vercel)
+async function rotaLembretes(req, res) {
+  const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
+  try {
+    const { status, corpo } = await enviarLembretes();
+    return enviar(res, status, JSON.stringify(corpo), json);
+  } catch (e) {
+    console.error('[lembretes]', e.message);
+    return enviar(res, 500, JSON.stringify({ erro: 'Erro ao enviar os lembretes.' }), json);
+  }
+}
+
 // POST /api/avisar-atualizacao (mesma lógica da função da Vercel)
 async function rotaAvisarAtualizacao(req, res) {
   const json = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
@@ -128,6 +141,7 @@ const servidor = createServer(async (req, res) => {
 
     if (caminho === '/api/notificar') return rotaNotificar(req, res);
     if (caminho === '/api/avisar-atualizacao') return rotaAvisarAtualizacao(req, res);
+    if (caminho === '/api/lembretes') return rotaLembretes(req, res);
     if (req.method !== 'GET' && req.method !== 'HEAD') return enviar(res, 405, 'Método não permitido');
 
     if (caminho === '/config.js') {

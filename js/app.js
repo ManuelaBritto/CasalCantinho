@@ -9,7 +9,7 @@ import { mostrarBoasVindas } from './boas-vindas.js';
 import { definirStore, storeAtual, listar, obterAjustes, salvarAjustes } from './store/index.js';
 import { lerJuntos, normalizarJuntos, tempoAtualMs, relogio } from './juntos.js';
 import { iniciarSala, encerrarSala } from './sala-cinema.js';
-import { vigiarVersao, pedirAvisoDeVersaoNova } from './versao.js';
+import { vigiarVersao, pedirAvisoDeVersaoNova, conferirLembretes } from './versao.js';
 import { criarStoreLocal } from './store/local.js';
 import { registrarServiceWorker, sincronizarNotificacoes, esquecerPerfilNotificacoes, estadoNotificacoes } from './notificacoes.js';
 import { carregarRecompensas, verificarConquistas, aplicarEstilosNome, gravarTempoCinema, esperarGravacao, limparCacheRecompensas } from './recompensas.js';
@@ -18,6 +18,7 @@ export const ROTAS = [
   { id: 'inicio', titulo: 'Início', icone: 'casa', modulo: () => import('./paginas/inicio.js') },
   { id: 'cartinhas', titulo: 'Cartinhas', icone: 'carta', modulo: () => import('./paginas/cartinhas.js') },
   { id: 'listas', titulo: 'Listas', icone: 'lista', modulo: () => import('./paginas/listas.js') },
+  { id: 'calendario', titulo: 'Calendário', icone: 'calendario', modulo: () => import('./paginas/calendario.js') },
   { id: 'cinemateca', titulo: 'Cinemateca', icone: 'filme', modulo: () => import('./paginas/cinemateca.js') },
   { id: 'cinema', titulo: 'Cinema', icone: 'cinema', modulo: () => import('./paginas/cinema.js') },
   { id: 'memorias', titulo: 'Memórias', icone: 'imagem', modulo: () => import('./paginas/memorias.js') },
@@ -40,6 +41,7 @@ async function iniciar() {
   injetarSpriteIcones();
   vigiarVersao();
   pedirAvisoDeVersaoNova();
+  conferirLembretes();
   registrarServiceWorker();
   aplicarPreferencias(lerPreferencias(null));
   // Notificação de outro cantinho (?cantinho=…): abre direto nele
@@ -225,7 +227,7 @@ async function atualizarAvisos() {
   if (!perfilAtual) return 0;
   try {
     const [cartas, juntos] = await Promise.all([listar('cartas'), lerJuntos()]);
-    const novas = cartas.filter((c) => c.para === perfilAtual.id && c.de !== perfilAtual.id && c.enviadaEm && !c.lidaEm).length;
+    const novas = cartas.filter((c) => c.para === perfilAtual.id && c.de !== perfilAtual.id && c.enviadaEm && !c.lidaEm && !(c.agendadaPara && Date.parse(c.agendadaPara) > Date.now())).length;
     document.querySelectorAll('[data-badge-cartas]').forEach((b) => {
       b.hidden = !novas;
       b.textContent = String(novas);

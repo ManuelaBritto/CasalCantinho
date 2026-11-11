@@ -49,3 +49,25 @@ export function pedirAvisoDeVersaoNova() {
   } catch { return; }
   fetch('/api/avisar-atualizacao', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}', keepalive: true }).catch(() => {});
 }
+
+/**
+ * Reserva dos lembretes (calendário e cartinhas agendadas): com o site aberto, pede ao
+ * servidor para conferir de tempos em tempos. O normal é o Supabase chamar sozinho a cada
+ * 5 minutos (supabase/agendar-lembretes.sql); o banco não deixa um lembrete sair duas vezes.
+ */
+export function conferirLembretes() {
+  if (!config.notificacoes) return () => {};
+  const conferir = () => {
+    if (document.visibilityState !== 'visible') return;
+    try {
+      const ultima = Number(localStorage.getItem('nc:lembretes-conferidos') || 0);
+      if (Date.now() - ultima < 4 * 60 * 1000) return;
+      localStorage.setItem('nc:lembretes-conferidos', String(Date.now()));
+    } catch { return; }
+    fetch('/api/lembretes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}', keepalive: true }).catch(() => {});
+  };
+  conferir();
+  const timer = setInterval(conferir, 5 * 60 * 1000);
+  document.addEventListener('visibilitychange', conferir);
+  return () => { clearInterval(timer); document.removeEventListener('visibilitychange', conferir); };
+}

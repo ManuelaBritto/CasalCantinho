@@ -120,6 +120,15 @@ begin
 end
 $$;
 
+-- Cartinha agendada (supabase/calendario.sql): se já foi instalada, mantém a regra dela
+do $$ begin
+  if to_regprocedure('public.carta_liberada(jsonb, uuid)') is not null and to_regprocedure('public.meus_casais()') is not null then
+    drop policy if exists "casal le" on public.cartas;
+    create policy "casal le" on public.cartas for select to authenticated
+      using (casal_id in (select public.meus_casais()) and public.carta_liberada(dados, criado_por));
+  end if;
+end $$;
+
 -- ---------- Fotos (Storage) ----------
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('memorias', 'memorias', false, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
