@@ -217,16 +217,20 @@ Avisos para o casal voltar ao app, além das notificações de ação. Rode `sup
 
 | Aviso | Quando (Brasília) | Exemplo |
 |---|---|---|
-| Datas especiais | 9h | "500 dias juntos! 💕", "Hoje fazem 2 anos e 3 meses juntos 💕" |
-| Nesse dia | 10h | "Há 1 ano, Drico te mandou uma cartinha 💌" |
-| Pergunta do dia | 12h, se não respondeu | "Pergunta do dia 💭 · O que você mais gosta de fazer comigo num dia de chuva?" |
-| Resumo da semana | domingo 18h | "Essa semana: 3 cartinhas, 1 memória nova e 3 partidas (você ganhou de 2×1)." |
-| Sua vez num jogo parado | 19h, jogo parado há 1+ dia | "Sua vez no jogo da velha 😏" |
+| Bom dia com elogio | todo dia 9h, se ainda não mandou elogio hoje | "Já mandou um elogio de bom dia para a Kath hoje?" |
+| Boa noite com elogio | todo dia 20h, se não mandou elogio desde as 18h | "Dê um boa noite com um elogio para o Drico!" |
+| Datas especiais | 9h | "Hoje vocês completam 500 dias juntos! 💕" |
+| Nesse dia | 10h | "Há 1 ano, nesse mesmo dia, o Drico te mandou uma cartinha 💌" |
+| Pergunta do dia | 12h, se não respondeu | "Pergunta do dia: O que você mais gosta de fazer comigo num dia de chuva?" |
+| Resumo da semana | domingo 18h | "Essa semana vocês tiveram 3 cartinhas, 1 memória nova e 3 partidas ✨" |
+| Sua vez num jogo parado | 19h, jogo parado há 1+ dia | "O jogo da velha está esperando sua jogada há 2 dias 😏" |
 | Saudade | 19h, 3+ dias sem abrir (1 por semana) | "Tem 2 cartinhas da Kath esperando você 💌" |
-| Sexta de cinema | sexta 19h | "Que tal ver "A Viagem de Chihiro", da lista de vocês, no Cineminha hoje?" |
-| Falta você | 20h30 | "Lavi já respondeu a pergunta de hoje 👀" |
+| Sexta de cinema | sexta 19h | "Sexta de cinema: que tal ver "A Viagem de Chihiro" hoje? 🍿" |
+| Falta você | 20h30 | "A Lavi já respondeu a pergunta de hoje, só falta você! 👀" |
 
-**Regras:** no máximo 2 por dia por pessoa (1 de dia, 1 à noite, somando todos os cantinhos dela), nada entre 22h e 8h, "jogo parado" e "saudade" só se a pessoa ainda não abriu o site no dia. Cada pessoa liga/desliga cada tipo em **Aparência → Notificações → Lembretes do cantinho** (todos vêm ligados).
+Todos chegam com o título "Nosso Cantinho" e uma frase só. Os dois de elogio abrem direto as Cartinhas com o elogio pronto para escrever.
+
+**Regras:** bom dia e boa noite com elogio são diários e ficam fora do limite. Os outros são no máximo 2 por dia por pessoa (1 de dia e 1 à noite, somando todos os cantinhos dela). Nada sai entre 22h e 8h. "Jogo parado" e "saudade" só vão se a pessoa ainda não abriu o site no dia. Cada pessoa liga ou desliga cada tipo em **Aparência → Notificações → Lembretes do cantinho** (todos vêm ligados).
 
 **Para acompanhar o que funciona**, rode no SQL Editor:
 

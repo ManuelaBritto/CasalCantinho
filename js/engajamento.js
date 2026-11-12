@@ -3,19 +3,21 @@
 //  - conta quando alguém abre o site tocando num desses avisos (para medir o que funciona);
 //  - painel em Aparência para ligar/desligar cada tipo.
 // Quem decide quando mandar é o banco (supabase/engajamento.sql).
-import { modoAuth, clienteSupabase, PERFIS } from './auth.js';
+import { modoAuth, clienteSupabase } from './auth.js';
 import { hojeBrasilia } from './jogos/regras.js';
 import { esc, toast } from './ui/dom.js';
 import { icone } from './ui/icones.js';
 
 export const TIPOS_LEMBRETE = [
-  ['marcos', 'Datas especiais do namoro', '500 dias juntos, mêsversário…'],
-  ['nesse_dia', 'Nesse dia', 'cartinhas e memórias de anos atrás, no mesmo dia'],
-  ['pergunta', 'Pergunta do dia', 'e um toque quando {outro} já respondeu'],
-  ['vez', 'Sua vez num jogo parado', 'jogo da velha ou forca esperando há mais de 1 dia'],
-  ['cinema', 'Sexta de cinema', 'um filme da lista de vocês'],
-  ['resumo', 'Resumo da semana', 'no domingo, o que vocês fizeram'],
-  ['saudade', 'Quando você some por uns dias', 'no máximo 1 por semana'],
+  ['bom_dia', 'Bom dia com elogio (9h)'],
+  ['boa_noite', 'Boa noite com elogio (20h)'],
+  ['marcos', 'Datas especiais do namoro'],
+  ['nesse_dia', 'Nesse dia, anos atrás'],
+  ['pergunta', 'Pergunta do dia'],
+  ['vez', 'Sua vez num jogo parado'],
+  ['cinema', 'Sexta de cinema'],
+  ['resumo', 'Resumo da semana'],
+  ['saudade', 'Quando você some por uns dias'],
 ];
 const ORIGENS = new Set([...TIPOS_LEMBRETE.map(([t]) => t), 'falta_voce']);
 const CHAVE_ORIGEM = 'nc:origem-push';
@@ -57,19 +59,16 @@ export function registrarVisita(perfil) {
 /** Painel "Lembretes do cantinho" (Aparência). */
 export async function montarPainelLembretes(alvo, perfil) {
   if (!alvo) return;
-  const outro = Object.values(PERFIS).find((p) => p.id !== perfil.id)?.nome || 'seu amor';
   const desenhar = (prefs, { desativado = false, aviso = '' } = {}) => {
     alvo.innerHTML = `
       <h3 class="subtitulo-pequeno">${icone('megafone')} Lembretes do cantinho</h3>
-      <p class="dica">Avisos para vocês não esquecerem do cantinho: até 2 por dia, nunca entre 22h e 8h.
-        Os de cartinha, jogo e calendário continuam chegando sempre.</p>
+      <p class="dica">Avisos para vocês lembrarem do cantinho, nunca entre 22h e 8h.</p>
       ${aviso ? `<div class="aviso">${icone('info')}<p>${aviso}</p></div>` : ''}
       <fieldset ${desativado ? 'disabled' : ''}>
         <legend class="sr-only">Quais lembretes receber</legend>
         <div class="opcoes coluna lembretes-opcoes">
-          ${TIPOS_LEMBRETE.map(([id, nome, desc]) => `
-            <label class="opcao"><input type="checkbox" name="lembrete" value="${id}" ${prefs[id] === false ? '' : 'checked'}>
-              <span><strong>${esc(nome)}</strong> <small>${esc(desc.replace('{outro}', outro))}</small></span></label>`).join('')}
+          ${TIPOS_LEMBRETE.map(([id, nome]) => `
+            <label class="opcao"><input type="checkbox" name="lembrete" value="${id}" ${prefs[id] === false ? '' : 'checked'}><span>${esc(nome)}</span></label>`).join('')}
         </div>
       </fieldset>`;
   };

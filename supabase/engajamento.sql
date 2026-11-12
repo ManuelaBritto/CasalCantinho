@@ -16,6 +16,10 @@
 --            · cinema     sexta 19h  um filme da lista "Queremos assistir"
 --            · falta_voce 20h30 o par respondeu a pergunta do dia e você não
 --
+-- Todo dia, fora do limite abaixo (só para quem ainda não mandou um elogio):
+--            · bom_dia    9h   "Já mandou um elogio de bom dia para a Kath hoje?"
+--            · boa_noite  20h  "Dê um boa noite com um elogio para a Kath!"
+--
 -- Regras para não incomodar:
 --   - no máximo 1 de dia e 1 à noite por pessoa (2 por dia, somando todos os cantinhos);
 --   - nada entre 22h e 8h;
@@ -48,6 +52,17 @@ create table if not exists privado.engajamento_envios (
 );
 create index if not exists engajamento_envios_tipo_idx on privado.engajamento_envios (user_id, tipo, dia desc);
 
+-- Bom dia / boa noite com elogio: um de cada por dia, em cada cantinho
+create table if not exists privado.elogio_lembretes (
+  id          bigserial primary key,
+  casal_id    uuid not null,
+  perfil      text not null,
+  dia         date not null,
+  tipo        text not null check (tipo in ('bom_dia', 'boa_noite')),
+  enviado_em  timestamptz not null default now(),
+  unique (casal_id, perfil, dia, tipo)
+);
+
 create table if not exists privado.engajamento_aberturas (
   id         bigserial primary key,
   casal_id   uuid not null,
@@ -68,6 +83,18 @@ begin
   if p is null or p = '' then return null; end if;
   if p ~ '^\d{4}-\d{2}-\d{2}$' then return p::date; end if;
   return (p::timestamptz at time zone p_fuso)::date;
+exception when others then
+  return null;
+end
+$$;
+
+create or replace function privado.ts_ou_nulo(p text)
+returns timestamptz
+language plpgsql
+stable
+as $$
+begin
+  return p::timestamptz;
 exception when others then
   return null;
 end
@@ -98,7 +125,7 @@ declare
   limpas jsonb := '{}'::jsonb;
   k text;
 begin
-  foreach k in array array['marcos', 'nesse_dia', 'pergunta', 'resumo', 'vez', 'saudade', 'cinema'] loop
+  foreach k in array array['bom_dia', 'boa_noite', 'marcos', 'nesse_dia', 'pergunta', 'resumo', 'vez', 'saudade', 'cinema'] loop
     if jsonb_typeof(p_prefs->k) = 'boolean' then limpas := limpas || jsonb_build_object(k, p_prefs->k); end if;
   end loop;
   update public.perfis set prefs_push = prefs_push || limpas
@@ -119,7 +146,7 @@ as $$
 declare
   eu text;
 begin
-  if p_tipo not in ('marcos', 'nesse_dia', 'pergunta', 'resumo', 'vez', 'saudade', 'cinema', 'falta_voce') then return; end if;
+  if p_tipo not in ('bom_dia', 'boa_noite', 'marcos', 'nesse_dia', 'pergunta', 'resumo', 'vez', 'saudade', 'cinema', 'falta_voce') then return; end if;
   select nome into eu from public.perfis where user_id = auth.uid() and casal_id = p_casal limit 1;
   if eu is null then return; end if;
   insert into privado.engajamento_aberturas (casal_id, perfil, tipo, dia)
@@ -184,6 +211,30 @@ begin
     left join lateral (select * from public.perfis o where o.casal_id = pf.casal_id and o.nome <> pf.nome order by o.nome limit 1) o on true
     where exists (select 1 from public.push_inscricoes i where i.casal_id = pf.casal_id and i.perfil = pf.nome)
   loop
+    -- Bom dia (9h) e boa noite (20h) com elogio: todo dia, fora do limite, se ainda não mandou um elogio
+    v_tipo := null;
+    if hora >= time '09:00' and hora < time '12:00' and coalesce((p.prefs->>'bom_dia')::boolean, true)
+       and not exists (select 1 from public.cartas ct where ct.casal_id = p.casal_id and ct.dados->>'tipo' = 'elogio'
+                         and ct.dados->>'de' = p.perfil and privado.data_ou_nula(ct.dados->>'enviadaEm') = hoje) then
+      v_tipo := 'bom_dia';
+    elsif hora >= time '20:00' and coalesce((p.prefs->>'boa_noite')::boolean, true)
+       and not exists (select 1 from public.cartas ct where ct.casal_id = p.casal_id and ct.dados->>'tipo' = 'elogio'
+                         and ct.dados->>'de' = p.perfil and privado.data_ou_nula(ct.dados->>'enviadaEm') = hoje
+                         and (privado.ts_ou_nulo(ct.dados->>'enviadaEm') at time zone 'America/Sao_Paulo')::time >= time '18:00') then
+      v_tipo := 'boa_noite';
+    end if;
+    if v_tipo is not null then
+      insert into privado.elogio_lembretes (casal_id, perfil, dia, tipo) values (p.casal_id, p.perfil, hoje, v_tipo) on conflict do nothing;
+      get diagnostics n = row_count;
+      if n > 0 then
+        saida := saida || jsonb_build_array(jsonb_build_object(
+          'tipo', v_tipo, 'casal', p.casal_id, 'perfil', p.perfil, 'outro', p.outro_nome, 'outro_tratamento', p.outro_tratamento,
+          'dados', '{}'::jsonb,
+          'inscricoes', coalesce((select jsonb_agg(jsonb_build_object('endpoint', i.endpoint, 'p256dh', i.p256dh, 'auth', i.auth))
+                                  from public.push_inscricoes i where i.casal_id = p.casal_id and i.perfil = p.perfil), '[]'::jsonb)));
+      end if;
+    end if;
+
     -- Já recebeu um neste período hoje (em qualquer cantinho)?
     if exists (select 1 from privado.engajamento_envios e where e.user_id = p.user_id and e.dia = hoje and e.periodo = v_periodo) then continue; end if;
     v_tipo := null;
@@ -332,6 +383,7 @@ begin
   end loop;
 
   delete from privado.engajamento_envios where dia < hoje - 120;
+  delete from privado.elogio_lembretes where dia < hoje - 30;
   return saida;
 end
 $$;
